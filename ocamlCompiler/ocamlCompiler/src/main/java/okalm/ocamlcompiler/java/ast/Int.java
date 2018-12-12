@@ -1,27 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package ast;
+package okalm.ocamlcompiler.java.ast;
 
-/**
- *
- * @author diardjul
- */
+import okalm.ocamlcompiler.java.*;
+
 public class Int extends Exp {
-    final int i;
+    public final int i;
 
-    Int(int i) {
+    public Int(int i) {
         this.i = i;
     }
 
-    @Override
-    <E> E accept(ObjVisitor<E> v) {
+
+    public <E> E accept(ObjVisitor<E> v) {
         return v.visit(this);
     }
-    @Override
-    void accept(Visitor v) {
+
+    public void accept(Visitor v) {
         v.visit(this);
     }
 }

@@ -1,11 +1,13 @@
-import java.util.*;
+package okalm.ocamlcompiler.java;
 
-interface Visitor {
+import okalm.ocamlcompiler.java.ast.*;
+
+public interface Visitor {
 
     void visit(Unit e);
     void visit(Bool e);
     void visit(Int e);
-    void visit(Float e);
+    void visit(okalm.ocamlcompiler.java.ast.Float e);
     void visit(Not e);
     void visit(Neg e);
     void visit(Add e);

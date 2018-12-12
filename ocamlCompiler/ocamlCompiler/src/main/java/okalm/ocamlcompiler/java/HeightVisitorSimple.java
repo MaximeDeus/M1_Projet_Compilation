@@ -1,4 +1,6 @@
-import java.util.*;
+package okalm.ocamlcompiler.java;
+
+import okalm.ocamlcompiler.java.ast.*;
 
 // Example of Visitor that computes a value (returns
 // the height of the AST) but uses the simple visitor for which
@@ -15,7 +17,7 @@ import java.util.*;
 // on this scheme. For instance, the set of free variables,
 // or generate a new tree.
  
-class HeightVisitorSimple implements Visitor {
+public class HeightVisitorSimple implements Visitor {
 
     // this variable is used to store the result of 
     // each visit method. In particular, we can consider
@@ -41,7 +43,7 @@ class HeightVisitorSimple implements Visitor {
         res = 0;
     }
 
-    public void visit(Float e) { 
+    public void visit(okalm.ocamlcompiler.java.ast.Float e) { 
         res = 0;
     }
 

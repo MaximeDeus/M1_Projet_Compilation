@@ -1,9 +1,9 @@
-package ast;
+package okalm.ocamlcompiler.java.ast;
 
-import java.util.*;
+import okalm.ocamlcompiler.java.*;
 
 public abstract class Exp {
-    abstract void accept(Visitor v);
+    public abstract void accept(Visitor v);
 
-    abstract <E> E accept(ObjVisitor<E> v);
+    public abstract <E> E accept(ObjVisitor<E> v);
 }

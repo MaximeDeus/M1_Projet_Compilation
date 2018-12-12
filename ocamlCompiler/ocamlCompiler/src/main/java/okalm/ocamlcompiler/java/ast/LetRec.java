@@ -2,19 +2,18 @@ package okalm.ocamlcompiler.java.ast;
 
 import okalm.ocamlcompiler.java.*;
 
-public class FMul extends Exp {
-    public final Exp e1;
-    public final Exp e2;
+public class LetRec extends Exp {
+    public final FunDef fd;
+    public final Exp e;
 
-    public FMul(Exp e1, Exp e2) {
-        this.e1 = e1;
-        this.e2 = e2;
+    public LetRec(FunDef fd, Exp e) {
+        this.fd = fd;
+        this.e = e;
     }
 
     public <E> E accept(ObjVisitor<E> v) {
         return v.visit(this);
     }
-    
     public void accept(Visitor v) {
         v.visit(this);
     }

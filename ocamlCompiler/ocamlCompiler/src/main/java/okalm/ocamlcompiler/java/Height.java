@@ -1,4 +1,6 @@
-import java.util.*;
+package okalm.ocamlcompiler.java;
+
+import okalm.ocamlcompiler.java.ast.*;
 
 // This is an "imperative-style" way of computing the height of
 // an AST.
@@ -14,7 +16,7 @@ import java.util.*;
 //   Casts are error-prone, we lose the benefits of static type checking
 //   Not "object-oriented" philosophy 
 
-class Height {
+public class Height {
 
     static int computeHeight(Exp exp) {
         int res = 0;

@@ -1,4 +1,7 @@
+package okalm.ocamlcompiler.java;
+
 import java.util.*;
+import okalm.ocamlcompiler.java.ast.*;
 
 class PrintVisitor implements Visitor {
     public void visit(Unit e) {
@@ -13,7 +16,7 @@ class PrintVisitor implements Visitor {
         System.out.print(e.i);
     }
 
-    public void visit(Float e) {
+    public void visit(okalm.ocamlcompiler.java.ast.Float e) {
         String s = String.format("%.2f", e.f);
         System.out.print(s);
     }

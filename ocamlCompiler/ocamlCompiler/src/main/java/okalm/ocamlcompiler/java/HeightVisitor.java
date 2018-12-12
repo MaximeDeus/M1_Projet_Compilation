@@ -1,6 +1,8 @@
-import java.util.*;
+package okalm.ocamlcompiler.java;
 
-class HeightVisitor implements ObjVisitor<Integer> {
+import okalm.ocamlcompiler.java.ast.*;
+
+public class HeightVisitor implements ObjVisitor<Integer> {
 
     public Integer visit(Unit e) {
         // This tree is of height 0
@@ -15,7 +17,7 @@ class HeightVisitor implements ObjVisitor<Integer> {
         return 0;
     }
 
-    public Integer visit(Float e) { 
+    public Integer visit(okalm.ocamlcompiler.java.ast.Float e) { 
         return 0;
     }
 

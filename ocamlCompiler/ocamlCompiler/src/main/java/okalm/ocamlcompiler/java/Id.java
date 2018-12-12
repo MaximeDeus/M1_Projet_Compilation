@@ -1,4 +1,6 @@
-class Id {
+package okalm.ocamlcompiler.java;
+
+public class Id {
     String id;
     Id(String id) {
         this.id = id;

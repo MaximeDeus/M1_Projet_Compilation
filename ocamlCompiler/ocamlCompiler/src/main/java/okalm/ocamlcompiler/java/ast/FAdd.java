@@ -1,29 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package ast;
+package okalm.ocamlcompiler.java.ast;
 
-/**
- *
- * @author diardjul
- */
+import okalm.ocamlcompiler.java.*;
+
 public class FAdd extends Exp {
-    final Exp e1;
-    final Exp e2;
+    public final Exp e1;
+    public final Exp e2;
 
-    FAdd(Exp e1, Exp e2) {
+    public FAdd(Exp e1, Exp e2) {
         this.e1 = e1;
         this.e2 = e2;
     }
 
-    @Override
-    <E> E accept(ObjVisitor<E> v) {
+
+    public <E> E accept(ObjVisitor<E> v) {
         return v.visit(this);
     }
-    @Override
-    void accept(Visitor v) {
+
+    public void accept(Visitor v) {
         v.visit(this);
     }
 }

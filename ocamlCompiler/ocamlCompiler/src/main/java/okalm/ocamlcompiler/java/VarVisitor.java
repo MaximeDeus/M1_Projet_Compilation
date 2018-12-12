@@ -1,4 +1,7 @@
+package okalm.ocamlcompiler.java;
+
 import java.util.*;
+import okalm.ocamlcompiler.java.ast.*;
 
 class VarVisitor implements ObjVisitor<Set<String>> {
 
@@ -14,7 +17,7 @@ class VarVisitor implements ObjVisitor<Set<String>> {
         return new HashSet<String>();
     }
 
-    public Set<String> visit(Float e) { 
+    public Set<String> visit(okalm.ocamlcompiler.java.ast.Float e) { 
         return new HashSet<String>();
     }
 

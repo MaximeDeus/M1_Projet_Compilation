@@ -1,6 +1,9 @@
-import java.util.*;
+package okalm.ocamlcompiler.java;
 
-class KNormVisitor implements ObjVisitor<Exp> {
+import okalm.ocamlcompiler.java.ast.*;
+import okalm.ocamlcompiler.java.type.*;
+
+public class KNormVisitor implements ObjVisitor<Exp> {
 
     public Unit visit(Unit e) {
         return e;
@@ -14,7 +17,7 @@ class KNormVisitor implements ObjVisitor<Exp> {
         return e;
     }
 
-    public Float visit(Float e) { 
+    public okalm.ocamlcompiler.java.ast.Float visit(okalm.ocamlcompiler.java.ast.Float e) { 
         return e;
     }
 

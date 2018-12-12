@@ -1,9 +1,12 @@
+package okalm.ocamlcompiler.java;
 
-interface ObjVisitor<E> {
+import okalm.ocamlcompiler.java.ast.*;
+
+public interface ObjVisitor<E> {
     E visit(Unit e);
     E visit(Bool e);
     E visit(Int e);
-    E visit(Float e);
+    E visit(okalm.ocamlcompiler.java.ast.Float e);
     E visit(Not e);
     E visit(Neg e);
     E visit(Add e);
