@@ -24,6 +24,11 @@ public class Main {
       ObjVisitor<Integer> v = new HeightVisitor();
       height = expression.accept(v);
       System.out.println("using HeightVisitor: " + height);
+      
+      System.out.println("------ TypeChecking ----");
+      TypeVisitor tv = new TypeVisitor();
+      expression.accept(tv);
+      System.out.println("Code type cheking is valid");
 
     } catch (Exception e) {
       e.printStackTrace();
