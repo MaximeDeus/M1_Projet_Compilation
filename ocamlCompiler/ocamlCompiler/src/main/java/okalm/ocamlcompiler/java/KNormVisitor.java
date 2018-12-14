@@ -1,5 +1,6 @@
 package okalm.ocamlcompiler.java;
 import okalm.ocamlcompiler.java.ast.*;
+import okalm.ocamlcompiler.java.ast.Float;
 import okalm.ocamlcompiler.java.type.*;
 
 public class KNormVisitor implements ObjVisitor<Exp> {
@@ -16,12 +17,12 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         return e;
     }
 
-    public okalm.ocamlcompiler.java.ast.Float visit(okalm.ocamlcompiler.java.ast.Float e) { 
+    public Float visit(Float e) {
         return e;
     }
 
     public Let visit(Not e) {
-        Exp e1 = e.e.accept(this);  //On rend le Visitor dans l'expression contenue par e
+        Exp e1 = e.e.accept(this);
         Id new_var = Id.gen();
         Type new_type = Type.gen();
         return new Let(new_var, new_type, e1, new Not(new Var(new_var))) ;
@@ -43,7 +44,7 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         Type new_type2 = Type.gen();
         Let res = new Let(new_var1, new_type1, e1,
                   new Let(new_var2, new_type2, e2,
-                    new Add(new Var(new_var1), new Var(new_var2))));
+                  new Add(new Var(new_var1), new Var(new_var2))));
         return res;
     }
 	
@@ -54,7 +55,9 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         Type new_type1 = Type.gen();
         Id new_var2 = Id.gen();
         Type new_type2 = Type.gen();
-        Let res = new Let(new_var1, new_type1, e1, new Let(new_var2, new_type2, e2, new Sub(new Var(new_var1), new Var(new_var2))));
+        Let res = new Let(new_var1, new_type1, e1,
+                  new Let(new_var2, new_type2, e2,
+                  new Sub(new Var(new_var1), new Var(new_var2))));
 
         return res;
     }
@@ -63,37 +66,87 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         Exp e1 = e.e.accept(this);
         Id new_var = Id.gen();
         Type new_type = Type.gen();
-        return e1;                      //a vérifier, je pense que c'est comme ça
+        Let res = new Let (new_var,new_type,e1, new FNeg(new Var(new_var)));
+        return res;
     }
 
     public Let visit(FAdd e){
-       //TO DO
-        return null;
+        Exp e1 = e.e1.accept(this);
+        Exp e2 = e.e2.accept(this);
+        Id new_var1 = Id.gen();
+        Type new_type1 = Type.gen();
+        Id new_var2 = Id.gen();
+        Type new_type2 = Type.gen();
+        Let res = new Let(new_var1, new_type1, e1,
+                new Let(new_var2, new_type2, e2,
+                        new FAdd(new Var(new_var1), new Var(new_var2))));
+        return res;
     }
 
     public Let visit(FSub e){
-        //TO DO
-        return null;
+        Exp e1 = e.e1.accept(this);
+        Exp e2 = e.e2.accept(this);
+        Id new_var1 = Id.gen();
+        Type new_type1 = Type.gen();
+        Id new_var2 = Id.gen();
+        Type new_type2 = Type.gen();
+        Let res = new Let(new_var1, new_type1, e1,
+                new Let(new_var2, new_type2, e2,
+                        new FSub (new Var(new_var1), new Var(new_var2))));
+        return res;
     }
 
     public Let visit(FMul e) {
-       //TO DO
-        return null;
+        Exp e1 = e.e1.accept(this);
+        Exp e2 = e.e2.accept(this);
+        Id new_var1 = Id.gen();
+        Type new_type1 = Type.gen();
+        Id new_var2 = Id.gen();
+        Type new_type2 = Type.gen();
+        Let res = new Let(new_var1, new_type1, e1,
+                new Let(new_var2, new_type2, e2,
+                        new FMul (new Var(new_var1), new Var(new_var2))));
+        return res;
     }
 
     public Let visit(FDiv e){
-        //TO DO
-        return null;
+        Exp e1 = e.e1.accept(this);
+        Exp e2 = e.e2.accept(this);
+        Id new_var1 = Id.gen();
+        Type new_type1 = Type.gen();
+        Id new_var2 = Id.gen();
+        Type new_type2 = Type.gen();
+        Let res = new Let(new_var1, new_type1, e1,
+                new Let(new_var2, new_type2, e2,
+                        new FDiv (new Var(new_var1), new Var(new_var2))));
+
+        return res;
     }
 
     public Let visit(Eq e){
-        //TO DO
-        return null;
+        Exp e1 = e.e1.accept(this);
+        Exp e2 = e.e2.accept(this);
+        Id new_var1 = Id.gen();
+        Type new_type1 = Type.gen();
+        Id new_var2 = Id.gen();
+        Type new_type2 = Type.gen();
+        Let res = new Let(new_var1, new_type1, e1,
+                new Let(new_var2, new_type2, e2,
+                        new Eq (new Var(new_var1), new Var(new_var2))));
+        return res;
     }
 
     public Let visit(LE e){
-        //TO DO
-        return null;
+        Exp e1 = e.e1.accept(this);
+        Exp e2 = e.e2.accept(this);
+        Id new_var1 = Id.gen();
+        Type new_type1 = Type.gen();
+        Id new_var2 = Id.gen();
+        Type new_type2 = Type.gen();
+        Let res = new Let(new_var1, new_type1, e1,
+                  new Let(new_var2, new_type2, e2,
+                        new LE (new Var(new_var1), new Var(new_var2))));
+        return res;
     }
 
     public If visit(If e){
@@ -104,8 +157,7 @@ public class KNormVisitor implements ObjVisitor<Exp> {
     }
 
     public Let visit(Let e) {
-      //TO DO
-       return null;
+        return e;
     }
 
     public Var visit(Var e){
@@ -113,7 +165,7 @@ public class KNormVisitor implements ObjVisitor<Exp> {
     }
 
     public Exp visit(LetRec e){
-       //TO DO
+        //TODO
         return null;
     }
 
