@@ -1,12 +1,13 @@
 package okalm.ocamlcompiler.java;
 
+import java_cup.runtime.*;
+import java.io.*;
+import java.util.*;
 
-import java.io.FileReader;
-
+import okalm.ocamlcompiler.java.ast.*;
 
 public class Main {
-  static public void main(String argv[]) {
-      //String arg[]= argument(argv);
+  static public void main(String argv[]) {    
     try {
       Commande.option(argv);
     } catch (Exception e) {
