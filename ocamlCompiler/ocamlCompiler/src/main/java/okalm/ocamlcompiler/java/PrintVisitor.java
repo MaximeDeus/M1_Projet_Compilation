@@ -4,6 +4,21 @@ import java.util.*;
 import okalm.ocamlcompiler.java.ast.*;
 
 class PrintVisitor implements Visitor {
+    
+    private Integer nbIndent;
+    
+    public PrintVisitor(){
+        nbIndent = 0;
+    }
+    
+    private String indentRepeator(){
+        String s= "";
+        for(int i = 0; i<nbIndent;i++){
+            s=s+"   ";
+        }
+        return s;
+    }
+    
     public void visit(Unit e) {
         System.out.print("()");
     }
@@ -116,15 +131,17 @@ class PrintVisitor implements Visitor {
     public void visit(Let e) {
         System.out.print("(let ");
         System.out.print(e.id);
-        System.out.print(" = ");
+        nbIndent++;
+        System.out.print(" = \n"+indentRepeator());
         e.e1.accept(this);
-        System.out.print(" in ");
+        nbIndent--;
+        System.out.print(" in  \n"+indentRepeator());
         e.e2.accept(this);
         System.out.print(")");
     }
 
     public void visit(Var e){
-        System.out.print( "var: "+e.id);
+        System.out.print(e.id);
     }
 
 
@@ -156,9 +173,11 @@ class PrintVisitor implements Visitor {
     public void visit(LetRec e){
         System.out.print("(let rec " + e.fd.id + " ");
         printInfix(e.fd.args, " ");
-        System.out.print(" = ");
+        nbIndent++;
+        System.out.print(" =  \n"+indentRepeator());
         e.fd.e.accept(this);
-        System.out.print(" in ");
+        nbIndent--;
+        System.out.print(" in  \n"+indentRepeator());
         e.e.accept(this);
         System.out.print(")");
     }
