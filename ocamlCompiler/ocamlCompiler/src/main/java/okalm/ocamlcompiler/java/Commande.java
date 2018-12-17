@@ -136,7 +136,9 @@ public class Commande {
     }
 
     public static Exp frontend(Exp exp) {
-        System.out.println("frontend");
+        System.out.println("------ FrontEnd ----");
+        PrintVisitor pv = new PrintVisitor();
+        exp.accept(pv);
         return exp;
     }
 
