@@ -32,7 +32,7 @@ public class Commande {
     public static void option(String args[]) throws Exception {
 
         if (args.length < 2) {
-            System.out.print("il faut au moins un argument -h: help");
+            System.out.print("we need two parameter. use -h for help");
         } else {
 
             for (int i = 1; i < args.length; i++) {
@@ -59,12 +59,10 @@ public class Commande {
                     case "-v":
                         //display version
                         bool_version = true;
-
                         break;
 
                     case "-t":
                         //type checking only
-
                         bool_type = true;
                         break;
 
@@ -105,7 +103,6 @@ public class Commande {
         } else {
             Exp expr = parse(args);
             if (!bool_parse) {
-
                 typechecking(expr);
                 if (!bool_type) {
                     expr = frontend(expr);
@@ -131,9 +128,11 @@ public class Commande {
         System.out.println("-base : basic main");
     }
 
-    public static void typechecking(Exp exp) {
-        System.out.println("typechecking");
-        //ObjErrorVisitor v =new ObjErrorVisitor();
+    public static void typechecking(Exp exp) throws Exception {
+        System.out.println("------ TypeChecking ----");
+        TypeVisitor tv = new TypeVisitor();
+        exp.accept(tv);
+        System.out.println("Code type cheking is valid");
     }
 
     public static Exp frontend(Exp exp) {
