@@ -137,9 +137,11 @@ public class Commande {
 
     public static Exp frontend(Exp exp) {
         System.out.println("------ FrontEnd ----");
+        KNormVisitor kv = new KNormVisitor();
+        Exp kexp = exp.accept(kv);
         PrintVisitor pv = new PrintVisitor();
-        exp.accept(pv);
-        return exp;
+        kexp.accept(pv);
+        return kexp;
     }
 
     public static Exp backend(Exp exp) {

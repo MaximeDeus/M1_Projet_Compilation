@@ -157,7 +157,14 @@ public class KNormVisitor implements ObjVisitor<Exp> {
     }
 
     public Let visit(Let e) {
-        return e;
+        Exp e1 = e.e1.accept(this);
+        Exp e2 = e.e2.accept(this);
+        Id new_var1 = Id.gen();
+        Type new_type1 = Type.gen();
+        Id new_var2 = Id.gen();
+        Type new_type2 = Type.gen();
+        Let res = new Let(e.id,e.t, e1, e2);
+        return res;
     }
 
     public Var visit(Var e){
