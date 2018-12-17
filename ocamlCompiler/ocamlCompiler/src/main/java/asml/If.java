@@ -24,14 +24,14 @@ public class If extends Exp_asml {
     }
 
     @Override
-    public void accept(VisitorAsml v
+    public void accept(AsmlVisitor v
     ) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public <E> E accept(ObjVisitorAsml< E> v) {
+    public <E> E accept(AsmlObjVisitor< E> v) {
         // TODO Auto-generated method stub
         return null;
     }

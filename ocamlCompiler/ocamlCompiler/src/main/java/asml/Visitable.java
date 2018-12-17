@@ -6,8 +6,8 @@ package asml;
  */
 public interface Visitable {
 
-    public void accept(VisitorAsml v);
+    public void accept(AsmlVisitor v);
 
-    public <E> E accept(ObjVisitorAsml<E> v);
+    public <E> E accept(AsmlObjVisitor<E> v);
 
 }

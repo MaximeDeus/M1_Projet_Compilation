@@ -35,12 +35,12 @@ class Asmt implements Visitable {
     }
 
     @Override
-    public void accept(VisitorAsml v) {
+    public void accept(AsmlVisitor v) {
         v.visit(this);
     }
 
     @Override
-    public <E> E accept(ObjVisitorAsml<E> v) {
+    public <E> E accept(AsmlObjVisitor<E> v) {
         return v.visit(this);
     }
 
