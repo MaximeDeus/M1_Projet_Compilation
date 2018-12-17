@@ -1,15 +1,17 @@
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class Fneg extends Exp_asml {
+public class Sub extends Exp_asml {
 
-    Ident ident;
+    public final Ident ident;
+    public final IdentOrImm ioi;
 
-    public Fneg(Ident ident) {
+    public Sub(Ident ident, IdentOrImm ioi) {
         this.ident = ident;
+        this.ioi = ioi;
     }
 
     @Override

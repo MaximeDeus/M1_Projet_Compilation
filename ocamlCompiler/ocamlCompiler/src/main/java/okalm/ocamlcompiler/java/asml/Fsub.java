@@ -1,14 +1,17 @@
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class Label extends Ident {
+public class Fsub extends Exp_asml {
 
-    //Pour le moment, l'underscore avec lequel doit commencer un label est implicite
-    public Label(String i) {
-        super(i); //On assume qu'apres l'underscore il faut toujours commencer avec une lettre minuscule
+    Ident ident1;
+    Ident ident2;
+
+    public Fsub(Ident ident1, Ident ident2) {
+        this.ident1 = ident1;
+        this.ident2 = ident2;
     }
 
     @Override

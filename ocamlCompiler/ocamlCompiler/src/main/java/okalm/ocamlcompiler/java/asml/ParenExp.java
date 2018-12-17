@@ -3,20 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class Fmul extends Exp_asml {
+public class ParenExp extends Exp_asml {
 
-    Ident ident1;
-    Ident ident2;
+    public final Exp_asml e;
 
-    public Fmul(Ident ident1, Ident ident2) {
-        this.ident1 = ident1;
-        this.ident2 = ident2;
+    public ParenExp(Exp_asml e) {
+        this.e = e;
     }
 
     @Override

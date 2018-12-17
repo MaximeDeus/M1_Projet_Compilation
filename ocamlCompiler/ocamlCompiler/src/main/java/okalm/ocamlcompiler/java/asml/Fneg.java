@@ -1,20 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class New extends Exp_asml {
+public class Fneg extends Exp_asml {
 
-    public final IdentOrImm ioi;
+    Ident ident;
 
-    public New(IdentOrImm ioi) {
-        this.ioi = ioi;
+    public Fneg(Ident ident) {
+        this.ident = ident;
     }
 
     @Override

@@ -1,25 +1,14 @@
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class Mem extends Exp_asml {
+public class Label extends Ident {
 
-    public final Ident ident1;
-    public final IdentOrImm ioi;
-    public final Ident ident2;
-
-    public Mem(Ident ident1, IdentOrImm ioi, Ident ident2) {
-        this.ident1 = ident1;
-        this.ioi = ioi;
-        this.ident2 = ident2;
-    }
-
-    public Mem(Ident ident1, IdentOrImm ioi) {
-        this.ident1 = ident1;
-        this.ioi = ioi;
-        this.ident2 = null;
+    //Pour le moment, l'underscore avec lequel doit commencer un label est implicite
+    public Label(String i) {
+        super(i); //On assume qu'apres l'underscore il faut toujours commencer avec une lettre minuscule
     }
 
     @Override
@@ -31,5 +20,4 @@ public class Mem extends Exp_asml {
     public <E> E accept(AsmlObjVisitor<E> v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

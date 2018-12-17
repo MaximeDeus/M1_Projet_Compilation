@@ -1,18 +1,12 @@
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class Fsub extends Exp_asml {
+public class Nop extends Exp_asml {
 
-    Ident ident1;
-    Ident ident2;
-
-    public Fsub(Ident ident1, Ident ident2) {
-        this.ident1 = ident1;
-        this.ident2 = ident2;
-    }
+    public final String e = "nop";
 
     @Override
     public void accept(AsmlVisitor v) {
@@ -23,4 +17,5 @@ public class Fsub extends Exp_asml {
     public <E> E accept(AsmlObjVisitor<E> v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 }

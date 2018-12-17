@@ -3,30 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class Add extends Exp_asml {
+public class CallClo extends Exp_asml {
 
     public final Ident ident;
-    public final IdentOrImm ioi;
+    public final Fargs fargs;
 
-    public Add(Ident ident, IdentOrImm ioi) {
+    public CallClo(Ident ident, Fargs fargs) {
         this.ident = ident;
-        this.ioi = ioi;
-    }
-
-    @Override
-    public <E> E accept(AsmlObjVisitor<E> v) {
-        return v.visit(this);
+        this.fargs = fargs;
     }
 
     @Override
     public void accept(AsmlVisitor v) {
         v.visit(this);
+    }
+
+    @Override
+    public <E> E accept(AsmlObjVisitor<E> v) {
+        return v.visit(this);
     }
 
 }

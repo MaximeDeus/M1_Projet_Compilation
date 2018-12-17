@@ -1,4 +1,4 @@
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 import java.util.ArrayList;
 import okalm.ocamlcompiler.java.ast.*;
@@ -79,12 +79,12 @@ public class RegisterAllocationVisitor implements AsmlVisitor {
     }
 
     @Override
-    public void visit(asml.If e) {
+    public void visit(okalm.ocamlcompiler.java.asml.If e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void visit(asml.Int e) {
+    public void visit(okalm.ocamlcompiler.java.asml.Int e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

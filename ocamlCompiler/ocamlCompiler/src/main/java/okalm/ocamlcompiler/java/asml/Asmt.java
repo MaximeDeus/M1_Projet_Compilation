@@ -1,4 +1,4 @@
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *

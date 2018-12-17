@@ -1,17 +1,25 @@
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class Sub extends Exp_asml {
+public class Mem extends Exp_asml {
 
-    public final Ident ident;
+    public final Ident ident1;
     public final IdentOrImm ioi;
+    public final Ident ident2;
 
-    public Sub(Ident ident, IdentOrImm ioi) {
-        this.ident = ident;
+    public Mem(Ident ident1, IdentOrImm ioi, Ident ident2) {
+        this.ident1 = ident1;
         this.ioi = ioi;
+        this.ident2 = ident2;
+    }
+
+    public Mem(Ident ident1, IdentOrImm ioi) {
+        this.ident1 = ident1;
+        this.ioi = ioi;
+        this.ident2 = null;
     }
 
     @Override

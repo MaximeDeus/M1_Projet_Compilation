@@ -1,12 +1,19 @@
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class Int extends IdentOrImm {
+public class Ident extends IdentOrImm {
 
-    int e;
+    String ident;
+
+    public Ident(String ident) {
+        if (Character.isLowerCase(ident.charAt(0))) {
+            this.ident = ident;
+        }
+
+    }
 
     @Override
     public void accept(AsmlVisitor v) {

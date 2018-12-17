@@ -1,18 +1,22 @@
-package asml;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class Ident extends IdentOrImm {
+public class Fmul extends Exp_asml {
 
-    String ident;
+    Ident ident1;
+    Ident ident2;
 
-    public Ident(String ident) {
-        if (Character.isLowerCase(ident.charAt(0))) {
-            this.ident = ident;
-        }
-
+    public Fmul(Ident ident1, Ident ident2) {
+        this.ident1 = ident1;
+        this.ident2 = ident2;
     }
 
     @Override
