@@ -2,96 +2,105 @@ package okalm.ocamlcompiler.java;
 
 import okalm.ocamlcompiler.java.ast.*;
 import okalm.ocamlcompiler.java.ast.Float;
+import okalm.ocamlcompiler.java.type.Type;
 
 public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
     @Override
     public Exp visit(Unit e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Bool e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Int e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Float e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Not e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Neg e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Add e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Sub e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(FNeg e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(FAdd e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(FSub e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(FMul e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(FDiv e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Eq e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(LE e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(If e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Let e) {
-        return null;
+        Exp e1 = e.e1.accept(this);
+        Exp e2 = e.e2.accept(this);
+        if (e.e1 instanceof Let){
+            Let e1_bis = (Let) e1;
+            Let res = new Let(e1_bis.id, e1_bis.t, e1,
+                    new Let(e.id, e.t, e1_bis.e2, e2));
+            return res;
+        }
+        return e;
     }
 
     @Override
     public Exp visit(Var e) {
-        return null;
+        return e;
     }
 
     @Override

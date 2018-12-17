@@ -129,19 +129,26 @@ public class Commande {
     }
 
     public static void typechecking(Exp exp) throws Exception {
-        System.out.println("------ TypeChecking ----");
+        System.out.println("------ TypeChecking ------");
         TypeVisitor tv = new TypeVisitor();
-        exp.accept(tv);
+        //TODO Decommenter cette ligne exp.accept(tv);
         System.out.println("Code type cheking is valid");
     }
 
     public static Exp frontend(Exp exp) {
-        System.out.println("------ FrontEnd ----");
+        System.out.println("------ FrontEnd ------");
+
+        System.out.println("------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
         Exp kexp = exp.accept(kv);
         PrintVisitor pv = new PrintVisitor();
         kexp.accept(pv);
-        return kexp;
+
+        System.out.println("------ A-Conversion ------");
+        AlphaConversionVisitor acv = new AlphaConversionVisitor();
+        Exp acvExp = kexp.accept(acv);
+        acvExp.accept(pv);
+        return acvExp;
     }
 
     public static Exp backend(Exp exp) {
@@ -173,7 +180,7 @@ public class Commande {
         expression.accept(new PrintVisitor());
         System.out.println();
 
-        System.out.println("------ Height of the AST ----");
+        System.out.println("------ Height of the AST ------");
         int height = Height.computeHeight(expression);
         System.out.println("using Height.computeHeight: " + height);
 
