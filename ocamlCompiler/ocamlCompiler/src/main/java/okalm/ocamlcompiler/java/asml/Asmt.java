@@ -4,12 +4,12 @@ package okalm.ocamlcompiler.java.asml;
  *
  * @author liakopog
  */
-class Asmt implements Visitable {
+public class Asmt implements Visitable {
 
     public final Exp_asml e;     //exp
     public final Boolean paren;  //LPAREN asmt RPAREN
     public final Asmt asmt;      //LET IDENT EQUAL exp IN asmt
-    public final Ident ident;    //LET IDENT EQUAL exp IN asmt
+    private Ident ident;    //LET IDENT EQUAL exp IN asmt
 
     public Asmt(Ident ident, Exp_asml e, Asmt asmt) {
         this.e = e;
@@ -32,6 +32,14 @@ class Asmt implements Visitable {
         this.ident = null;
         this.e = null;
 
+    }
+
+    public void setIdent(Ident ident) {
+        this.ident = ident;
+    }
+
+    public Ident getIdent() {
+        return ident;
     }
 
     @Override

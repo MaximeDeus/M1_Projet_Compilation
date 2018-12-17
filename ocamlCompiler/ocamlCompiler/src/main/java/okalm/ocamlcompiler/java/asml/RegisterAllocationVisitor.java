@@ -9,6 +9,7 @@ import okalm.ocamlcompiler.java.ast.*;
  */
 public class RegisterAllocationVisitor implements AsmlVisitor {
 
+    int nbVarFrame = 0; //Nombre de variables dans ce frame
     Var[] registres = new Var[9]; //Liste representant les registres r4-r12 utilisables par le programme
     ArrayList<Var> mem = new ArrayList<>(); //Liste des variables allouees dans la memoire
 
@@ -25,7 +26,12 @@ public class RegisterAllocationVisitor implements AsmlVisitor {
 
     @Override
     public void visit(Asmt e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (!(e.getIdent() == null)) { //Allocation de registe ou d'emplacement memoire pour variable
+            e.setIdent(new Ident("[" + "r11," + (Integer.toString(4 + nbVarFrame * 4))));
+            nbVarFrame++;
+        }
+        e.asmt.accept(this);
+        e.e.accept(this);
     }
 
     @Override
