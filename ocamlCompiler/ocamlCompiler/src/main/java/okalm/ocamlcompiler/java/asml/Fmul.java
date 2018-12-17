@@ -3,24 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asml;
+package okalm.ocamlcompiler.java.asml;
 
 /**
  *
  * @author liakopog
  */
-public class CallClo extends Exp_asml {
+public class Fmul extends Exp_asml {
 
-    Ident ident;
-    Fargs fargs;
+    Ident ident1;
+    Ident ident2;
+
+    public Fmul(Ident ident1, Ident ident2) {
+        this.ident1 = ident1;
+        this.ident2 = ident2;
+    }
 
     @Override
-    public void accept(VisitorAsml v) {
+    public void accept(AsmlVisitor v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E accept(ObjVisitorAsml<E> v) {
+    public <E> E accept(AsmlObjVisitor<E> v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
