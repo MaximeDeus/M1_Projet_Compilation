@@ -4,36 +4,44 @@ package asml;
  *
  * @author liakopog
  */
-public class Tokens {
+public enum Tokens {
+	LPAREN("("),
+     RPAREN(")"),
+     PLUS("+"),
+     EQUAL("="),
+     FEQUAL("=."),
+     LE("<="),
+     FLE("<=."),
+     GE(">="),
+     IF("if"),
+     THEN("then"),
+     ELSE("else"),
+     LET("let"),
+     IN("in"),
+     DOT("."),
+     NEG("neg"),
+     FNEG("fneg"),
+     MEM("mem"),
+     FMUL("fmul"),
+     FDIV("fdiv"),
+     FSUB("fsub"),
+     FADD("fadd"),
+     ASSIGN("<-"),
+     ADD("add"),
+     SUB("sub"),
+     CALL("call"),
+     NEW("new"),
+     NOP("nop"),
+     APPCLO("apply_closure"),
+     UNDERSC("_");
+     
+	private final String string;
 
-    final char LPAREN = '(';
-    final char RPAREN = ')';
-    final char PLUS = '+';
-    final char EQUAL = '=';
-    final String FEQUAL = "=.";
-    final String LE = "<=";
-    final String FLE = "<=.";
-    final String GE = ">=";
-    final String IF = "if";
-    final String THEN = "then";
-    final String ELSE = "else";
-    final String LET = "let";
-    final String IN = "in";
-    final String DOT = ".";
-    final String NEG = "neg";
-    final String FNEG = "fneg";
-    final String MEM = "mem";
-    final String FMUL = "fmul";
-    final String FDIV = "fdiv";
-    final String FSUB = "fsub";
-    final String FADD = "fadd";
-    final String ASSIGN = "<-";
-    final String ADD = "add";
-    final String SUB = "sub";
-    final String CALL = "call";
-    final String NEW = "new";
-    final String NOP = "nop";
-    final String APPCLO = "apply_closure";
-    final char UNDERSC = '_';
+	private Tokens(String s) {
+		this.string = s;
+	}
 
+	public String getToken() {
+		return string;
+	}
 }

@@ -5,6 +5,7 @@ package asml;
  * @author liakopog
  */
 public class Mem {
-
-    //TODO
-}
+	Ident ident1;
+	IdentOrImm ioi;
+	Ident ident2;
+ }
