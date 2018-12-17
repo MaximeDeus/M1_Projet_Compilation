@@ -6,18 +6,39 @@ package asml;
  */
 class Fargs implements Visitable {
 
-    Ident ident;    //case IDENT
-    Fargs fargs;    //case IDENT formal_args
-    Boolean NIL;    //case NIL
+    public final Ident ident;    //case IDENT
+    public final Fargs fargs;    //case IDENT formal_args
+    public final Boolean estNIL;    //case NIL
+
+    public Fargs(Boolean estNIL) {
+        this.estNIL = estNIL;
+        this.fargs = null;
+        this.ident = null;
+
+    }
+
+    public Fargs(Ident ident, Fargs fargs) {
+        this.ident = ident;
+        this.fargs = fargs;
+        this.estNIL = false;
+
+    }
+
+    public Fargs(Ident ident) {
+        this.ident = ident;
+        this.fargs = null;
+        this.estNIL = false;
+
+    }
 
     @Override
     public void accept(VisitorAsml v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        v.visit(this);
     }
 
     @Override
     public <E> E accept(ObjVisitorAsml<E> v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visit(this);
     }
 
 }

@@ -4,10 +4,16 @@ package asml;
  *
  * @author liakopog
  */
-public class Ident extends Exp_asml implements IdentOrImm {
+public class Ident extends IdentOrImm {
 
-    //TODO:s'assurer que le premier caractere est une lettre minuscule
     String ident;
+
+    public Ident(String ident) {
+        if (Character.isLowerCase(ident.charAt(0))) {
+            this.ident = ident;
+        }
+
+    }
 
     @Override
     public void accept(VisitorAsml v) {

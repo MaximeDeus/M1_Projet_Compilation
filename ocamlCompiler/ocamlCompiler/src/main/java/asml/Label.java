@@ -4,12 +4,12 @@ package asml;
  *
  * @author liakopog
  */
-public class Label extends Exp_asml {
+public class Label extends Ident {
 
-    //TODO:Un Label doit toujours commencer avec un underscore (_)
-    Fargs formal_args;
-    Asmt asmt;
-    String label;
+    //Pour le moment, l'underscore avec lequel doit commencer un label est implicite
+    public Label(String i) {
+        super(i); //On assume qu'apres l'underscore il faut toujours commencer avec une lettre minuscule
+    }
 
     @Override
     public void accept(VisitorAsml v) {

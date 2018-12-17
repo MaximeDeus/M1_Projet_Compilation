@@ -6,16 +6,21 @@ package asml;
  */
 public class Fadd extends Exp_asml {
 
-    Ident ident1;
-    Ident ident2;
+    public final Ident ident1;
+    public final Ident ident2;
+
+    public Fadd(Ident ident1, Ident ident2) {
+        this.ident1 = ident1;
+        this.ident2 = ident2;
+    }
 
     @Override
     public void accept(VisitorAsml v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        v.visit(this);
     }
 
     @Override
     public <E> E accept(ObjVisitorAsml<E> v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visit(this);
     }
 }

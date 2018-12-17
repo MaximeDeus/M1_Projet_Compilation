@@ -6,8 +6,13 @@ package asml;
  */
 public class Sub extends Exp_asml {
 
-    Ident ident;
-    IdentOrImm ioi;
+    public final Ident ident;
+    public final IdentOrImm ioi;
+
+    public Sub(Ident ident, IdentOrImm ioi) {
+        this.ident = ident;
+        this.ioi = ioi;
+    }
 
     @Override
     public void accept(VisitorAsml v) {

@@ -6,7 +6,7 @@ package asml;
  */
 public class Nop extends Exp_asml {
 
-    String e = "nop";
+    public final String e = "nop";
 
     @Override
     public void accept(VisitorAsml v) {

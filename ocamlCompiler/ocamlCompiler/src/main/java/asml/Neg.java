@@ -6,7 +6,11 @@ package asml;
  */
 public class Neg extends Exp_asml {
 
-    Ident ident;
+    public final Ident ident;
+
+    public Neg(Ident ident) {
+        this.ident = ident;
+    }
 
     @Override
     public void accept(VisitorAsml v) {

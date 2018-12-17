@@ -6,17 +6,22 @@ package asml;
  */
 public class Call extends Exp_asml {
 
-    Label label;
-    Fargs fargs;
+    public final Label label;
+    public final Fargs fargs;
+
+    public Call(Label label, Fargs fargs) {
+        this.label = label;
+        this.fargs = fargs;
+    }
 
     @Override
     public void accept(VisitorAsml v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        v.visit(this);
     }
 
     @Override
     public <E> E accept(ObjVisitorAsml<E> v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visit(this);
     }
 
 }

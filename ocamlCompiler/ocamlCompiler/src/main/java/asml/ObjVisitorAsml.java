@@ -6,4 +6,5 @@ package asml;
  */
 public abstract class ObjVisitorAsml<E> {
 
+    public abstract <E> E visit(Visitable ac);
 }

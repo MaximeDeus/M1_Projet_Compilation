@@ -11,7 +11,11 @@ package asml;
  */
 public class New extends Exp_asml {
 
-    IdentOrImm ioi;
+    public final IdentOrImm ioi;
+
+    public New(IdentOrImm ioi) {
+        this.ioi = ioi;
+    }
 
     @Override
     public void accept(VisitorAsml v) {

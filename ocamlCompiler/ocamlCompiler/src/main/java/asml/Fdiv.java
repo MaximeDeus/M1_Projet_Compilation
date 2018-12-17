@@ -11,8 +11,13 @@ package asml;
  */
 public class Fdiv extends Exp_asml {
 
-    Ident ident1;
-    Ident ident2;
+    public Ident ident1;
+    public Ident ident2;
+
+    public Fdiv(Ident ident1, Ident ident2) {
+        this.ident1 = ident1;
+        this.ident2 = ident2;
+    }
 
     @Override
     public void accept(VisitorAsml v) {

@@ -11,17 +11,22 @@ package asml;
  */
 public class CallClo extends Exp_asml {
 
-    Ident ident;
-    Fargs fargs;
+    public final Ident ident;
+    public final Fargs fargs;
+
+    public CallClo(Ident ident, Fargs fargs) {
+        this.ident = ident;
+        this.fargs = fargs;
+    }
 
     @Override
     public void accept(VisitorAsml v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        v.visit(this);
     }
 
     @Override
     public <E> E accept(ObjVisitorAsml<E> v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visit(this);
     }
 
 }

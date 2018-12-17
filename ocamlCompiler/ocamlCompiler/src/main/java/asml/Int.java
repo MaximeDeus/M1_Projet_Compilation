@@ -4,7 +4,7 @@ package asml;
  *
  * @author liakopog
  */
-public class Int extends Exp_asml implements IdentOrImm {
+public class Int extends IdentOrImm {
 
     int e;
 

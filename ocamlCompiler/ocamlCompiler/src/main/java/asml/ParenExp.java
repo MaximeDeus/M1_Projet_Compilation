@@ -11,7 +11,11 @@ package asml;
  */
 public class ParenExp extends Exp_asml {
 
-    Exp_asml e;
+    public final Exp_asml e;
+
+    public ParenExp(Exp_asml e) {
+        this.e = e;
+    }
 
     @Override
     public void accept(VisitorAsml v) {

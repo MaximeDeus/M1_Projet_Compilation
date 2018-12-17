@@ -6,21 +6,42 @@ package asml;
  */
 class Asmt implements Visitable {
 
-    Exp_asml e;     //exp
-    Boolean paren;  //LPAREN asmt RPAREN
-    Asmt asmt;      //LET IDENT EQUAL exp IN asmt
-    Ident ident;    //LET IDENT EQUAL exp IN asmt
-	@Override
-	public void accept(VisitorAsml v) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public <E> E accept(ObjVisitorAsml<E> v) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public final Exp_asml e;     //exp
+    public final Boolean paren;  //LPAREN asmt RPAREN
+    public final Asmt asmt;      //LET IDENT EQUAL exp IN asmt
+    public final Ident ident;    //LET IDENT EQUAL exp IN asmt
 
+    public Asmt(Ident ident, Exp_asml e, Asmt asmt) {
+        this.e = e;
+        this.paren = false;
+        this.asmt = asmt;
+        this.ident = ident;
+    }
 
+    public Asmt(Exp_asml e) {
+        this.e = e;
+        this.paren = false;
+        this.asmt = null;
+        this.ident = null;
+
+    }
+
+    public Asmt(Asmt asmt) {
+        this.paren = true;
+        this.asmt = asmt;
+        this.ident = null;
+        this.e = null;
+
+    }
+
+    @Override
+    public void accept(VisitorAsml v) {
+        v.visit(this);
+    }
+
+    @Override
+    public <E> E accept(ObjVisitorAsml<E> v) {
+        return v.visit(this);
+    }
 
 }
