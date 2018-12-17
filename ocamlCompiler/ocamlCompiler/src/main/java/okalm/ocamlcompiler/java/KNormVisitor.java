@@ -172,12 +172,28 @@ public class KNormVisitor implements ObjVisitor<Exp> {
     }
 
     public Exp visit(LetRec e){
-        //TODO
-        return null;
+        //TODO à tester
+        Exp e1 = e.e.accept(this);
+        Exp e2 = e.fd.e.accept(this);
+        FunDef fd = new FunDef(e.fd.id,e.fd.type,e.fd.args,e2);
+        LetRec res = new LetRec(fd, e1);
+        return res;
     }
 
     public Exp visit(App e){
-        //TO DO
+        /**TODO à terminer
+        Exp e1 = e.e.accept(this);
+        Exp e2 = e.e2.accept(this);
+        Id new_var1 = Id.gen();
+        Type new_type1 = Type.gen();
+        Id new_var2 = Id.gen();
+        Type new_type2 = Type.gen();
+        Let res = new Let(new_var1, new_type1, e1,
+                new Let(new_var2, new_type2, e2,
+                        new LE (new Var(new_var1), new Var(new_var2))));
+        return res;
+    }
+         */
         return null;
     }
 
