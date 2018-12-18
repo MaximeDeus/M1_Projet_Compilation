@@ -29,4 +29,9 @@ public class Add extends Exp_asml {
         v.visit(this);
     }
 
+    @Override
+    public <E> E accept(AsmlErrorVisitor<E> v) throws Exception {
+        return v.visit(this);
+    }
+
 }
