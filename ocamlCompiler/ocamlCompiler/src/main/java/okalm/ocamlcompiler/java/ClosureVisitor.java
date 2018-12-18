@@ -13,33 +13,22 @@ import okalm.ocamlcompiler.java.ast.*;
  *
  * @author defoursr
  */
-public class AlphaConversionVisitor implements ObjVisitor<Exp> {
-
-    private ArrayList<String> listeId;
-
-    private Integer numfun; // représente l'environemment actuel (0=main, 1=f1, 2=f2 etc)
-    private Integer funCount; //compteur de numéro de fonction (1 fonction = 1 numéro, main = 0)
-
-    public AlphaConversionVisitor() {
-        listeId = new ArrayList<>();
-        numfun = 0;
-        funCount = 0;
+public class ClosureVisitor implements ObjVisitor<Exp>{
+    
+    private ArrayList<ClosureFunction> listeFun;
+    
+    public ClosureVisitor(){
+        listeFun= new ArrayList();
     }
-
-    /**
-     * Renomme une variable suivant le numéro de la fonction dans laquelle on se trouve (main=0)
-     *
-     * @param id
-     * @return
-     */
-    private Id rename(Id id) {
-        if (numfun == 0) {
-            return new Id(id.id); //x
-        } else {
-            return new Id(id.id + numfun.toString()); //x1 ou x2 ou...
+    
+    public String functionsToString(){
+        String s ="";
+        for(ClosureFunction c: listeFun){
+            s+=c.toString();
         }
+        return s;
     }
-
+    
     @Override
     public Exp visit(Unit e) {
         return e;
@@ -122,35 +111,33 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(Let e) {
-        return new Let(rename(e.id), e.t, e.e1.accept(this), e.e2.accept(this));
+        return new Let(e.id, e.t, e.e1.accept(this), e.e2.accept(this));
     }
 
     @Override
     public Exp visit(Var e) {
-        //variable avec id renommée suivant la fonction actuelle
-        return new Var(rename(e.id));
+        return new Var(e.id);
     }
 
     @Override
     public Exp visit(LetRec e) {
-        funCount++; //nouvelle fonction = nouveau numéro de fonction
-        Integer previousFun = numfun; //on enregistre la fonction dans laquelle on se trouvait (numfun = fonction actuelle)
-        numfun=funCount; //on se positionne dans la nouvelle fonction
-        
-        //copie des arguments de la fonction
         FunDef f = e.fd;
-        List<Id> temp = new ArrayList();
-        f.args.forEach((element)-> {
-            temp.add(rename(element));
+        
+        //liste de paramètres convertie en liste de string
+        List<String> s = new ArrayList<>();
+        f.args.forEach((element) -> {
+            s.add(element.id);
         });
         
-        //création de l'en-tête de la fonction et alpha conversion du corps de la fonction (f.e)
-        FunDef fd = new FunDef(f.id,f.type,temp,f.e.accept(this));
-        numfun=previousFun;//retour dans la fonction précédente
+        ClosureFunction c = new ClosureFunction(
+                "_"+f.id.id,
+                s,
+                f.e
+        );
+        //ajout de la fonction
+        listeFun.add(c);
         
-        //alpha conversion de la partie après le 'in' de la fonction
-        LetRec lr = new LetRec(fd, e.e.accept(this));
-        return(lr);
+        return(e.e.accept(this));
     }
     @Override
     public Exp visit(App e) {
@@ -185,5 +172,5 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
     public Exp visit(Put e) {
         return new Put(e.e1.accept(this), e.e2.accept(this), e.e3.accept(this));
     }
-
+    
 }
