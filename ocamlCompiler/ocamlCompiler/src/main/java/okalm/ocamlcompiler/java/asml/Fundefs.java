@@ -4,7 +4,7 @@ package okalm.ocamlcompiler.java.asml;
  *
  * @author liakopog
  */
-public class Fundefs {
+public class Fundefs implements Visitable {
 
     public final Asmt asmt; //cas LET UNDERSC EQUAL asmt
     public final Fundefs fundefs; //cas LET LABEL EQUAL FLOAT fundefs
@@ -35,6 +35,16 @@ public class Fundefs {
         this.formal_args = formal_args;
         this.label = label;
         this.ident = ident;
+    }
+
+    @Override
+    public <E> E accept(AsmlObjVisitor<E> v) {
+        return v.visit(this);
+    }
+
+    @Override
+    public void accept(AsmlVisitor v) {
+        v.visit(this);
     }
 
 }

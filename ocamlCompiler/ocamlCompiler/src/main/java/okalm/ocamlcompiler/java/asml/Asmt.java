@@ -6,39 +6,23 @@ package okalm.ocamlcompiler.java.asml;
  */
 public class Asmt implements Visitable {
 
-    public final Exp_asml e;     //exp
-    public final Boolean paren;  //LPAREN asmt RPAREN
-    public final Asmt asmt;      //LET IDENT EQUAL exp IN asmt
-    private Ident ident;    //LET IDENT EQUAL exp IN asmt
+    private Exp_asml ident;    //LET IDENT EQUAL exp IN asmt
+    public Exp_asml e;     //exp
+    public Boolean paren;  //LPAREN asmt RPAREN
+    public Exp_asml asmt;      //LET IDENT EQUAL exp IN asmt
 
-    public Asmt(Ident ident, Exp_asml e, Asmt asmt) {
+    public Asmt(Exp_asml ident, Exp_asml e, Exp_asml asmt, Boolean paren) {
         this.e = e;
-        this.paren = false;
+        this.paren = paren;
         this.asmt = asmt;
         this.ident = ident;
     }
 
-    public Asmt(Exp_asml e) {
-        this.e = e;
-        this.paren = false;
-        this.asmt = null;
-        this.ident = null;
-
-    }
-
-    public Asmt(Asmt asmt) {
-        this.paren = true;
-        this.asmt = asmt;
-        this.ident = null;
-        this.e = null;
-
-    }
-
-    public void setIdent(Ident ident) {
+    public void setIdent(Exp_asml ident) {
         this.ident = ident;
     }
 
-    public Ident getIdent() {
+    public Exp_asml getIdent() {
         return ident;
     }
 

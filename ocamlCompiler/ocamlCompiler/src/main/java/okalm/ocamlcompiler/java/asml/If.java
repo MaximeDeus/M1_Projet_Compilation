@@ -6,12 +6,12 @@ package okalm.ocamlcompiler.java.asml;
  */
 public class If extends Exp_asml {
 
-    public Ident ifIdent;
+    public Exp_asml ifIdent;
     public Tokens token;
-    public IdentOrImm ioi;		//meme dans le cas de float, qui demandent un Ident seulement, on utilise un IdentOrImm pour simplifier
-    public Asmt thenasmt, elseasmt;
+    public Exp_asml ioi;		//meme dans le cas de float, qui demandent un Ident seulement, on utilise un IdentOrImm pour simplifier
+    public Exp_asml thenasmt, elseasmt;
 
-    public If(Ident i, Tokens t, IdentOrImm ioi, Asmt th, Asmt el) throws Exception {
+    public If(Exp_asml i, Tokens t, Exp_asml ioi, Exp_asml th, Exp_asml el) throws Exception {
         switch (t) {
             case FEQUAL:
             case FLE:
@@ -24,16 +24,13 @@ public class If extends Exp_asml {
     }
 
     @Override
-    public void accept(AsmlVisitor v
-    ) {
-        // TODO Auto-generated method stub
-
+    public <E> E accept(AsmlObjVisitor<E> v) {
+        return v.visit(this);
     }
 
     @Override
-    public <E> E accept(AsmlObjVisitor< E> v) {
-        // TODO Auto-generated method stub
-        return null;
+    public void accept(AsmlVisitor v) {
+        v.visit(this);
     }
 
 }

@@ -6,7 +6,7 @@ package okalm.ocamlcompiler.java.asml;
  */
 public class Call extends Exp_asml {
 
-    public final Label label;
+    public final Exp_asml label;
     public final Fargs fargs;
 
     public Call(Label label, Fargs fargs) {

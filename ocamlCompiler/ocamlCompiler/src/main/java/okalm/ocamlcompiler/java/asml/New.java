@@ -11,20 +11,20 @@ package okalm.ocamlcompiler.java.asml;
  */
 public class New extends Exp_asml {
 
-    public final IdentOrImm ioi;
+    public final Exp_asml ioi;
 
-    public New(IdentOrImm ioi) {
+    public New(Exp_asml ioi) {
         this.ioi = ioi;
     }
 
     @Override
-    public void accept(AsmlVisitor v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public <E> E accept(AsmlObjVisitor<E> v) {
+        return v.visit(this);
     }
 
     @Override
-    public <E> E accept(AsmlObjVisitor<E> v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void accept(AsmlVisitor v) {
+        v.visit(this);
     }
 
 }

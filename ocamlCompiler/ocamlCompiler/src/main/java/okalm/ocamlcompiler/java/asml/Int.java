@@ -9,13 +9,13 @@ public class Int extends IdentOrImm {
     int e;
 
     @Override
-    public void accept(AsmlVisitor v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public <E> E accept(AsmlObjVisitor<E> v) {
+        return v.visit(this);
     }
 
     @Override
-    public <E> E accept(AsmlObjVisitor<E> v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void accept(AsmlVisitor v) {
+        v.visit(this);
     }
 
 }

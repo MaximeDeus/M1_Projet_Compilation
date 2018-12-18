@@ -11,22 +11,22 @@ package okalm.ocamlcompiler.java.asml;
  */
 public class Fdiv extends Exp_asml {
 
-    public Ident ident1;
-    public Ident ident2;
+    public Exp_asml ident1;
+    public Exp_asml ident2;
 
-    public Fdiv(Ident ident1, Ident ident2) {
+    public Fdiv(Exp_asml ident1, Exp_asml ident2) {
         this.ident1 = ident1;
         this.ident2 = ident2;
     }
 
     @Override
-    public void accept(AsmlVisitor v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public <E> E accept(AsmlObjVisitor<E> v) {
+        return v.visit(this);
     }
 
     @Override
-    public <E> E accept(AsmlObjVisitor<E> v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void accept(AsmlVisitor v) {
+        v.visit(this);
     }
 
 }

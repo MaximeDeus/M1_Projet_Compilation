@@ -6,30 +6,30 @@ package okalm.ocamlcompiler.java.asml;
  */
 public class Mem extends Exp_asml {
 
-    public final Ident ident1;
-    public final IdentOrImm ioi;
-    public final Ident ident2;
+    public final Exp_asml ident1;
+    public final Exp_asml ioi;
+    public final Exp_asml ident2;
 
-    public Mem(Ident ident1, IdentOrImm ioi, Ident ident2) {
+    public Mem(Exp_asml ident1, Exp_asml ioi, Exp_asml ident2) {
         this.ident1 = ident1;
         this.ioi = ioi;
         this.ident2 = ident2;
     }
 
-    public Mem(Ident ident1, IdentOrImm ioi) {
+    public Mem(Exp_asml ident1, Exp_asml ioi) {
         this.ident1 = ident1;
         this.ioi = ioi;
         this.ident2 = null;
     }
 
     @Override
-    public void accept(AsmlVisitor v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public <E> E accept(AsmlObjVisitor<E> v) {
+        return v.visit(this);
     }
 
     @Override
-    public <E> E accept(AsmlObjVisitor<E> v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void accept(AsmlVisitor v) {
+        v.visit(this);
     }
 
 }
