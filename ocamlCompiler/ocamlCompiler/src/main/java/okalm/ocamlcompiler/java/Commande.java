@@ -138,17 +138,30 @@ public class Commande {
     public static Exp frontend(Exp exp) {
         System.out.println("------ FrontEnd ------");
 
+        /* TODO Décommenter pour tester K-Normalisation
         System.out.println("------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
-        Exp kexp = exp.accept(kv);
+        //Exp kexp = exp.accept(kv);
+        */
         PrintVisitor pv = new PrintVisitor();
-        kexp.accept(pv);
+        //kexp.accept(pv);
 
+
+        /* TODO Décommenter pour tester A-Conversion
+        System.out.println();
         System.out.println("------ A-Conversion ------");
         AlphaConversionVisitor acv = new AlphaConversionVisitor();
-        Exp acvExp = kexp.accept(acv);
+        Exp acvExp = exp.accept(acv);
         acvExp.accept(pv);
         return acvExp;
+        */
+
+        System.out.println();
+        System.out.println("------ Reduction Let Expression ------");
+        ReductionLetExpressionVisitor rlev = new ReductionLetExpressionVisitor();
+        Exp rleExp = exp.accept(rlev);
+        rleExp.accept(pv);
+        return rleExp;
     }
 
     public static Exp backend(Exp exp) {
