@@ -6,8 +6,8 @@ package okalm.ocamlcompiler.java.asml;
  */
 class Fargs implements Visitable {
 
-    public final Ident ident;    //case IDENT
-    public final Fargs fargs;    //case IDENT formal_args
+    public final Exp_asml ident;    //case IDENT
+    public final Exp_asml fargs;    //case IDENT formal_args
     public final Boolean estNIL;    //case NIL
 
     public Fargs(Boolean estNIL) {
@@ -17,18 +17,10 @@ class Fargs implements Visitable {
 
     }
 
-    public Fargs(Ident ident, Fargs fargs) {
+    public Fargs(Exp_asml ident, Exp_asml fargs, Boolean estNIL) {
         this.ident = ident;
         this.fargs = fargs;
-        this.estNIL = false;
-
-    }
-
-    public Fargs(Ident ident) {
-        this.ident = ident;
-        this.fargs = null;
-        this.estNIL = false;
-
+        this.estNIL = estNIL;
     }
 
     @Override
