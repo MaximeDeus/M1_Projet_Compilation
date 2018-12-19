@@ -1,16 +1,18 @@
 package okalm.ocamlcompiler.java.asml;
 
+import java.util.List;
+
 /**
  *
  * @author liakopog
  */
-public class Fundefs implements Visitable {
+public class Fundefs extends Exp_asml {
 
-    public final Asmt asmt; //cas LET UNDERSC EQUAL asmt
-    public final Fundefs fundefs; //cas LET LABEL EQUAL FLOAT fundefs
-    public final Fargs formal_args; //cas  LET LABEL formal_args EQUAL asmt fundefs
-    public final Label label;
-    public final Ident ident;    //pour representer le float, je ne sais pas pourquoi dans ce cas il n'est pas encodé par un ident comme d'habitude
+    public final Exp_asml asmt; //cas LET UNDERSC EQUAL asmt
+    public final List<Fundefs> fundefs; //cas LET LABEL EQUAL FLOAT fundefs
+    public final List<Exp_asml> formal_args; //cas  LET LABEL formal_args EQUAL asmt fundefs
+    public final Exp_asml label;
+    public final Exp_asml ident;    //pour representer le float, je ne sais pas pourquoi dans ce cas il n'est pas encodé par un ident comme d'habitude
 
     public Fundefs(Asmt asmt) {
         this.asmt = asmt;
@@ -21,7 +23,7 @@ public class Fundefs implements Visitable {
 
     }
 
-    public Fundefs(Fundefs fundefs, Label label, Ident ident) {
+    public Fundefs(List<Fundefs> fundefs, Label label, Ident ident) {
         this.asmt = null;
         this.fundefs = fundefs;
         this.formal_args = null;
@@ -29,7 +31,7 @@ public class Fundefs implements Visitable {
         this.ident = ident;
     }
 
-    public Fundefs(Asmt asmt, Fundefs fundefs, Fargs formal_args, Label label, Ident ident) {
+    public Fundefs(Exp_asml asmt, List<Fundefs> fundefs, List<Exp_asml> formal_args, Exp_asml label, Exp_asml ident) {
         this.asmt = asmt;
         this.fundefs = fundefs;
         this.formal_args = formal_args;

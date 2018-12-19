@@ -137,7 +137,6 @@ public class Commande {
 
     public static Exp frontend(Exp exp) {
         System.out.println("------ FrontEnd ------");
-
         System.out.println("------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
         Exp kexp = exp.accept(kv);

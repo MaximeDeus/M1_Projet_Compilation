@@ -4,7 +4,7 @@ package okalm.ocamlcompiler.java.asml;
  *
  * @author liakopog
  */
-public class Asmt implements Visitable {
+public class Asmt extends Exp_asml {
 
     private Exp_asml ident;    //LET IDENT EQUAL exp IN asmt
     public Exp_asml e;     //exp

@@ -7,6 +7,10 @@ package okalm.ocamlcompiler.java.asml;
 public class Int extends IdentOrImm {
 
     int e;
+    
+    public Int(int e){
+    this.e=e;
+    }
 
     @Override
     public <E> E accept(AsmlObjVisitor<E> v) {
