@@ -2,9 +2,14 @@ package okalm.ocamlcompiler.java;
 
 import okalm.ocamlcompiler.java.ast.*;
 import okalm.ocamlcompiler.java.ast.Float;
-import okalm.ocamlcompiler.java.type.Type;
 
 public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
+
+    /*Cet attribut est utilisé pour conserver le noeud précédent lors
+     * de la construction du nouvel arbre (début nouvel arbre = fin du précédent)
+     */
+    private Let expressionPrecedente = null;
+
     @Override
     public Exp visit(Unit e) {
         return e;
@@ -87,15 +92,26 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(Let e) {
-        Exp e1 = e.e1.accept(this);
-        Exp e2 = e.e2.accept(this);
-        if (e.e1 instanceof Let){
-            Let e1_bis = (Let) e1;
-            Let res = new Let(e1_bis.id, e1_bis.t, e1,
-                    new Let(e.id, e.t, e1_bis.e2, e2));
-            return res;
+        Let filsGauche;
+        if (e.e1 instanceof Let) { //Si Reduction à effectuer
+            filsGauche = (Let) e.e1;
+            if (expressionPrecedente == null) { //Si premier Let
+                //Début du nouvel arbre
+                expressionPrecedente = new Let(e.id, e.t, filsGauche.e2, e.e2);
+            } else {
+                //Construction de l'arbre de bas en haut (bas = racine de l'arbre initial)
+                expressionPrecedente = new Let(e.id, e.t, filsGauche.e2, expressionPrecedente);
+            }
+
+        } else {
+            if (expressionPrecedente == null) { //Pas de réduction à effectuer
+                return e;
+            } else { //Fin de l'algorithme
+                return new Let(e.id, e.t, e.e1, expressionPrecedente);
+            }
+
         }
-        return e;
+        return filsGauche.accept(this); //On parcourt le Let
     }
 
     @Override
@@ -105,36 +121,36 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(LetRec e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(App e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Tuple e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(LetTuple e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Array e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Get e) {
-        return null;
+        return e;
     }
 
     @Override
     public Exp visit(Put e) {
-        return null;
+        return e;
     }
 }
