@@ -92,18 +92,6 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(Let e) {
-        /** TODO version non fonctionnelle
-         Exp e1 = e.e1.accept(this);
-         Exp e2 = e.e2.accept(this);
-         if (e.e1 instanceof Let){
-         Let e1_bis = (Let) e1;
-         Let res = new Let(e1_bis.id, e1_bis.t, ((Let) e1).e1,
-         new Let(e.id, e.t, e1_bis.e2, e2));
-         return res;
-         }
-         return e;
-         */
-
         Let filsGauche;
         if (e.e1 instanceof Let) { //Si Reduction à effectuer
             filsGauche = (Let) e.e1;
