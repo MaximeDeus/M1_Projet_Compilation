@@ -14,13 +14,14 @@ import java.util.ArrayList;
  *
  * @author liakopog
  */
-public class CodeGenerationVisitor implements AsmlErrorVisitor<Exp_asml> {
+public class CodeGenerationVisitor implements AsmlErrorVisitor<String> {
 
     File fichierARM;
     FileWriter writer;
     ArrayList<String> memoire = new ArrayList<>();
     String[] registres = new String[13]; //Liste representant les registres r0-r12 utilisables par le programme
     String[] registresSpeciales = new String[3];
+    ArrayList<String> variablesActives = new ArrayList<>();
     int frameCounter = 0;
 
     public CodeGenerationVisitor() throws IOException {
@@ -31,7 +32,7 @@ public class CodeGenerationVisitor implements AsmlErrorVisitor<Exp_asml> {
     @Override
     public String visit(Add e) throws Exception {
 
-        return (e.ident.accept(this) + ", " + e.ioi.accept(this));
+        return (e.ident.accept(this) + "," + e.ioi.accept(this));
     }
 
     @Override
@@ -41,141 +42,52 @@ public class CodeGenerationVisitor implements AsmlErrorVisitor<Exp_asml> {
     }
 
     @Override
-    public <E> E visit(Asmt e) throws Exception {
+    public String visit(Asmt e) throws Exception {
         if (e.ident != null) {
             switch (e.e.getClass().toString()) {
 
                 case "Add":
-                    String[] regs = findRegisters(e.ident.toString() + " " + e.e.accept(this));
+
+                    String[] regs = findRegisters(e.ident.toString() + "," + e.e.accept(this));
 
                     writer.write("ADD" + regs[0] + regs[1] + regs[2]);
-
             }
-
         }
 
     }
 
     @Override
-    public <E> E visit(Call e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String visit(Ident e) throws Exception {
+        return e.ident;
     }
 
-    @Override
-    public <E> E visit(CallClo e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Fadd e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Fargs e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Fdiv e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Fmul e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Fneg e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Fsub e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Fundefs e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Ident e) throws Exception {
-        if (e.actionAllocateur != null) {
-            if (e.actionAllocateur.equals("save")) {
-                if (e.registre == -1) {
-                    int reg = findRegister(e);
-                    writer.write("MOV " + "r" + reg + ", " + e.ident);
-                }
-
-                writer.write("STR " + "r" + reg + "fp+" + (frameCounter * 4 + 4));
-                frameCounter++;
-                memoire.add(e);
-            } else if (e.actionAllocateur.equals("load")) {
-
-                writer.write("LDR" +);
-
-            }
-
-            writer.write("");
-
-        }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
-    }
-
-    @Override
-    public <E> E visit(If e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Int e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Label e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Mem e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Neg e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(New e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Nop e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(ParenExp e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <E> E visit(Tokens e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private int findRegisters(String e) {
+    //Prend trois variables et retourne les registres pour une instruction à trois adresses
+    private String[] findRegisters(String e) throws Exception {
         String[] args = e.split(",");
-
-        for (String var : e) {
-
+        String[] ret = new String[3];
+        for (int i = 0; i < 3; i++) {
+            int r = 0;
+            while (r < 13 && ret[i] == null) {
+                if (args[i].equals(registres[r])) {
+                    ret[i] = "r" + r;
+                } else if (registres[r] == null) {//Pas déja dans un registre, alors on cherche pour un registre vide
+                    ret[i] = "r" + r;
+                } else if (!(variablesActives.contains(registres[r]))) {//si la variable contenue dans registre r n'est pas utilisée plus tard
+                    ret[i] = "r" + r;
+                }
+                r++;
+            }
+            while (r < 13 && ret[i] == null) {
+                if (variablesActives.contains(registres[r])) {//si la variable contenue dans registre r est utilisée plus tard, mais on n'a plus d'options
+                    writer.write("STR " + "r" + r + "[fp+" + frameCounter + "]");
+                    frameCounter++;
+                    ret[i] = "r" + r;
+                }
+                r++;
+            }
+            //TODO Ajouter le cas ou si un des deux arguments n'est pas actif dans la suite, on peut mettre le resultat dans son reg ex.: x=y+z -> R0=R0+R1 si y pas actif dans la suite
         }
+        return args;
     }
+
 }
