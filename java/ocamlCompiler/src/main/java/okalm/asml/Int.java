@@ -6,7 +6,7 @@ package okalm.asml;
  */
 public class Int extends IdentOrImm {
 
-    public int e;
+    int e;
     
     public Int(int e){
     this.e=e;

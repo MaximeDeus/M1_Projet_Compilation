@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package okalm.ocamlcompiler.java.asml;
+package okalm.asml;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -46,7 +46,7 @@ public class CodeGenerationVisitor implements AsmlErrorVisitor<Exp_asml> {
             switch (e.e.getClass().toString()) {
 
                 case "Add":
-                    String[] regs = findRegisters(e.ident.toString() + e.e.accept(this));
+                    String[] regs = findRegisters(e.ident.toString() + " " + e.e.accept(this));
 
                     writer.write("ADD" + regs[0] + regs[1] + regs[2]);
 
@@ -172,6 +172,10 @@ public class CodeGenerationVisitor implements AsmlErrorVisitor<Exp_asml> {
     }
 
     private int findRegisters(String e) {
-        return -1;
+        String[] args = e.split(",");
+
+        for (String var : e) {
+
+        }
     }
 }

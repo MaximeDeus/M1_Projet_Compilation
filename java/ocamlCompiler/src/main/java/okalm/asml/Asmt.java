@@ -6,9 +6,9 @@ package okalm.asml;
  */
 public class Asmt extends Exp_asml {
 
-    public Exp_asml ident;    //LET IDENT EQUAL exp IN asmt
-    public Exp_asml e;     //exp
-    public Boolean paren;  //LPAREN asmt RPAREN
+    public Exp_asml ident;     //LET IDENT EQUAL exp IN asmt
+    public Exp_asml e;         //exp
+    public Boolean paren;      //LPAREN asmt RPAREN
     public Exp_asml asmt;      //LET IDENT EQUAL exp IN asmt
 
     public Asmt(Exp_asml ident, Exp_asml e, Exp_asml asmt, Boolean paren) {
@@ -18,14 +18,6 @@ public class Asmt extends Exp_asml {
         this.ident = ident;
     }
 
-    public void setIdent(Exp_asml ident) {
-        this.ident = ident;
-    }
-
-    public Exp_asml getIdent() {
-        return ident;
-    }
-
     @Override
     public void accept(AsmlVisitor v) {
         v.visit(this);
@@ -33,6 +25,11 @@ public class Asmt extends Exp_asml {
 
     @Override
     public <E> E accept(AsmlObjVisitor<E> v) {
+        return v.visit(this);
+    }
+
+    @Override
+    public <E> E accept(AsmlErrorVisitor<E> v) throws Exception {
         return v.visit(this);
     }
 

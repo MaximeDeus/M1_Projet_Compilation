@@ -1,4 +1,4 @@
-package okalm.ocamlcompiler.java.asml;
+package okalm.asml;
 
 import java.util.ArrayList;
 
