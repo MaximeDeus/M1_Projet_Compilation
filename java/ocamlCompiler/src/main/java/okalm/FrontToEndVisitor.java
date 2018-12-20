@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package okalm.ocamlcompiler.java;
+package okalm;
 
 import java.util.ArrayList;
 import java.util.List;
-import okalm.ocamlcompiler.java.asml.*;
-import okalm.ocamlcompiler.java.ast.*;
+import okalm.asml.*;
+import okalm.ast.*;
 
 /**
  *
@@ -70,12 +70,12 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
     }
 
     @Override
-    public Exp_asml visit(okalm.ocamlcompiler.java.ast.Int e) {
-        return new okalm.ocamlcompiler.java.asml.Int(e.i);
+    public Exp_asml visit(okalm.ast.Int e) {
+        return new okalm.asml.Int(e.i);
     }
 
     @Override
-    public Exp_asml visit(okalm.ocamlcompiler.java.ast.Float e) {
+    public Exp_asml visit(okalm.ast.Float e) {
         return new Ident(java.lang.Float.toString(e.f));
     }
 
@@ -86,18 +86,18 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
     }
 
     @Override
-    public Exp_asml visit(okalm.ocamlcompiler.java.ast.Neg e) {
-        return new okalm.ocamlcompiler.java.asml.Neg(e.e.accept(this));
+    public Exp_asml visit(okalm.ast.Neg e) {
+        return new okalm.asml.Neg(e.e.accept(this));
     }
 
     @Override
-    public Exp_asml visit(okalm.ocamlcompiler.java.ast.Add e) {
-        return new okalm.ocamlcompiler.java.asml.Add(e.e1.accept(this), e.e2.accept(this));
+    public Exp_asml visit(okalm.ast.Add e) {
+        return new okalm.asml.Add(e.e1.accept(this), e.e2.accept(this));
     }
 
     @Override
-    public Exp_asml visit(okalm.ocamlcompiler.java.ast.Sub e) {
-        return new okalm.ocamlcompiler.java.asml.Sub(e.e1.accept(this), e.e2.accept(this));
+    public Exp_asml visit(okalm.ast.Sub e) {
+        return new okalm.asml.Sub(e.e1.accept(this), e.e2.accept(this));
     }
 
     @Override
@@ -107,37 +107,37 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(FAdd e) {
-        return new okalm.ocamlcompiler.java.asml.Fadd(e.e1.accept(this), e.e2.accept(this));
+        return new okalm.asml.Fadd(e.e1.accept(this), e.e2.accept(this));
     }
 
     @Override
     public Exp_asml visit(FSub e) {
-        return new okalm.ocamlcompiler.java.asml.Fsub(e.e1.accept(this), e.e2.accept(this));
+        return new okalm.asml.Fsub(e.e1.accept(this), e.e2.accept(this));
     }
 
     @Override
     public Exp_asml visit(FMul e) {
-        return new okalm.ocamlcompiler.java.asml.Fmul(e.e1.accept(this), e.e2.accept(this));
+        return new okalm.asml.Fmul(e.e1.accept(this), e.e2.accept(this));
     }
 
     @Override
     public Exp_asml visit(FDiv e) {
-        return new okalm.ocamlcompiler.java.asml.Fdiv(e.e1.accept(this), e.e2.accept(this));
+        return new okalm.asml.Fdiv(e.e1.accept(this), e.e2.accept(this));
     }
 
     @Override
-    public Exp_asml visit(okalm.ocamlcompiler.java.ast.Eq e) {
-        return new okalm.ocamlcompiler.java.asml.Eq(e.e1.accept(this), e.e2.accept(this));
+    public Exp_asml visit(okalm.ast.Eq e) {
+        return new okalm.asml.Eq(e.e1.accept(this), e.e2.accept(this));
     }
 
     @Override
-    public Exp_asml visit(okalm.ocamlcompiler.java.ast.LE e) {
-        return new okalm.ocamlcompiler.java.asml.LE(e.e1.accept(this), e.e2.accept(this));
+    public Exp_asml visit(okalm.ast.LE e) {
+        return new okalm.asml.LE(e.e1.accept(this), e.e2.accept(this));
     }
 
     @Override
-    public Exp_asml visit(okalm.ocamlcompiler.java.ast.If e) {
-        return new okalm.ocamlcompiler.java.asml.If(e.e1.accept(this), e.e2.accept(this), e.e3.accept(this));
+    public Exp_asml visit(okalm.ast.If e) {
+        return new okalm.asml.If(e.e1.accept(this), e.e2.accept(this), e.e3.accept(this));
     }
 
     @Override

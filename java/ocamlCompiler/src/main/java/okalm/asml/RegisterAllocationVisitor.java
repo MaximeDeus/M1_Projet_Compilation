@@ -42,8 +42,6 @@ public class RegisterAllocationVisitor implements AsmlVisitor {
     @Override
     public void visit(Call e) {
         e.label.accept(this);
-        e.fargs.accept(this);
-
     }
 
     @Override
@@ -62,9 +60,6 @@ public class RegisterAllocationVisitor implements AsmlVisitor {
     public void visit(Fargs e) {
         if (!e.estNIL) {
             e.ident.accept(this);
-        }
-        if (e.fargs != null) {
-            e.fargs.accept(this);
         }
     }
 
