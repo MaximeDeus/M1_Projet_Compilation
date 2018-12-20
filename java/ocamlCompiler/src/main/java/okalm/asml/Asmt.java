@@ -6,7 +6,7 @@ package okalm.asml;
  */
 public class Asmt extends Exp_asml {
 
-    private Exp_asml ident;    //LET IDENT EQUAL exp IN asmt
+    public Exp_asml ident;    //LET IDENT EQUAL exp IN asmt
     public Exp_asml e;     //exp
     public Boolean paren;  //LPAREN asmt RPAREN
     public Exp_asml asmt;      //LET IDENT EQUAL exp IN asmt

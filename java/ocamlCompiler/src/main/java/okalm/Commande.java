@@ -1,6 +1,7 @@
 package okalm;
 
 import java.io.FileReader;
+import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
 
 /**
@@ -101,15 +102,15 @@ public class Commande {
         } else if (bool_help) {
             help();
         } else {
-            Exp expr = parse(args);
+            Exp exp = parse(args);
             if (!bool_parse) {
-                typechecking(expr);
+                typechecking(exp);
                 if (!bool_type) {
-                    expr = frontend(expr);
+                    Exp_asml exp_asml = frontend(exp);
                     if (!bool_ASML) {
-                        expr = backend(expr);
+                        exp_asml = backend(exp_asml);
                     }
-                    output(expr);
+                    output(exp_asml);
                 }
 
             }
@@ -135,42 +136,58 @@ public class Commande {
         System.out.println("Code type cheking is valid");
     }
 
-    public static Exp frontend(Exp exp) {
-        System.out.println("------ FrontEnd ------");
-
-        /* TODO Décommenter pour tester K-Normalisation
-        System.out.println("------ K-Normalisation ------");
-        KNormVisitor kv = new KNormVisitor();
-        //Exp kexp = exp.accept(kv);
-        */
+    public static Exp_asml frontend(Exp exp) {
+        System.out.println("_____ FrontEnd _____");
         PrintVisitor pv = new PrintVisitor();
-        //kexp.accept(pv);
+        
+        //K-norm
+        System.out.println("\n------ K-Normalisation ------");
+        KNormVisitor kv = new KNormVisitor();
+        exp = exp.accept(kv);
+        //exp.accept(pv); //affichage K-normalisation
 
-
-        /* TODO Décommenter pour tester A-Conversion
-        System.out.println();
-        System.out.println("------ A-Conversion ------");
+        //a-convers
+        System.out.println("\n------ A-Conversion ------");
         AlphaConversionVisitor acv = new AlphaConversionVisitor();
-        Exp acvExp = exp.accept(acv);
-        acvExp.accept(pv);
-        return acvExp;
-        */
+        exp = exp.accept(acv);
+        //exp.accept(pv); //affichage A-Conversion
 
-        System.out.println();
-        System.out.println("------ Reduction Let Expression ------");
+
+        //reduction let
+        System.out.println("\n------ Reduction Let Expression ------");
         ReductionLetExpressionVisitor rlev = new ReductionLetExpressionVisitor();
-        Exp rleExp = exp.accept(rlev);
-        rleExp.accept(pv);
-        return rleExp;
+        exp = exp.accept(rlev);
+        //exp.accept(pv); //affichage let expression
+
+        
+        System.out.println("\n------ Closure ------");
+        ClosureVisitor cv = new ClosureVisitor();
+        exp = exp.accept(cv);
+        System.out.println(cv.functionsToString()); //affichage des fonctions après closure
+        exp.accept(pv); //affichage code après closure
+        
+        System.out.println("\n------ FrontEnd to BackEnd ------");
+        FrontToEndVisitor ftev = new FrontToEndVisitor();
+        Exp_asml exp_asml = exp.accept(ftev);
+        exp_asml = ftev.wrapCode(exp_asml, cv.listeFun);
+        return exp_asml;
+
+        
     }
 
-    public static Exp backend(Exp exp) {
-        System.out.println("backend");
+    public static Exp_asml backend(Exp_asml exp) {
+        System.out.println("_____ FrontEnd _____");
         return exp;
     }
 
+    public static void output(Exp_asml exp) {
+        System.out.println("_____ OUTPUT _____");
+        printAsmlVisitor pav = new printAsmlVisitor(true);
+        System.out.println(exp.accept(pav));
+    }
+    
     public static void output(Exp exp) {
-        System.out.println("output");
+        System.out.println("\noutput frontend");
     }
 
     public static void error() {

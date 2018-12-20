@@ -6,12 +6,12 @@ package okalm.asml;
  */
 public class Ident extends IdentOrImm {
 
-    String ident;
+    public String ident;
 
     public Ident(String ident) {
-        if (Character.isLowerCase(ident.charAt(0))) {
+        //if (Character.isLowerCase(ident.charAt(0))) {
             this.ident = ident;
-        }
+        //}
 
     }
 

@@ -17,7 +17,7 @@ import okalm.ast.Float;
  */
 public class ClosureVisitor implements ObjVisitor<Exp>{
     
-    private ArrayList<ClosureFunction> listeFun;
+    public ArrayList<ClosureFunction> listeFun;
     
     public ClosureVisitor(){
         listeFun= new ArrayList();
