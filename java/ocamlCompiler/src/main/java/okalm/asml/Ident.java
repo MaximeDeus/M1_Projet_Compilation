@@ -6,10 +6,10 @@ package okalm.asml;
  */
 public class Ident extends IdentOrImm {
 
-    String ident;
-    String actionAllocateur;
-    int registre = -1; //Le registre ou la variable est sauvegardée
-    String[] memAdr;
+    public String ident;
+    public String actionAllocateur;
+    public int registre = -1; //Le registre ou la variable est sauvegardée
+    public String[] memAdr;
 
     public Ident(String ident) {
         if (Character.isLowerCase(ident.charAt(0))) {
