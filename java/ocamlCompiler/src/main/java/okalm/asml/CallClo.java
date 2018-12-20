@@ -29,4 +29,9 @@ public class CallClo extends Exp_asml {
         return v.visit(this);
     }
 
+    @Override
+    public <E> E accept(AsmlErrorVisitor<E> v) throws Exception {
+        return v.visit(this);
+    }
+
 }

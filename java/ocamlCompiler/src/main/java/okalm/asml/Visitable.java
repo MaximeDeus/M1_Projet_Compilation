@@ -10,4 +10,6 @@ public interface Visitable {
 
     public <E> E accept(AsmlObjVisitor<E> v);
 
+    public <E> E accept(AsmlErrorVisitor<E> v) throws Exception;
+
 }

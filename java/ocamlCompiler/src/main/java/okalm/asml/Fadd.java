@@ -23,4 +23,10 @@ public class Fadd extends Exp_asml {
     public <E> E accept(AsmlObjVisitor<E> v) {
         return v.visit(this);
     }
+
+    @Override
+    public <E> E accept(AsmlErrorVisitor<E> v) throws Exception {
+        return v.visit(this);
+    }
+
 }
