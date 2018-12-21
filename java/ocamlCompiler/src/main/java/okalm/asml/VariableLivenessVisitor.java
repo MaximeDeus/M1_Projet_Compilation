@@ -26,7 +26,7 @@ public class VariableLivenessVisitor implements AsmlVisitor {
 
     @Override
     public void visit(Asmt e) {
-        if (!(e.getIdent() == null)) { //Allocation de registe ou d'emplacement memoire pour variable
+        if (!(e.ident == null)) { //Allocation de registe ou d'emplacement memoire pour variable
             mem.add(new Ident("[" + "fp+" + (Integer.toString(4 + nbVarFrame * 4) + "]")));
             nbVarFrame++;
         }
@@ -42,7 +42,7 @@ public class VariableLivenessVisitor implements AsmlVisitor {
     @Override
     public void visit(Call e) {
         e.label.accept(this);
-        e.fargs.accept(this);
+//        e.fargs.accept(this);
 
     }
 
@@ -62,9 +62,9 @@ public class VariableLivenessVisitor implements AsmlVisitor {
     public void visit(Fargs e) {
         if (!e.estNIL) {
             e.ident.accept(this);
-        }
-        if (e.fargs != null) {
-            e.fargs.accept(this);
+//        }
+//        if (e.fargs != null) {
+//            e.fargs.accept(this);
         }
     }
 
@@ -97,15 +97,15 @@ public class VariableLivenessVisitor implements AsmlVisitor {
         if (e.formal_args != null) {
 
             e.label.accept(this);
-            e.formal_args.accept(this);
+//            e.formal_args.accept(this);
             e.asmt.accept(this);
-            e.fundefs.accept(this);
+//            e.fundefs.accept(this);
         } else if (e.asmt != null) {
             e.asmt.accept(this);
         } else {
             e.label.accept(this);
             e.ident.accept(this);
-            e.fundefs.accept(this);
+//            e.fundefs.accept(this);
         }
     }
 
@@ -115,20 +115,19 @@ public class VariableLivenessVisitor implements AsmlVisitor {
     }
 
     @Override
-    public void visit(okalm.ocamlcompiler.java.asml.If e) {
+    public void visit(okalm.asml.If e) {
 
-        e.ifIdent.accept(this);
-        e.ioi.accept(this);
-        e.thenasmt.accept(this);
-        if (e.elseasmt != null) {
-            e.elseasmt.accept(this);
-
-        }
-
+//        e.ifIdent.accept(this);
+//        e.ioi.accept(this);
+//        e.thenasmt.accept(this);
+//        if (e.elseasmt != null) {
+//            e.elseasmt.accept(this);
+//
+//        }
     }
 
     @Override
-    public void visit(okalm.ocamlcompiler.java.asml.Int e) {
+    public void visit(okalm.asml.Int e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

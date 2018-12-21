@@ -44,7 +44,7 @@ public class AllSpillAllocationVisitor implements AsmlVisitor {
     @Override
     public void visit(Call e) {
         e.label.accept(this);
-        e.fargs.accept(this);
+//        e.fargs.accept(this);
 
     }
 
@@ -64,9 +64,9 @@ public class AllSpillAllocationVisitor implements AsmlVisitor {
     public void visit(Fargs e) {
         if (!e.estNIL) {
             e.ident.accept(this);
-        }
-        if (e.fargs != null) {//TODO: On a changé la structure des arguments
-            e.fargs.accept(this);
+//        }
+//        if (e.fargs != null) {//TODO: On a changé la structure des arguments
+//            e.fargs.accept(this);
         }
     }
 
@@ -98,7 +98,7 @@ public class AllSpillAllocationVisitor implements AsmlVisitor {
     public void visit(Fundefs e) {
         if (e.formal_args != null) {
             e.label.accept(this);
-            e.formal_args.accept(this);
+//            e.formal_args.accept(this);
             e.asmt.accept(this);
 //            e.fundefs.accept(this);
         } else if (e.asmt != null) {
@@ -117,10 +117,10 @@ public class AllSpillAllocationVisitor implements AsmlVisitor {
     }
 
     @Override
-    public void visit(okalm.ocamlcompiler.java.asml.If e) {
+    public void visit(okalm.asml.If e) {
 
-        e.ifIdent.accept(this);
-        e.ioi.accept(this);
+//        e.ifIdent.accept(this);
+//        e.ioi.accept(this);
         e.thenasmt.accept(this);
         if (e.elseasmt != null) {
             e.elseasmt.accept(this);
@@ -130,7 +130,7 @@ public class AllSpillAllocationVisitor implements AsmlVisitor {
     }
 
     @Override
-    public void visit(okalm.ocamlcompiler.java.asml.Int e) {
+    public void visit(okalm.asml.Int e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

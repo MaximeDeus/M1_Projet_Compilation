@@ -12,112 +12,112 @@ package okalm.asml;
 public class GraphColoringVisitor implements AsmlObjVisitor<Object> {
 
     @Override
-    public <E> E visit(Add e) {
+    public Object visit(Add e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Sub e) {
+    public Object visit(Sub e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Asmt e) {
+    public Object visit(Asmt e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Call e) {
+    public Object visit(Call e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(CallClo e) {
+    public Object visit(CallClo e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Fadd e) {
+    public Object visit(Fadd e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Fargs e) {
+    public Object visit(Fargs e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Fdiv e) {
+    public Object visit(Fdiv e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Fmul e) {
+    public Object visit(Fmul e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Fneg e) {
+    public Object visit(Fneg e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Fsub e) {
+    public Object visit(Fsub e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Fundefs e) {
+    public Object visit(Fundefs e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Ident e) {
+    public Object visit(Ident e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(If e) {
+    public Object visit(If e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Int e) {
+    public Object visit(Int e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Label e) {
+    public Object visit(Label e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Mem e) {
+    public Object visit(Mem e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Neg e) {
+    public Object visit(Neg e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(New e) {
+    public Object visit(New e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Nop e) {
+    public Object visit(Nop e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(ParenExp e) {
+    public Object visit(ParenExp e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <E> E visit(Tokens e) {
+    public Object visit(Tokens e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

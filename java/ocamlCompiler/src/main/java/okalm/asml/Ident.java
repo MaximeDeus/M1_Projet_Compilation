@@ -28,14 +28,6 @@ public class Ident extends IdentOrImm {
         v.visit(this);
     }
 
-    public Exp_asml getActionAllocateur() {
-        return actionAllocateur;
-    }
-
-    public void setActionAllocateur(Exp_asml actionAllocateur) {
-        this.actionAllocateur = actionAllocateur;
-    }
-
     @Override
     public <E> E accept(AsmlErrorVisitor<E> v) throws Exception {
         return v.visit(this);

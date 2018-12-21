@@ -23,4 +23,9 @@ public class Fsub extends Exp_asml {
     public void accept(AsmlVisitor v) {
         v.visit(this);
     }
+
+    @Override
+    public <E> E accept(AsmlErrorVisitor<E> v) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

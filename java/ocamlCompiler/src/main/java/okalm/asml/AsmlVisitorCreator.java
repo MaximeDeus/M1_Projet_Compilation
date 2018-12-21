@@ -22,9 +22,10 @@ public class AsmlVisitorCreator {
     }
 
     public void createVisitors(Fundefs f) {
-        f.accept(new AllSpillAllocationVisitor());
-        if (f.fundefs != null) {
-            createVisitors(f.fundefs);
-        }
+//        f.accept(new AllSpillAllocationVisitor());
+//        int i = 0;
+//        while (i < f.fundefs.size()) {
+//            f.fundefs[i]
+
     }
 }
