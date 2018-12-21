@@ -296,11 +296,9 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         // expr2 must be of type "type", but in a new environment where
         // x is of type id_type, so we generate
         // GenEquations(env + (id -> id_type), expr2, type)
-        System.out.println("let");
         Type t1 = e.e1.accept(this);
 
         if (testType(t1, TArray.class)){
-            System.out.println("on passe jamais là?"+e.id.id);
             
             addId(listeArray, e.id, listeExp.get(e.e1));
         }else if (!testType(t1, TTuple.class)){
@@ -322,7 +320,6 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         if(listeVar.containsKey(e.id.id)){
             return listeVar.get(e.id.id);
         }else if(listeArray.containsKey(e.id.id)){
-            System.out.println("var");
             return new TArray();
         }else if (listeFun.containsKey(e.id.id)){
             return listeFun.get(e.id.id);
@@ -334,10 +331,7 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
     @Override
     public Type visit(LetRec e) throws Exception {
         
-        System.out.println("listefun"+listeFun);
         if (listeFun.containsKey(e.fd.id)){
-            System.out.println("s'il te plais passe là...");
-            System.out.println("funs: "+listeFun+"\n var: "+listeVar+"\n Array: "+listeArray);
             return listeFun.get(e.fd.id);
         }else{
             TypeVisitor tv = new TypeVisitor();
@@ -350,11 +344,9 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
             tv.listeFun.putAll(this.listeFun);
             tv.listeArray.putAll(this.listeArray);
             
-            //addId(listeFun,e.fd.id, e.fd.e.accept(tv));
             Type trenvoi = e.fd.e.accept(tv);
             listeFun.remove(e.fd.id);
             addId(listeFun,e.fd.id, trenvoi);
-            System.out.println("funs: "+listeFun+"\n var: "+listeVar+"\n Array: "+listeArray);
             return e.e.accept(this);
         }
     }
@@ -406,8 +398,6 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
             throw new UnsupportedOperationException("Bad typing for Array parameter e2 : integer or Float expected");
         }
         addExpType(e, t2);
-        System.out.println("Array");
-        System.out.println("funs: "+listeFun+"\n var: "+listeVar+"\n Array: "+listeArray);
         return new TArray();
 
     }
@@ -426,8 +416,6 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
             t2 = new TInt();
             return new TUndef();
         }
-        System.out.println(" get type e1 " + t1);
-        System.out.println(" get type e2 " + t2);
         if (!testType(t1, TArray.class) || (!testType(t2, TInt.class))) {
             throw new UnsupportedOperationException("Bad typing for get parameter e1 : Array excepted and e2 : Integer expected");
         }
@@ -436,14 +424,11 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         for (String s : h) {
             id = s;
         }
-        System.out.println("listArray: "+listeArray);
-        System.out.println("id "+id + " get return "+listeArray.get(id));
         return listeArray.get(id);
     }
 
     @Override
     public Type visit(Put e) throws Exception {
-        //System.out.println("e1: "+e.e1+" e2: "+e.e2+" e3: "+e.e3);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
