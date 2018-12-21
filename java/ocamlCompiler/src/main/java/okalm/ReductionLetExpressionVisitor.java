@@ -8,7 +8,7 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
     /*Cet attribut est utilisé pour conserver le noeud précédent lors
      * de la construction du nouvel arbre (début nouvel arbre = fin du précédent)
      */
-    private Let expressionPrecedente = null;
+    private Let root = null;
 
     @Override
     public Exp visit(Unit e) {
@@ -92,7 +92,7 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(Let e) {
-        Let filsGauche;
+        /**Let filsGauche;
         if (e.e1 instanceof Let) { //Si "= Let..."
             filsGauche = (Let) e.e1;
             if (expressionPrecedente == null) { //Si premier Let
@@ -105,11 +105,11 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
             return filsGauche.accept(this); //On parcourt le Let
         }
 
-        /**Let filsDroit = (Let) e.e2;
-          *while (filsDroit instanceof Let){ //Si "in Let ..."
-          *    filsDroit = (Let) e.e2;
-          *    expressionPrecedente = new Let(filsDroit.id, filsDroit.t, filsDroit.e1, expressionPrecedente);
-          *    }*/
+        Let filsDroit = (Let) e.e2;
+          while (filsDroit instanceof Let){ //Si "in Let ..."
+              filsDroit = (Let) e.e2;
+              expressionPrecedente = new Let(filsDroit.id, filsDroit.t, filsDroit.e1, expressionPrecedente);
+              }
             else {
             if (expressionPrecedente == null) { //Pas de réduction à effectuer
                 return e;
@@ -118,6 +118,23 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
             }
 
         }
+         */
+        //TODO Avant tester code, penser à bien config Commande.java (prendre exp initiale, pas Knorm etc.) 
+        Exp filsGauche = e.e1;
+        if (filsGauche instanceof Let){ //TODO Ajouter traitement pour LetTuple et LetRec
+            filsGauche.accept(this);
+            //On récupère le fils droit
+            Exp filsDroit = ((Let) filsGauche).e2;
+            while (filsDroit instanceof Let){
+                filsDroit = ((Let) filsDroit).e2;
+            }
+            root = new Let(((Let) filsGauche).id,((Let) filsGauche).t,filsGauche,
+                    new Let(e.id,e.t,filsDroit,e.e2));
+        }
+
+        e.e2.accept(this);
+        return root;
+
     }
 
     @Override
