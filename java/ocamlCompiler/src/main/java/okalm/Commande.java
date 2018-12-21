@@ -85,9 +85,7 @@ public class Commande {
                     default:
                         bool_erreur = true;
                         break;
-
                 }
-
             }
             compute(args);
         }
@@ -132,7 +130,7 @@ public class Commande {
     public static void typechecking(Exp exp) throws Exception {
         System.out.println("------ TypeChecking ------");
         TypeVisitor tv = new TypeVisitor();
-        //TODO Decommenter cette ligne exp.accept(tv);
+        exp.accept(tv);
         System.out.println("Code type cheking is valid");
     }
 

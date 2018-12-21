@@ -1,6 +1,8 @@
 package okalm;
 
+import java.util.ArrayList;
 import java.util.HashMap; 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import okalm.ast.*;
@@ -15,15 +17,16 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
     private Map<String, Type> listeVar;
     private Map<String, Type> listeFun;
     private Map<String, Type> listeArray;
-    private Map<String, Type> listeTuple;
+    private Map<String, List<Type>> listeTuple;
     private Map<Exp, Type> listeExp;
-
+    private Map<Exp, List<Type>>  listeExpTuple;
     public TypeVisitor() {
         listeVar = new HashMap();
         listeFun = new HashMap();
         listeArray = new HashMap();
         listeTuple = new HashMap();
         listeExp = new HashMap();
+        listeExpTuple = new HashMap();
         listeFun.put("print_int", new TUnit());
         listeFun.put("truncate", new TInt());
 
@@ -49,6 +52,10 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
     }
      private void addExpType(Exp exp, Type t){
          listeExp.put(exp, t);
+     }
+     
+     private void addExpTuple(Exp exp, ArrayList<Type> t){
+         listeExpTuple.put(exp, (List)t);
      }
 
     private Boolean testType(Type t, Class s) {
@@ -109,7 +116,6 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
     public Type visit(Add e) throws Exception {
         Type t1 = e.e1.accept(this);
         Type t2 = e.e2.accept(this);
-
         if (testType(t1, TUndef.class)) {
             t1 = t2;
             VarVisitor vv = new VarVisitor();
@@ -290,6 +296,7 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
 
     @Override
     public Type visit(Let e) throws Exception {
+        System.out.println("let");
         // Let (x : id_type) = exrp1 in expr2
         // expr1 must be of the type id_type, so we generate 
         // GenEquations(env, expr1, id_type) 
@@ -299,12 +306,11 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         Type t1 = e.e1.accept(this);
 
         if (testType(t1, TArray.class)){
-            
             addId(listeArray, e.id, listeExp.get(e.e1));
         }else if (!testType(t1, TTuple.class)){
             this.addId(listeVar,e.id, t1);
         }else{
-            this.addId(listeTuple,e.id, t1);
+            listeTuple.put(e.id.id, listeExpTuple.get(e.e1));
         }
         Type t2 = e.e2.accept(this);
         
@@ -314,7 +320,7 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
     @Override
     public Type visit(Var e) throws Exception {
         
-        if (!listeVar.containsKey(e.id.id)&&!listeArray.containsKey(e.id.id)) {
+        if (!listeVar.containsKey(e.id.id)&&!listeArray.containsKey(e.id.id)&&!listeTuple.containsKey(e.id.id)) {
             throw new TypeException("Unknow variable " + e.id.id);
         }
         if(listeVar.containsKey(e.id.id)){
@@ -324,7 +330,7 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         }else if (listeFun.containsKey(e.id.id)){
             return listeFun.get(e.id.id);
         }else{
-            return listeTuple.get(e.id.id);
+            return new TTuple();
         }
     }
 
@@ -356,10 +362,10 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         VarVisitor vv = new VarVisitor();
         Set<String> h = e.accept(vv);
         String rendu = "error";
-
         for (String s : h) {
             rendu = s;
-            if (!listeFun.containsKey(rendu) && !listeVar.containsKey(rendu)) {
+            if (!listeFun.containsKey(rendu) && !listeVar.containsKey(rendu)&&
+                    !listeArray.containsKey(rendu)&&!listeTuple.containsKey(rendu)) {
                 throw new TypeException("Unknow function " + rendu);
             }
         }
@@ -372,13 +378,41 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
 
     @Override
     public Type visit(Tuple e) throws Exception {
-
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //Type t=new TUndef();
+        ArrayList<Type> lt = new ArrayList();
+        for(Exp ex : e.es){
+            // ici si on veux limiter les type autoriser dans un tuple
+            Type t= ex.accept(this);
+            lt.add(t);
+        }
+        addExpTuple(e, lt);
+        return new TTuple();
     }
 
     @Override
-    public Type visit(LetTuple e) throws Exception {
+    public Type visit(LetTuple e) throws Exception {        //TODO
+        /*int indice=0;
+        String id="error";
+        System.out.println("LET TUPLE e.ids: "+e.ids+ " e.ts: "+e.ts+" e.e1: "+ e.e1+" e.e2: "+e.e2);
+        Type t1 = e.e1.accept(this);    
+        //Type t2 = e.e2.accept(this);
+        VarVisitor vv = new VarVisitor();
+        Set<String> h = e.e1.accept(vv);
+        for (String s : h) {
+            id = s;
+        }
+         System.out.println("listeTuple"+listeTuple);
+        for(Id i : e.ids){
+            addId(listeVar, i, listeTuple.get(id).get(indice));
+            indice++;
+        }
+        
+        
+        System.out.println("LET TUPLE e.e1: "+t1+ " e.e2: "+t2);
+        System.out.println("letTuple");*/
+        
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        /*return t2;*/
     }
 
     @Override
@@ -404,7 +438,6 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
 
     @Override
     public Type visit(Get e) throws Exception {
-        
         String id="error";
         Type t1 = e.e1.accept(this);
         Type t2 = e.e2.accept(this);
@@ -429,7 +462,23 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
 
     @Override
     public Type visit(Put e) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String id="error";
+        Type t1 = e.e1.accept(this);
+        Type t2 = e.e2.accept(this);
+        Type t3 = e.e3.accept(this);
+        VarVisitor vv = new VarVisitor();
+        Set<String> h = e.e1.accept(vv);
+        for (String s : h) {
+            if (listeArray.containsKey(s)){
+                id=s; 
+            }
+        }
+        Type type =listeArray.get(id);
+        if(!testType(t1, TArray.class)||!testType(t2, TInt.class)||!testType(t3, type.getClass())){
+            throw new UnsupportedOperationException("Bad typing for get parameter e1 : Array excepted and e2 : Integer expected or e3 : "+type.getClass().getSimpleName()+" excepted");
+            
+        }
+        return new TUnit();
     }
 
 }
