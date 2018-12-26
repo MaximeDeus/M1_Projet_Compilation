@@ -10,13 +10,10 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     /**
      * Cet attribut stocke les parents lorsqu'un fils gauche est un Let
-     * Nécessaire à la construction récursive de l'arbre
+     * Nécessaire à la construction récursive de l'arbre (un parent devient fils droit dernier noeud)
      */
     private List<Let> parents = new ArrayList<>();
-    //L'arbre construit
-    private Exp tree;
-
-    private Exp filsGauche;
+    //Permet de stocker la création récursive du fils droit
     private Exp filsDroit;
 
     @Override
@@ -101,91 +98,27 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(Let e) {
-        /**
-         * Version 1 (non fonctionnelle)
-         * Let filsGauche;
-        if (e.e1 instanceof Let) { //Si "= Let..."
-            filsGauche = (Let) e.e1;
-            if (expressionPrecedente == null) { //Si premier Let
-                //Début du nouvel arbre
-                expressionPrecedente = new Let(e.id, e.t, filsGauche.e2, e.e2);
-            } else {
-                //Construction de l'arbre de bas en haut (bas = racine de l'arbre initial)
-                expressionPrecedente = new Let(e.id, e.t, filsGauche.e2, expressionPrecedente);
-            }
-            return filsGauche.accept(this); //On parcourt le Let
+
+        if (e.e1 instanceof Let){ //Si fils gauche est un let
+            parents.add(e); //On l'ajoute à la liste des parents
+            return e.e1.accept(this); //On termine son exécution et appelle son fils gauche
         }
 
-        Let filsDroit = (Let) e.e2;
-          while (filsDroit instanceof Let){ //Si "in Let ..."
-              filsDroit = (Let) e.e2;
-              expressionPrecedente = new Let(filsDroit.id, filsDroit.t, filsDroit.e1, expressionPrecedente);
-              }
-            else {
-            if (expressionPrecedente == null) { //Pas de réduction à effectuer
-                return e;
-            } else { //Fin de l'algorithme
-                return new Let(e.id, e.t, e.e1, expressionPrecedente);
-            }
-
-        }
-         */
-        //TODO Avant tester code, penser à bien config Commande.java (prendre exp initiale, pas Knorm etc.)
-        /**
-         * Version 2 (non fonctionnelle)
-        Exp filsGauche = e.e1;
-        if (filsGauche instanceof Let){ //TODO Ajouter traitement pour LetTuple et LetRec
-            filsGauche.accept(this);
-            //On récupère le fils droit
-            Exp filsDroit = ((Let) filsGauche).e2;
-            while (filsDroit instanceof Let){
-                filsDroit = ((Let) filsDroit).e2;
-            }
-            root = new Let(((Let) filsGauche).id,((Let) filsGauche).t,filsGauche,
-                    new Let(e.id,e.t,filsDroit,e.e2));
-        }
-
-        e.e2.accept(this);
-        return root;
-         */
-
-        /**
-         * Si le fils gauche est un bloc imbriqué :
-         *
-         * 1- On sauvegarde le noeud parent qui sera à terme ajouté en tant que fils droit
-         * 2- On appelle le fils gauche
-         */
-        if (e.e1 instanceof Let){
-            //TODO pose problème de référencement : Let filsGauche = (Let) e.e1;
-            parents.add(e);
-            return e.e1.accept(this);
-            //TODO Essayer return e.e1.accept(this);
-            //TODO Essayer return new let (e.id, e.t, e.e1 (stocker dans var filsGauche?), e.e2);
+        if(e.e2 instanceof Let|| e.e2 instanceof LetRec){ //Si fils droit est un LetXXX
+            filsDroit = e.e2.accept(this); //On stocke le résultat de l'appel (construction récursive) dans filsDroit
+            return new Let (e.id, e.t, e.e1,filsDroit); //On renvoie le nouvel arbre construit (Nouvel arbre car nouvelle référence)
         }
 
         /**
-         * Si le fils droit est un bloc imbriqué :
-         * 1- On renvoie le noeud parent + appel sur le fils droit
-         */
-        if(e.e2 instanceof Let){
-            filsDroit = e.e2.accept(this);
-           // return e;
-            return new Let (e.id, e.t, e.e1,filsDroit);
-        }
-
-        /**
-         * Construction de l'arbre
+         * Construction de l'arbre (fils droit)
          */
         if (parents.size() > 0){
-            Let parent = parents.get(parents.size()-1);
-            parents.remove(parent);
-            Let nouveauFilsDroit = new Let( parent.id,parent.t,e.e2,parent.e2);
-            return new Let (e.id,e.t,e.e1,nouveauFilsDroit.accept(this));
-            //return new Let (e.id,e.t,e.e1,new Let(
-            //        parent.id,parent.t,e.e2,parent.e2));
+                Let parent = parents.get(parents.size() - 1); //On prend le dernier parent ajouté
+                parents.remove(parent);
+                Let nouveauFilsDroit = new Let(parent.id, parent.t, e.e2, parent.e2); //Création du nouveau fils droit à partir du parent (cf algo)
+                return new Let(e.id, e.t, e.e1, nouveauFilsDroit.accept(this)); //Construction récursive de l'arbre
         }
         return e;
-        //return tree;
     }
 
     @Override
@@ -195,6 +128,9 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(LetRec e) {
+        if (e.e instanceof Let || e.e instanceof LetRec){ //Si le in est un LetXXX
+            return new LetRec(e.fd,e.e.accept(this)); //On applique l'algorithme sur la partie droite (nouvelle référence)
+        }
         return e;
     }
 
