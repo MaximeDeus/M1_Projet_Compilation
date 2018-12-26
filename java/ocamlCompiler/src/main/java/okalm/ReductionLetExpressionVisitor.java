@@ -3,12 +3,21 @@ package okalm;
 import okalm.ast.*;
 import okalm.ast.Float;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
-    /*Cet attribut est utilisé pour conserver le noeud précédent lors
-     * de la construction du nouvel arbre (début nouvel arbre = fin du précédent)
+    /**
+     * Cet attribut stocke les parents lorsqu'un fils gauche est un Let
+     * Nécessaire à la construction récursive de l'arbre
      */
-    private Let root = null;
+    private List<Let> parents = new ArrayList<>();
+    //L'arbre construit
+    private Exp tree;
+
+    private Exp filsGauche;
+    private Exp filsDroit;
 
     @Override
     public Exp visit(Unit e) {
@@ -92,7 +101,9 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(Let e) {
-        /**Let filsGauche;
+        /**
+         * Version 1 (non fonctionnelle)
+         * Let filsGauche;
         if (e.e1 instanceof Let) { //Si "= Let..."
             filsGauche = (Let) e.e1;
             if (expressionPrecedente == null) { //Si premier Let
@@ -119,7 +130,9 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
         }
          */
-        //TODO Avant tester code, penser à bien config Commande.java (prendre exp initiale, pas Knorm etc.) 
+        //TODO Avant tester code, penser à bien config Commande.java (prendre exp initiale, pas Knorm etc.)
+        /**
+         * Version 2 (non fonctionnelle)
         Exp filsGauche = e.e1;
         if (filsGauche instanceof Let){ //TODO Ajouter traitement pour LetTuple et LetRec
             filsGauche.accept(this);
@@ -134,7 +147,45 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
         e.e2.accept(this);
         return root;
+         */
 
+        /**
+         * Si le fils gauche est un bloc imbriqué :
+         *
+         * 1- On sauvegarde le noeud parent qui sera à terme ajouté en tant que fils droit
+         * 2- On appelle le fils gauche
+         */
+        if (e.e1 instanceof Let){
+            //TODO pose problème de référencement : Let filsGauche = (Let) e.e1;
+            parents.add(e);
+            return e.e1.accept(this);
+            //TODO Essayer return e.e1.accept(this);
+            //TODO Essayer return new let (e.id, e.t, e.e1 (stocker dans var filsGauche?), e.e2);
+        }
+
+        /**
+         * Si le fils droit est un bloc imbriqué :
+         * 1- On renvoie le noeud parent + appel sur le fils droit
+         */
+        if(e.e2 instanceof Let){
+            filsDroit = e.e2.accept(this);
+           // return e;
+            return new Let (e.id, e.t, e.e1,filsDroit);
+        }
+
+        /**
+         * Construction de l'arbre
+         */
+        if (parents.size() > 0){
+            Let parent = parents.get(parents.size()-1);
+            parents.remove(parent);
+            Let nouveauFilsDroit = new Let( parent.id,parent.t,e.e2,parent.e2);
+            return new Let (e.id,e.t,e.e1,nouveauFilsDroit.accept(this));
+            //return new Let (e.id,e.t,e.e1,new Let(
+            //        parent.id,parent.t,e.e2,parent.e2));
+        }
+        return e;
+        //return tree;
     }
 
     @Override
