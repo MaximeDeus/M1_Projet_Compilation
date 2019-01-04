@@ -6,10 +6,15 @@ package okalm.asml;
  */
 public class Fadd extends Exp_asml {
 
-    public final Ident ident1;
-    public final Ident ident2;
+    public final Exp_asml ident1;
+    public final Exp_asml ident2;
 
     public Fadd(Ident ident1, Ident ident2) {
+        this.ident1 = ident1;
+        this.ident2 = ident2;
+    }
+
+    public Fadd(Exp_asml ident1, Exp_asml ident2) {
         this.ident1 = ident1;
         this.ident2 = ident2;
     }

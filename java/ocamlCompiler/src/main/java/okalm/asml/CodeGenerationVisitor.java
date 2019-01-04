@@ -77,10 +77,15 @@ public class CodeGenerationVisitor implements AsmlErrorVisitor<String> {
         for (int i = 0; i < args.length; i++) {
             int r = 0;
             while (r < 13 && ret[i] == null) {
-                if (args[i].equals(registres[r])) {//déja contenu dans un registre
+                if (args[i].equals(registres[r])) {//variable déja contenue dans un registre
                     ret[i] = "r" + r;
 
-                } else if (registres[r] == null) {//Pas déja dans un registre, alors on cherche pour un registre vide
+                }
+            }
+
+            r = 0;
+            while (r < 13 && ret[i] == null) {
+                if (registres[r] == null) {//Pas déja dans un registre, alors on cherche pour un registre vide
                     ret[i] = "r" + r;
                     remplirRegistre(r, args[i]);
                 } else if (!(variablesActives.contains(registres[r]))) {//si la variable contenue dans registre r n'est pas utilisée plus tard
@@ -98,7 +103,7 @@ public class CodeGenerationVisitor implements AsmlErrorVisitor<String> {
                 }
                 r++;
             }
-            try {                                   //Si le dernier argument est un int, alors on le parse et on le met dans un registre déjà decidé par la fonction
+            try {                                             //Si le dernier argument est un int, alors on le parse et on le met dans un registre déjà decidé par la fonction
                 int entier = Integer.parseInt(args[args.length - 1]);
                 writer.write("MOV " + ret[args.length - 1] + ", " + "#" + entier);
             } catch (NumberFormatException nfe) {
