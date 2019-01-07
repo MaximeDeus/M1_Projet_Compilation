@@ -2,14 +2,14 @@ package okalm;
 
 
 public class Main {
-  static public Integer main(String argv[]) {    
+  static public void main(String argv[]) {    
     try {
       Commande.option(argv);
-      return 0; //success
+      System.exit(0);
     } catch (Exception e) {
       //e.printStackTrace();
       System.err.println(e.getMessage());
-      return 1;
+      System.exit(1);
     }
   }
 }
