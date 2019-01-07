@@ -27,7 +27,7 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
      */
     public Exp_asml wrapCode(Exp_asml e, ArrayList<ClosureFunction> listeFun) {
         //création de la liste de fonction du main
-        List<Fundefs> listefunAsml = new ArrayList();
+        List<Exp_asml> listefunAsml = new ArrayList();
 
         //pour chaque fonction présente dans listeFun
         listeFun.forEach((ClosureFunction element) -> {
@@ -41,10 +41,10 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
             //création d'une fonction sous forme asml
             listefunAsml.add(
                     new Fundefs( //fonction asml
-                            element.getCode().accept(this),     //code sous forme asml de la fonction
-                            new ArrayList(),                    //liste de sous fonction de la fonction //TODO
-                            params,                             //liste de paramètres créée précédement
-                            new Label(element.getLabel()),      //nom de la fonction
+                            element.getCode().accept(this), //code sous forme asml de la fonction
+                            new ArrayList(), //liste de sous fonction de la fonction //TODO
+                            params, //liste de paramètres créée précédement
+                            new Label(element.getLabel()), //nom de la fonction
                             new Ident("")));
         });
         return new Fundefs(
@@ -158,10 +158,10 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
     @Override
     public Exp_asml visit(App e) {
         List<Exp_asml> l = new ArrayList();
-       
+
         //on visite tout les arguments de l'appel pour les transformer en noeuds asml et on les stocke dans une nouvelle liste asml
         e.es.forEach((element) -> {
-            l.add(new Fargs(new okalm.asml.Ident(element.accept(this))));
+            l.add(new Fargs(element.accept(this)));
         });
 
         return new okalm.asml.Call(e.e.accept(this), l);

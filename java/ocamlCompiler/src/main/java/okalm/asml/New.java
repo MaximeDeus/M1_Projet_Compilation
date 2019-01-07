@@ -11,7 +11,7 @@ package okalm.asml;
  */
 public class New extends Exp_asml {
 
-    public final Exp_asml ioi;
+    public Exp_asml ioi;
 
     public New(Exp_asml ioi) {
         this.ioi = ioi;

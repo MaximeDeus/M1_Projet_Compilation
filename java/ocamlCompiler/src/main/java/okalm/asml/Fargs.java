@@ -6,20 +6,16 @@ package okalm.asml;
  */
 public class Fargs extends Exp_asml {
 
-    public final Ident ident;    //case IDENT
-    //public final Fargs fargs;    //case IDENT formal_args
-    public final Boolean estNIL;    //case NIL
+    public Exp_asml ident;    //case IDENT
+    public Boolean estNIL;    //case NIL TODO:a effacer
 
     public Fargs(Boolean estNIL) {
         this.estNIL = estNIL;
-        //this.fargs = null;
         this.ident = null;
-
     }
 
-    public Fargs(Ident ident) {
+    public Fargs(Exp_asml ident) {
         this.ident = ident;
-        //this.fargs = null;
         this.estNIL = false;
 
     }

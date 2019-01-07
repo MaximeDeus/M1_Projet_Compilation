@@ -5,61 +5,42 @@
  */
 package okalm.asml;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author liakopog
  */
-public class CodeGenerationVisitor implements AsmlErrorVisitor<String> {
+public class CodeGenerationVisitor implements AsmlObjVisitor<String> {
 
-    File fichierARM;
-    FileWriter writer;
     String[] registres = new String[13]; //Liste representant les registres r0-r12 utilisables par le programme
     String[] registresSpeciales = new String[3];
     ArrayList<String> variablesActives = new ArrayList<>();
-    Map<String, ArrayList<String>> mem = new HashMap(100);
+    Map<String, String> mem = new HashMap(100);
     int frameCounter = 1;
 
-    public CodeGenerationVisitor() throws IOException {
-        fichierARM = new File("./ARMcode.s");
-        writer = new FileWriter(fichierARM);
-    }
-
     @Override
-    public String visit(Ident e) throws Exception {
+    public String visit(Ident e) {
         return e.ident;
     }
 
     @Override
-    public String visit(Add e) throws Exception {
-        return (e.ident.accept(this) + "," + e.ioi.accept(this));
-    }
-
-    @Override
-    public String visit(Sub e) throws Exception {
-        return (e.ident.accept(this) + ", " + e.ioi.accept(this));
-    }
-
-    @Override
-    public String visit(Asmt e) throws Exception {
+    public String visit(Asmt e) {
         if (e.ident != null) {
             String[] regs;
             switch (e.e.getClass().toString()) {
 
                 case "Add":
                     regs = choixRegistres(e.ident.toString() + "," + e.e.accept(this));
-                    writer.write("ADD" + regs[0] + ", " + regs[1] + ", " + regs[2] + "\n");
-                    break;
+                    return ("ADD" + regs[0] + ", " + regs[1] + ", " + regs[2] + "\n");
                 case "Sub":
                     regs = choixRegistres(e.ident.toString() + "," + e.e.accept(this));
-                    writer.write("SUB " + regs[0] + ", " + regs[1] + ", " + regs[2] + "\n");
-                    break;
+                    return ("SUB " + regs[0] + ", " + regs[1] + ", " + regs[2] + "\n");
+
                 case "":
                 default:
 
@@ -71,7 +52,17 @@ public class CodeGenerationVisitor implements AsmlErrorVisitor<String> {
         return null;
     }
 
-    private String[] choixRegistres(String e) throws Exception {
+    @Override
+    public String visit(Add e) {
+        return (e.ident.accept(this) + "," + e.ioi.accept(this));
+    }
+
+    @Override
+    public String visit(Sub e) {
+        return (e.ident.accept(this) + ", " + e.ioi.accept(this));
+    }
+
+    private String[] choixRegistres(String e) {
         String[] args = e.split(",");
         String[] ret = new String[args.length];
         for (int i = 0; i < args.length; i++) {
@@ -105,7 +96,7 @@ public class CodeGenerationVisitor implements AsmlErrorVisitor<String> {
             }
             try {                                             //Si le dernier argument est un int, alors on le parse et on le met dans un registre déjà decidé par la fonction
                 int entier = Integer.parseInt(args[args.length - 1]);
-                writer.write("MOV " + ret[args.length - 1] + ", " + "#" + entier);
+                writer = writer + ("MOV " + ret[args.length - 1] + ", " + "#" + entier);
             } catch (NumberFormatException nfe) {
             }
             //TODO Ajouter le cas ou si un des deux arguments n'est pas actif dans la suite, on peut mettre le resultat dans son reg ex.: x=y+z -> R0=R0+R1 si y pas actif dans la suite
@@ -113,8 +104,8 @@ public class CodeGenerationVisitor implements AsmlErrorVisitor<String> {
         return args;
     }
 
-    public void sauvegardeMemoire(int r) throws IOException {
-        writer.write("STR " + "r" + r + "[fp+" + (frameCounter * 4) + "]" + "\n"); //On sauvegarde la variable qui etait dans le registre à utiliser dans la memoire...
+    public void sauvegardeMemoire(int r) {
+        writer = writer + ("STR " + "r" + r + "[fp+" + (frameCounter * 4) + "]" + "\n"); //On sauvegarde la variable qui etait dans le registre à utiliser dans la memoire...
         ArrayList<String> liste = mem.get(registres[r]);
 
         if (liste == null) {
@@ -125,102 +116,106 @@ public class CodeGenerationVisitor implements AsmlErrorVisitor<String> {
         frameCounter++;
     }
 
-    private void remplirRegistre(int r, String arg) throws Exception {
+    private void remplirRegistre(int r, String arg) {//Charger une variable depuis la memoire dans un registre
         ArrayList<String> liste = mem.get(arg);
         if (liste == null) {
-            throw new Exception("Variable not found in memory, sorry");
+            try {
+                throw new Exception("Variable not found in memory, sorry");
+            } catch (Exception ex) {
+                Logger.getLogger(CodeGenerationVisitor.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
-            writer.write("LDR " + "r" + r + liste.get(liste.size() - 1) + "\n"); //Recuperer la sauvegarde la plus recente, idealement il y a q'une de toute façon
+            writer = writer + ("LDR " + "r" + r + liste.get(liste.size() - 1) + "\n"); //Recuperer la sauvegarde la plus recente, idealement il y a q'une de toute façon
         }
     }
 
     @Override
-    public String visit(Call e) throws Exception {
+    public String visit(Call e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(CallClo e) throws Exception {
+    public String visit(CallClo e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Fadd e) throws Exception {
+    public String visit(Fadd e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Fargs e) throws Exception {
+    public String visit(Fargs e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Fdiv e) throws Exception {
+    public String visit(Fdiv e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Fmul e) throws Exception {
+    public String visit(Fmul e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Fneg e) throws Exception {
+    public String visit(Fneg e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Fsub e) throws Exception {
+    public String visit(Fsub e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Fundefs e) throws Exception {
+    public String visit(Fundefs e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(If e) throws Exception {
+    public String visit(If e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Int e) throws Exception {
+    public String visit(Int e) {
         return Integer.toString(e.e);
     }
 
     @Override
-    public String visit(Label e) throws Exception {
+    public String visit(Label e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Mem e) throws Exception {
+    public String visit(Mem e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Neg e) throws Exception {
+    public String visit(Neg e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(New e) throws Exception {
+    public String visit(New e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Nop e) throws Exception {
+    public String visit(Nop e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(ParenExp e) throws Exception {
+    public String visit(ParenExp e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String visit(Tokens e) throws Exception {
+    public String visit(Tokens e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

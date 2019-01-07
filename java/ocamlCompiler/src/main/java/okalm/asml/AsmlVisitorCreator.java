@@ -18,7 +18,6 @@ public class AsmlVisitorCreator {
     }
 
     public void allouerRegistres() {
-        racine.accept(new AllSpillAllocationVisitor());
     }
 
     public void createVisitors(Fundefs f) {

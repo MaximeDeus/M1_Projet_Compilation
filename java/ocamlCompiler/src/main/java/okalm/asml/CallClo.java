@@ -5,16 +5,18 @@
  */
 package okalm.asml;
 
+import java.util.List;
+
 /**
  *
  * @author liakopog
  */
 public class CallClo extends Exp_asml {
 
-    public final Ident ident;
-    public final Fargs fargs;
+    public Ident ident;
+    public List<Exp_asml> fargs;
 
-    public CallClo(Ident ident, Fargs fargs) {
+    public CallClo(Ident ident, List<Exp_asml> fargs) {
         this.ident = ident;
         this.fargs = fargs;
     }

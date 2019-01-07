@@ -8,8 +8,8 @@ import java.util.List;
  */
 public class Call extends Exp_asml {
 
-    public final Exp_asml label;
-    public final List<Exp_asml> fargs;
+    public Exp_asml label;
+    public List<Exp_asml> fargs;
 
     public Call(Label label, List<Exp_asml> fargs) {
         this.label = label;

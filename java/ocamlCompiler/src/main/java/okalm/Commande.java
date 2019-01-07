@@ -1,6 +1,7 @@
 package okalm;
 
 import java.io.FileReader;
+import okalm.asml.CodeGenerationVisitor;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
 
@@ -29,7 +30,6 @@ public class Commande {
      * @param args tableau d'argument
      * @throws Exception
      */
-
     public static void option(String args[]) throws Exception {
 
         if (args.length < 2) {
@@ -89,7 +89,7 @@ public class Commande {
             }
             compute(args);
         }
-        
+
     }
 
     public static void compute(String args[]) throws Exception {
@@ -138,7 +138,7 @@ public class Commande {
     public static Exp_asml frontend(Exp exp) {
         System.out.println("_____ FrontEnd _____");
         PrintVisitor pv = new PrintVisitor();
-        
+
         //K-norm
         System.out.println("\n------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
@@ -151,32 +151,37 @@ public class Commande {
         exp = exp.accept(acv);
         //exp.accept(pv); //affichage A-Conversion
 
-
         //reduction let
         System.out.println("\n------ Reduction Let Expression ------");
         ReductionLetExpressionVisitor rlev = new ReductionLetExpressionVisitor();
         exp = exp.accept(rlev);
         //exp.accept(pv); //affichage let expression
 
-        
         System.out.println("\n------ Closure ------");
         ClosureVisitor cv = new ClosureVisitor();
         exp = exp.accept(cv);
         System.out.println(cv.functionsToString()); //affichage des fonctions après closure
         exp.accept(pv); //affichage code après closure
-        
+
         System.out.println("\n------ FrontEnd to BackEnd ------");
         FrontToEndVisitor ftev = new FrontToEndVisitor();
         Exp_asml exp_asml = exp.accept(ftev);
         exp_asml = ftev.wrapCode(exp_asml, cv.listeFun);
         return exp_asml;
 
-        
     }
 
-    public static Exp_asml backend(Exp_asml exp) {
-        System.out.println("_____ FrontEnd _____");
-        return exp;
+    public static String backend(Exp_asml exp) {
+        System.out.println("_____ Backend _____");
+
+    }
+
+    public static void outputARM(Exp_asml exp) {
+        System.out.println("_____ Backend _____");
+
+        CodeGenerationVisitor cgv = new CodeGenerationVisitor();
+        exp
+
     }
 
     public static void output(Exp_asml exp) {
@@ -184,7 +189,7 @@ public class Commande {
         printAsmlVisitor pav = new printAsmlVisitor(true);
         System.out.println(exp.accept(pav));
     }
-    
+
     public static void output(Exp exp) {
         System.out.println("\noutput frontend");
     }

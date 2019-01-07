@@ -7,12 +7,9 @@ package okalm.asml;
 public class Ident extends IdentOrImm {
 
     public String ident;
-    public String actionAllocateur;
-    public int registre = -1; //Le registre ou la variable est sauvegardée
-    public String[] memAdr;
 
     public Ident(String ident) {
-            this.ident = ident;
+        this.ident = ident;
     }
 
     @Override

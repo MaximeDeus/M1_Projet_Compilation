@@ -6,9 +6,9 @@ package okalm.asml;
  */
 public class Mem extends Exp_asml {
 
-    public final Exp_asml ident1;
-    public final Exp_asml ioi;
-    public final Exp_asml ident2;
+    public Exp_asml ident1;
+    public Exp_asml ioi;
+    public Exp_asml ident2;
 
     public Mem(Exp_asml ident1, Exp_asml ioi, Exp_asml ident2) {
         this.ident1 = ident1;
