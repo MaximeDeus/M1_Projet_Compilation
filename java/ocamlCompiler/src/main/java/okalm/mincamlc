@@ -3,4 +3,5 @@
 MINCAML_HOME=$(cd "$(dirname "$0")"/../ && pwd)
 CP_DIR="$MINCAML_HOME/java"
 CP="$CP_DIR/java-cup-11b-runtime.jar:$CP_DIR/"
+echo $MINCAML_HOME
 exec java -enableassertions -cp "$CP" Main "$@"
