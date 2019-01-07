@@ -29,6 +29,11 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         listeExpTuple = new HashMap();
         listeFun.put("print_int", new TUnit());
         listeFun.put("truncate", new TInt());
+        listeFun.put("print_string", new TUnit());
+        listeFun.put("cos", new TFloat());
+        listeFun.put("sin", new TFloat());
+        listeFun.put("tan", new TFloat());
+        
 
     }
 
@@ -296,13 +301,6 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
 
     @Override
     public Type visit(Let e) throws Exception {
-        System.out.println("let");
-        // Let (x : id_type) = exrp1 in expr2
-        // expr1 must be of the type id_type, so we generate 
-        // GenEquations(env, expr1, id_type) 
-        // expr2 must be of type "type", but in a new environment where
-        // x is of type id_type, so we generate
-        // GenEquations(env + (id -> id_type), expr2, type)
         Type t1 = e.e1.accept(this);
 
         if (testType(t1, TArray.class)){
@@ -378,7 +376,6 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
 
     @Override
     public Type visit(Tuple e) throws Exception {
-        //Type t=new TUndef();
         ArrayList<Type> lt = new ArrayList();
         for(Exp ex : e.es){
             // ici si on veux limiter les type autoriser dans un tuple
@@ -390,29 +387,9 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
     }
 
     @Override
-    public Type visit(LetTuple e) throws Exception {        //TODO
-        /*int indice=0;
-        String id="error";
-        System.out.println("LET TUPLE e.ids: "+e.ids+ " e.ts: "+e.ts+" e.e1: "+ e.e1+" e.e2: "+e.e2);
-        Type t1 = e.e1.accept(this);    
-        //Type t2 = e.e2.accept(this);
-        VarVisitor vv = new VarVisitor();
-        Set<String> h = e.e1.accept(vv);
-        for (String s : h) {
-            id = s;
-        }
-         System.out.println("listeTuple"+listeTuple);
-        for(Id i : e.ids){
-            addId(listeVar, i, listeTuple.get(id).get(indice));
-            indice++;
-        }
-        
-        
-        System.out.println("LET TUPLE e.e1: "+t1+ " e.e2: "+t2);
-        System.out.println("letTuple");*/
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        /*return t2;*/
+    public Type visit(LetTuple e) throws Exception {        
+        //TODO
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
