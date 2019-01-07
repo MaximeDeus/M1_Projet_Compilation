@@ -12,10 +12,7 @@ public class Ident extends IdentOrImm {
     public String[] memAdr;
 
     public Ident(String ident) {
-        if (Character.isLowerCase(ident.charAt(0))) {
             this.ident = ident;
-        }
-
     }
 
     @Override

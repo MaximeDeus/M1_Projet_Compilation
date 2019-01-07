@@ -33,7 +33,7 @@ public class Commande {
     public static void option(String args[]) throws Exception {
 
         if (args.length < 2) {
-            System.out.print("we need two parameter. use -h for help");
+            throw new IllegalArgumentException("More arguments needed, use -h for more informations.");
         } else {
 
             for (int i = 1; i < args.length; i++) {
@@ -89,6 +89,7 @@ public class Commande {
             }
             compute(args);
         }
+        
     }
 
     public static void compute(String args[]) throws Exception {

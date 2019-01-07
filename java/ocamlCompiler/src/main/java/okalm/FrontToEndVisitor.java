@@ -161,10 +161,10 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
        
         //on visite tout les arguments de l'appel pour les transformer en noeuds asml et on les stocke dans une nouvelle liste asml
         e.es.forEach((element) -> {
-            l.add(new Fargs(new Ident(element.accept(this))));
+            l.add(new Fargs(new okalm.asml.Ident(element.accept(this))));
         });
 
-        return new Call(e.e.accept(this), l);
+        return new okalm.asml.Call(e.e.accept(this), l);
     }
 
     @Override
