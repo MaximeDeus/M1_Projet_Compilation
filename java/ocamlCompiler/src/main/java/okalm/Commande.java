@@ -1,6 +1,9 @@
 package okalm;
 
 import java.io.FileReader;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.File;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
 
@@ -129,10 +132,10 @@ public class Commande {
     }
 
     public static void typechecking(Exp exp) throws Exception {
-        System.out.println("------ TypeChecking ------");
+       /* System.out.println("------ TypeChecking ------");*/
         TypeVisitor tv = new TypeVisitor();
         exp.accept(tv);
-        System.out.println("Code type cheking is valid");
+        /*System.out.println("Code type cheking is valid");*/
     }
 
     public static Exp_asml frontend(Exp exp) {
@@ -175,18 +178,30 @@ public class Commande {
     }
 
     public static Exp_asml backend(Exp_asml exp) {
-        System.out.println("_____ FrontEnd _____");
+        System.out.println("_____ BACKEND _____");
         return exp;
     }
 
     public static void output(Exp_asml exp) {
         System.out.println("_____ OUTPUT _____");
         printAsmlVisitor pav = new printAsmlVisitor(true);
-        System.out.println(exp.accept(pav));
+        final String chemin = "Output/result.asml";
+        final File fichier =new File(chemin); 
+        try {
+            fichier.createNewFile();
+            final FileWriter writer = new FileWriter(fichier);
+            try {
+                writer.write(exp.accept(pav));
+            } finally {
+                writer.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Impossible de creer le fichier");
+        }
     }
     
     public static void output(Exp exp) {
-        System.out.println("\noutput frontend");
+        System.out.println("\noutput backend");
     }
 
     public static void error() {
@@ -202,20 +217,20 @@ public class Commande {
     public static Exp parse(String args[]) throws Exception {
 
         Parser p = new Parser(new Lexer(new FileReader(args[0])));
-        System.out.println("BASIC MAIN:");
+        /*System.out.println("BASIC MAIN:");*/
         Exp expression = (Exp) p.parse().value;
         assert (expression != null);
-        System.out.println("------ AST ------");
+        /*System.out.println("------ AST ------");
         expression.accept(new PrintVisitor());
-        System.out.println();
+        System.out.println();*/
 
-        System.out.println("------ Height of the AST ------");
+       /* System.out.println("------ Height of the AST ------");
         int height = Height.computeHeight(expression);
-        System.out.println("using Height.computeHeight: " + height);
+        System.out.println("using Height.computeHeight: " + height);*/
 
-        ObjVisitor<Integer> v = new HeightVisitor();
+        /*ObjVisitor<Integer> v = new HeightVisitor();
         height = expression.accept(v);
-        System.out.println("using HeightVisitor: " + height);
+        System.out.println("using HeightVisitor: " + height);*/
         return expression;
     }
 
