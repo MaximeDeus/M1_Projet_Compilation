@@ -21,4 +21,9 @@ public class Var extends Exp {
     public <E> E accept(ObjErrorVisitor<E> v) throws Exception {
         return v.visit(this);
     }
+    
+    @Override
+    public String toString(){
+        return id.toString();
+    }
 }

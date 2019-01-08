@@ -147,13 +147,13 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
 //        )
         String retour = indent?"\n":" ";
         nbIndent++;
-        String s = "if " + e.condasmt.accept(this) + " then ("+ indentRepeator() + e.thenasmt.accept(this) +retour;
+        String s = "if " + e.condasmt.accept(this) + " then ("+ indentRepeator() + e.thenasmt.accept(this);
         nbIndent--;
-        s+= indentRepeator() + ") else ("+retour;
+        s+= indentRepeator() + ") else (";
         nbIndent++;
         s+=indentRepeator()+e.elseasmt.accept(this);
         nbIndent--;
-        s+=indentRepeator()+retour;
+        s+=indentRepeator()+")"+indentRepeator();
         
         return s;
         

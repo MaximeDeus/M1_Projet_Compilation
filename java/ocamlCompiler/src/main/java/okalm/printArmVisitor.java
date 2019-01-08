@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package okalm;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import okalm.asml.*;
 /**
  *
@@ -11,10 +14,18 @@ import okalm.asml.*;
  */
 public class printArmVisitor implements AsmlObjVisitor<String>{
     
-    int labelNum;
+    private int labelNum;
+    private Set<String> extFun;
     
     public printArmVisitor(){
         labelNum=0;
+        extFun = new HashSet();
+        extFun.add("print_int");
+        extFun.add("print_newline");
+        extFun.add("print_string");
+        extFun.add("exit");
+        extFun.add("hello_world");
+        extFun.add("print_char");
     }
     
     public String getNewLabel(){
@@ -63,7 +74,15 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Call e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (extFun.contains(e.label.accept(this))){
+            String s = "";
+            for(Exp_asml elem: e.fargs){
+                s+= ","+elem.accept(this);
+            }
+            return e.label.accept(this) +"("+s+")";
+        }else{
+            return "!Function call not supported yet!\n";
+        }
     }
 
     @Override
