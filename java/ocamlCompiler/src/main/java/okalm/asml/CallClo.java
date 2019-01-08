@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class CallClo extends Exp_asml {
 
-    public Ident ident;
+    public Exp_asml ident;
     public List<Exp_asml> fargs;
 
     public CallClo(Ident ident, List<Exp_asml> fargs) {
