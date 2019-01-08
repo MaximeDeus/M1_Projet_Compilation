@@ -1,0 +1,1 @@
+let z = Array 10 1 in z(1)

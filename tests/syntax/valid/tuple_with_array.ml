@@ -1,0 +1,1 @@
+let a = Array.create 5 6 in let t = (7, 2. , a) in t
