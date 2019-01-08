@@ -1,6 +1,7 @@
 package okalm;
 
 import java.io.FileReader;
+import okalm.asml.BasicAllocationVisitor;
 import okalm.asml.CodeGenerationVisitor;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
@@ -106,10 +107,11 @@ public class Commande {
                 typechecking(exp);
                 if (!bool_type) {
                     Exp_asml exp_asml = frontend(exp);
-                    if (!bool_ASML) {
-//                        exp_asml = backend(exp_asml);
-                    }
                     output(exp_asml);
+                    if (!bool_ASML) {
+                        exp_asml = backend(exp_asml);
+                        outputARM(exp_asml);
+                    }
                 }
 
             }
@@ -143,7 +145,7 @@ public class Commande {
         System.out.println("\n------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
         exp = exp.accept(kv);
-        //exp.accept(pv); //affichage K-normalisation
+        exp.accept(pv); //affichage K-normalisation
 
         //a-convers
         System.out.println("\n------ A-Conversion ------");
@@ -161,7 +163,7 @@ public class Commande {
         ClosureVisitor cv = new ClosureVisitor();
         exp = exp.accept(cv);
         System.out.println(cv.functionsToString()); //affichage des fonctions après closure
-        exp.accept(pv); //affichage code après closure
+        //exp.accept(pv); //affichage code après closure
 
         System.out.println("\n------ FrontEnd to BackEnd ------");
         FrontToEndVisitor ftev = new FrontToEndVisitor();
@@ -171,20 +173,22 @@ public class Commande {
 
     }
 
-    public static String backend(Exp_asml exp) {
+    public static Exp_asml backend(Exp_asml exp) {
         System.out.println("_____ Backend _____");
-        return null;
+        BasicAllocationVisitor bav = new BasicAllocationVisitor();
+        exp = exp.accept(bav);
+        return exp;
     }
 
     public static void outputARM(Exp_asml exp) {
-        System.out.println("_____ Backend _____");
-
-        CodeGenerationVisitor cgv = new CodeGenerationVisitor();
+        System.out.println("_____ ARM _____");
+        printArmVisitor pav = new printArmVisitor();
+        System.out.println(exp.accept(pav));
 
     }
 
     public static void output(Exp_asml exp) {
-        System.out.println("_____ OUTPUT _____");
+        System.out.println("_____ ASML _____");
         printAsmlVisitor pav = new printAsmlVisitor(true);
         System.out.println(exp.accept(pav));
     }

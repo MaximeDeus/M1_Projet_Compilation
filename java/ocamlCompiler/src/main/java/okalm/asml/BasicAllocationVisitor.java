@@ -52,7 +52,6 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
         List<Exp_asml> l = new ArrayList();
         if (!e.fargs.isEmpty()) {
             e.fargs.forEach((element) -> {
-
                 l.add(element.accept(this));
             });
         }
@@ -108,13 +107,12 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
     }
 
     @Override
-    public Exp_asml visit(Ident e
-    ) {
+    public Exp_asml visit(Ident e) {
         if (!reg.containsKey(e.ident)) {
             reg.put(e.ident, regNum);
             regNum++;
         }
-        return new Ident("r" + reg.get(e.ident));
+        return new Ident("R" + reg.get(e.ident));
     }
 
     @Override
@@ -198,4 +196,17 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public Exp_asml visit(Eq e) {
+        e.e1= e.e1.accept(this);
+        e.e2= e.e2.accept(this);
+        return e;
+    }
+
+    @Override
+    public Exp_asml visit(LE e) {
+        e.e1= e.e1.accept(this);
+        e.e2= e.e2.accept(this);
+        return e;    
+    }
 }
