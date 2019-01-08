@@ -12,10 +12,10 @@ MINCAMLC=java/ocamlCompiler/src/main/java/mincamlc
 # TODO extends this script to run test in subdirectories
 # 
 echo VALID
-for test_case in tests/syntax/valid/*.ml
+for test_case in tests/typechecking/valid/*.ml
 do
     echo "testing parser on: $test_case"
-    if $MINCAMLC $test_case -p 2> /dev/null 1> /dev/null
+    if $MINCAMLC $test_case -t 2> /dev/null 1> /dev/null
     then
         echo "OK"
     else 
@@ -23,14 +23,13 @@ do
     fi
 done
 echo INVALID
-for test_case in tests/syntax/invalid/*.ml
+for test_case in tests/typechecking/invalid/*.ml
 do
     echo "testing parser on: $test_case"
-    if $MINCAMLC $test_case -p 2> /dev/null 1> /dev/null
+    if $MINCAMLC $test_case -t 2> /dev/null 1> /dev/null
     then
         echo "OK"
     else 
         echo "KO"
     fi
 done
-
