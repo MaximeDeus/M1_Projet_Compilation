@@ -1,5 +1,6 @@
 package okalm.asml;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,11 +9,11 @@ import java.util.List;
  */
 public class Fundefs extends Exp_asml {
 
-    public final Exp_asml asmt; //cas LET UNDERSC EQUAL asmt
-    public final List<Fundefs> fundefs; //cas LET LABEL EQUAL FLOAT fundefs
-    public final List<Exp_asml> formal_args; //cas  LET LABEL formal_args EQUAL asmt fundefs
-    public final Exp_asml label;
-    public final Exp_asml ident;    //pour representer le float, je ne sais pas pourquoi dans ce cas il n'est pas encodé par un ident comme d'habitude
+    public Exp_asml asmt; //cas LET UNDERSC EQUAL asmt
+    public List<Exp_asml> fundefs; //cas LET LABEL EQUAL FLOAT fundefs
+    public List<Exp_asml> formal_args; //cas  LET LABEL formal_args EQUAL asmt fundefs
+    public Exp_asml label;
+    public Exp_asml ident;    //pour representer un float eventuellement
 
     public Fundefs(Asmt asmt) {
         this.asmt = asmt;
@@ -23,7 +24,7 @@ public class Fundefs extends Exp_asml {
 
     }
 
-    public Fundefs(List<Fundefs> fundefs, Label label, Ident ident) {
+    public Fundefs(List<Exp_asml> fundefs, Label label, Ident ident) {
         this.asmt = null;
         this.fundefs = fundefs;
         this.formal_args = null;
@@ -31,7 +32,7 @@ public class Fundefs extends Exp_asml {
         this.ident = ident;
     }
 
-    public Fundefs(Exp_asml asmt, List<Fundefs> fundefs, List<Exp_asml> formal_args, Exp_asml label, Exp_asml ident) {
+    public Fundefs(Exp_asml asmt, List<Exp_asml> fundefs, List<Exp_asml> formal_args, Exp_asml label, Exp_asml ident) {
         this.asmt = asmt;
         this.fundefs = fundefs;
         this.formal_args = formal_args;

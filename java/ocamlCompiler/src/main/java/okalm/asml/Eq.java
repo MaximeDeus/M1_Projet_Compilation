@@ -11,8 +11,8 @@ package okalm.asml;
  */
 public class Eq extends Exp_asml {
 
-    public final Exp_asml e1;
-    public final Exp_asml e2;
+    public Exp_asml e1;
+    public Exp_asml e2;
 
     public Eq(Exp_asml e1, Exp_asml e2) {
         this.e1 = e1;
@@ -21,17 +21,17 @@ public class Eq extends Exp_asml {
 
     @Override
     public void accept(AsmlVisitor v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        v.visit(this);
     }
 
     @Override
     public <E> E accept(AsmlObjVisitor<E> v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visit(this);
     }
 
     @Override
     public <E> E accept(AsmlErrorVisitor<E> v) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visit(this);
     }
 
 }

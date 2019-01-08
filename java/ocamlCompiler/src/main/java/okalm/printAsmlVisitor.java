@@ -122,6 +122,7 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
         for(Exp_asml elem : e.formal_args){
             s+=elem.accept(this)+" ";
         }
+        s+=" =";
         nbIndent++;
         //corps de la fonction
         s+= this.indentRepeator()+ e.asmt.accept(this);
@@ -196,5 +197,15 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
     @Override
     public String visit(Tokens e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String visit(Eq e) {
+        return e.e1.accept(this)+" == "+ e.e2.accept(this);
+    }
+
+    @Override
+    public String visit(LE e) {
+        return e.e1.accept(this)+" <= "+ e.e2.accept(this);
     }
 }

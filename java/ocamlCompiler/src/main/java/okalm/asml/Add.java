@@ -11,8 +11,8 @@ package okalm.asml;
  */
 public class Add extends Exp_asml {
 
-    public final Exp_asml ident;
-    public final Exp_asml ioi;
+    public Exp_asml ident;
+    public Exp_asml ioi;
 
     public Add(Exp_asml ident, Exp_asml ioi) {
         this.ident = ident;

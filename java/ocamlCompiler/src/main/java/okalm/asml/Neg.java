@@ -6,7 +6,7 @@ package okalm.asml;
  */
 public class Neg extends Exp_asml {
 
-    public final Exp_asml ident;
+    public Exp_asml ident;
 
     public Neg(Exp_asml ident) {
         this.ident = ident;

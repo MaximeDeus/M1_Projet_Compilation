@@ -7,11 +7,12 @@ import okalm.ObjVisitor;
 import okalm.Visitor;
 
 public class App extends Exp {
+
     public final Exp e;
     public final List<Exp> es;
 
     /**
-     * 
+     *
      * @param e Var avec id= nom de la fonction appelée
      * @param es Paramètre de l'appel de la fonction
      */
@@ -20,13 +21,14 @@ public class App extends Exp {
         this.es = es;
     }
 
-    public<E> E accept(ObjVisitor<E> v) {
+    public <E> E accept(ObjVisitor<E> v) {
         return v.visit(this);
     }
+
     public void accept(Visitor v) {
         v.visit(this);
     }
-    
+
     public <E> E accept(ObjErrorVisitor<E> v) throws Exception {
         return v.visit(this);
     }
