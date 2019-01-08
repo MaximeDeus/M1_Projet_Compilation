@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.File;
+import okalm.asml.BasicAllocationVisitor;
+import okalm.asml.CodeGenerationVisitor;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
 
@@ -32,7 +34,6 @@ public class Commande {
      * @param args tableau d'argument
      * @throws Exception
      */
-
     public static void option(String args[]) throws Exception {
 
         if (args.length < 2) {
@@ -92,7 +93,7 @@ public class Commande {
             }
             compute(args);
         }
-        
+
     }
 
     public static void compute(String args[]) throws Exception {
@@ -109,10 +110,11 @@ public class Commande {
                 typechecking(exp);
                 if (!bool_type) {
                     Exp_asml exp_asml = frontend(exp);
+                    output(exp_asml);
                     if (!bool_ASML) {
                         exp_asml = backend(exp_asml);
+                        outputARM(exp_asml);
                     }
-                    output(exp_asml);
                 }
 
             }
@@ -132,21 +134,21 @@ public class Commande {
     }
 
     public static void typechecking(Exp exp) throws Exception {
-        System.out.println("------ TypeChecking ------");
+       /* System.out.println("------ TypeChecking ------");*/
         TypeVisitor tv = new TypeVisitor();
         exp.accept(tv);
-        System.out.println("Code type cheking is valid");
+        /*System.out.println("Code type cheking is valid");*/
     }
 
     public static Exp_asml frontend(Exp exp) {
         System.out.println("_____ FrontEnd _____");
         PrintVisitor pv = new PrintVisitor();
-        
+
         //K-norm
         System.out.println("\n------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
         exp = exp.accept(kv);
-        //exp.accept(pv); //affichage K-normalisation
+        exp.accept(pv); //affichage K-normalisation
 
         //a-convers
         System.out.println("\n------ A-Conversion ------");
@@ -154,27 +156,24 @@ public class Commande {
         exp = exp.accept(acv);
         //exp.accept(pv); //affichage A-Conversion
 
-
         //reduction let
         System.out.println("\n------ Reduction Let Expression ------");
         ReductionLetExpressionVisitor rlev = new ReductionLetExpressionVisitor();
         exp = exp.accept(rlev);
         //exp.accept(pv); //affichage let expression
 
-        
         System.out.println("\n------ Closure ------");
         ClosureVisitor cv = new ClosureVisitor();
         exp = exp.accept(cv);
         System.out.println(cv.functionsToString()); //affichage des fonctions après closure
-        exp.accept(pv); //affichage code après closure
-        
+        //exp.accept(pv); //affichage code après closure
+
         System.out.println("\n------ FrontEnd to BackEnd ------");
         FrontToEndVisitor ftev = new FrontToEndVisitor();
         Exp_asml exp_asml = exp.accept(ftev);
         exp_asml = ftev.wrapCode(exp_asml, cv.listeFun);
         return exp_asml;
 
-        
     }
 
     public static Exp_asml backend(Exp_asml exp) {
@@ -184,14 +183,25 @@ public class Commande {
         return exp;
     }
 
+    public static void outputARM(Exp_asml exp) {
+        System.out.println("_____ ARM _____");
+        printArmVisitor pav = new printArmVisitor();
+        System.out.println(exp.accept(pav));
+        
+        write_in_file ("Output/result.s", exp, pav);
+
+    }
+
     public static void output(Exp_asml exp) {
-        System.out.println("_____ OUTPUT _____");
+        System.out.println("_____ ASML _____");
         printAsmlVisitor pav = new printAsmlVisitor(true);
         System.out.println(exp.accept(pav));
+        
+        write_in_file ("Output/result.asml", exp, pav);
     }
-    
+
     public static void output(Exp exp) {
-        System.out.println("\noutput frontend");
+        System.out.println("\noutput backend");
     }
 
     public static void error() {
@@ -207,21 +217,53 @@ public class Commande {
     public static Exp parse(String args[]) throws Exception {
 
         Parser p = new Parser(new Lexer(new FileReader(args[0])));
-        System.out.println("BASIC MAIN:");
+        /*System.out.println("BASIC MAIN:");*/
         Exp expression = (Exp) p.parse().value;
         assert (expression != null);
-        System.out.println("------ AST ------");
+        /*System.out.println("------ AST ------");
         expression.accept(new PrintVisitor());
-        System.out.println();
+        System.out.println();*/
 
-        System.out.println("------ Height of the AST ------");
+       /* System.out.println("------ Height of the AST ------");
         int height = Height.computeHeight(expression);
-        System.out.println("using Height.computeHeight: " + height);
+        System.out.println("using Height.computeHeight: " + height);*/
 
-        ObjVisitor<Integer> v = new HeightVisitor();
+        /*ObjVisitor<Integer> v = new HeightVisitor();
         height = expression.accept(v);
-        System.out.println("using HeightVisitor: " + height);
+        System.out.println("using HeightVisitor: " + height);*/
         return expression;
+    }
+    
+    public static void write_in_file  (String chemin, Exp_asml exp,printAsmlVisitor pav){
+        
+        final File fichier =new File(chemin); 
+        try {
+            fichier.createNewFile();
+            final FileWriter writer = new FileWriter(fichier);
+            try {
+                writer.write(exp.accept(pav));
+            } finally {
+                writer.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Impossible de creer le fichier");
+        }
+    }
+    
+    public static void write_in_file  (String chemin, Exp_asml exp,printArmVisitor pav){
+        
+        final File fichier =new File(chemin); 
+        try {
+            fichier.createNewFile();
+            final FileWriter writer = new FileWriter(fichier);
+            try {
+                writer.write(exp.accept(pav));
+            } finally {
+                writer.close();
+            }
+        } catch (Exception e) {
+            System.out.println("Impossible de creer le fichier");
+        }
     }
 
 }
