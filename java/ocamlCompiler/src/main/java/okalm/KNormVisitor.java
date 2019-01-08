@@ -3,7 +3,16 @@ import okalm.ast.*;
 import okalm.ast.Float;
 import okalm.type.Type;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 public class KNormVisitor implements ObjVisitor<Exp> {
+
+    //Attributs utilisés pour la méthode App
+    private LinkedList<Exp> liste_arguments = new LinkedList<>(); //Liste qui contient les arguments k-normalisés
+    private HashMap<App,Integer> nb_argument_fonction = new HashMap<>(); //Cette map associe une fonction à son nombre de paramètre
 
     public Unit visit(Unit e) {
         return e;
@@ -181,21 +190,60 @@ public class KNormVisitor implements ObjVisitor<Exp> {
     }
 
     public Exp visit(App e){
-        /**TODO à terminer
-        Exp e1 = e.e.accept(this);
-        Exp e2 = e.e2.accept(this);
-        Id new_var1 = Id.gen();
-        Type new_type1 = Type.gen();
-        Id new_var2 = Id.gen();
-        Type new_type2 = Type.gen();
-        Let res = new Let(new_var1, new_type1, e1,
-                new Let(new_var2, new_type2, e2,
-                        new LE (new Var(new_var1), new Var(new_var2))));
-        return res;
+
+
+        //TODO v1 qui fonctionne (version basique)
+       /** Id new_id = Id.gen();
+        Type new_type = Type.gen();
+        List<Exp> new_es = new LinkedList<>();
+        new_es.add(new Var(new_id));
+
+        Let new_let = new Let (new_id,new_type,e.es.get(0),new App(e.e,new_es));
+
+        return new_let;
+        */
+
+       /**
+        //TODO v2 qui fonctionne (version appels imbriqués)
+        Id new_id = Id.gen();
+        Type new_type = Type.gen();
+        List<Exp> new_es = new LinkedList<>();
+        new_es.add(new Var(new_id));
+
+        Let new_let = new Let (new_id,new_type,e.es.get(0).accept(this),new App(e.e,new_es));
+
+
+        return new_let;
+        */
+
+        Id new_id = Id.gen();
+        Type new_type = Type.gen();
+
+        if (!nb_argument_fonction.containsKey(e)){ //Permet de stocker nombre arguments de la fonction
+            nb_argument_fonction.put(e,e.es.size());
+        }
+
+        if (e.es.size() > 0) { //S'il y a encore des arguments à k-normaliser
+                liste_arguments.add(new Var(new_id)); //On stocke dans la liste les nouveaux arguments (v0 v1 etc.)
+                Exp argument = e.es.get(0); //On prend le premier argument de la fonction ( f a b -> on prend a)
+                e.es.remove(0); //Que l'on retire aussi de l'appel de fonction initial (f a b devient f b)
+                //On effectue une application partielle de la fonction
+                return new Let(new_id, new_type, argument.accept(this), e.accept(this));
+        }
+        else { //lorsqu'il n'y a plus d'argument à traiter
+            List<Exp> tmp = new LinkedList<>(); //On construit liste arguments pour chaque fonction
+            int i;
+            int nombre_arguments = nb_argument_fonction.get(e); //Nombre d'arguments de la fonction traitée
+            int position_argument = liste_arguments.size() - nombre_arguments; //Permet de conserver l'ordre
+            for (i = 0 ; i < nombre_arguments ; i++){
+                tmp.add(liste_arguments.get(position_argument));
+                liste_arguments.remove(position_argument);
+            }
+            return new App (e.e,tmp); //Fin de l'algo (le fils droit = app initial modifié)
+        }
+
     }
-         */
-        return null;
-    }
+
 
     public Tuple visit(Tuple e){
        //TO DO
@@ -237,5 +285,4 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         return res;
     }
 }
-
 
