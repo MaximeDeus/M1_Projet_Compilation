@@ -13,6 +13,7 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
 
     public VariableLivenessVisitor() {
         wlList = new HashMap<>();
+        //TODO: mettre le worklist parser ici
 
     }
 
@@ -166,10 +167,10 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
         if (mthen.containsKey("worklistmap")) {
             String s = (String) m.get("worklistmap");
             WorkList wlTemp = wlList.get(s);
-            wlthen.suc.add(wlTemp);
+            wlthen.suc.add(wlTemp.toString());
         }
 
-        workl.suc.add(wlthen);
+        workl.suc.add(wlthen.toString());
 
         //On construit le worklist de la condition else
         melse = new HashMap();
@@ -187,10 +188,10 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
         if (melse.containsKey("worklistmap")) {
             String s = (String) m.get("worklistmap");
             WorkList wlTemp = wlList.get(s);
-            wlelse.suc.add(wlTemp);
+            wlelse.suc.add(wlTemp.toString());
         }
 
-        workl.suc.add(wlelse);
+        workl.suc.add(wlelse.toString());
 
         m.put("worklistmap", workl.toString());
         wlList.put(workl.toString(), workl);
@@ -212,8 +213,16 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
 
     @Override
     public Map<String, String> visit(LE e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        Map m = new HashMap();
+
+        m.putAll(e.e1.accept(this));
+        m.putAll(e.e2.accept(this));
+        m.forEach((t, u) -> {
+            u = "Gen";
+        });
+
+        return m;
+       	}
 
     @Override
     public Map<String, String> visit(Int e) {

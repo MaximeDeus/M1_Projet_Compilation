@@ -15,8 +15,8 @@ import java.util.List;
 public class WorkList {
 
     public Exp_asml exp;
-    public List<WorkList> prec, suc; //précédent, successeur
-    public List<String> gen, kill;
+    public List<String> prec, suc; //précédent, successeur
+    public ArrayList<String> gen,kill;
 
     public WorkList(Exp_asml exp) {
         this.exp = exp;
