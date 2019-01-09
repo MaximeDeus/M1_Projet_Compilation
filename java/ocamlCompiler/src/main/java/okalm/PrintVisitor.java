@@ -123,9 +123,15 @@ class PrintVisitor implements Visitor {
         System.out.print("(if ");
         e.e1.accept(this);
         System.out.print(" then ");
+        nbIndent++;
+        System.out.print("\n"+indentRepeator());
         e.e2.accept(this);
-        System.out.print(" else ");
+        nbIndent--;
+        System.out.print("\n"+indentRepeator()+" else ");
+        nbIndent++;
+        System.out.print("\n"+indentRepeator());
         e.e3.accept(this);
+        nbIndent--;
         System.out.print(")");
     }
 
@@ -133,7 +139,7 @@ class PrintVisitor implements Visitor {
         System.out.print("(let ");
         System.out.print(e.id);
         nbIndent++;
-        System.out.print(" = \n"+indentRepeator());
+        System.out.print(" = ");
         e.e1.accept(this);
         nbIndent--;
         System.out.print(" in  \n"+indentRepeator());

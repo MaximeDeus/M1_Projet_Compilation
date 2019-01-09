@@ -76,7 +76,7 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
                 break;
         }
         //TODO
-        s+=e.asmt.accept(this)+"\n";
+        s+=e.asmt.accept(this);
         return s;        
     }
 
@@ -85,9 +85,9 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
         if (extFun.contains(e.label.accept(this))){
             String s = "";
             for(Exp_asml elem: e.fargs){
-                s+= ","+elem.accept(this);
+                s+= " "+elem.accept(this)+" ";
             }
-            return e.label.accept(this) +"("+s+")";
+            return "   min_caml_"+e.label.accept(this) +s;
         }else{
             return "!Function call not supported yet!\n";
         }
@@ -122,11 +122,11 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
         s+=e.condasmt.getClass().getSimpleName().equals("Eq")?"   EQ ":"   LE ";  //séléction du comparateur (EQ/LE)
         String t = getNewLabel(); // création du label du cas true
         s+= t + "\n";
-        s+= "   "+e.elseasmt.accept(this)+"\n";
+        s+= e.elseasmt.accept(this)+"\n";
         String end = getNewLabel(); //création du label de fin;
         s+= "   "+end + "\n"; // renvois de la phase else au label de fin
         s+= "."+t+":\n"; //label true
-        s+= "   "+e.thenasmt.accept(this)+"\n";
+        s+= e.thenasmt.accept(this)+"\n";
         s+= "."+end+":\n";
         
         return s;
@@ -181,7 +181,7 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Fargs e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return e.ident.accept(this);
     }
 
     @Override

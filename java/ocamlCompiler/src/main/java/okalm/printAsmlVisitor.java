@@ -76,7 +76,7 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Fargs e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return e.ident.accept(this);
     }
 
     @Override
@@ -176,7 +176,7 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Neg e) {
-        return "not "+e.ident.accept(this);
+        return "neg "+e.ident.accept(this);
     }
 
     @Override
