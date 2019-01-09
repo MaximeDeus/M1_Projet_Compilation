@@ -7,7 +7,7 @@ public class Main {
       Commande.option(argv);
       System.exit(0);
     } catch (Exception e) {
-      //e.printStackTrace();
+      e.printStackTrace();
       System.err.println(e.getMessage());
       System.exit(1);
     }
