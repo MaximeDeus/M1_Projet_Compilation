@@ -181,17 +181,17 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         Var var2 = new Var (id2);
 
         if (e.e1 instanceof LE){
-            LE eqORle = (LE) e.e1;
-            return new Let (id1,type1,eqORle.e1,
-                   new Let (id2,type2,eqORle.e2,
+            LE le = (LE) e.e1;
+            return new Let (id1,type1,le.e1,
+                   new Let (id2,type2,le.e2,
                    new If  (new LE(var1,var2),e.e2.accept(this),e.e3.accept(this))));
 
         }
         else{
-            Eq eqORle = (Eq) e.e1;
-            return new Let (id1,type1,eqORle.e1,
-                   new Let (id2,type2,eqORle.e2,
-                   new If  (new LE(var1,var2),e.e2.accept(this),e.e3.accept(this))));
+            Eq eq = (Eq) e.e1;
+            return new Let (id1,type1,eq.e1,
+                   new Let (id2,type2,eq.e2,
+                   new If  (new Eq(var1,var2),e.e2.accept(this),e.e3.accept(this))));
         }
 
     }
