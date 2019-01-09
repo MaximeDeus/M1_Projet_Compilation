@@ -63,6 +63,14 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
                 s+= "   MOV "+ e.ident.accept(this)+" , "+ e.e.accept(this)+"\n";
                 break;
                 
+            case "Neg":
+                s+="";
+                break;
+                
+            case "Asmt":
+                s+="";
+                break;
+                
             default: 
                 s+= "!"+type +" is not supported yet!";
                 break;
@@ -111,14 +119,14 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
     public String visit(If e) {
         String s = "";
         s+= "   CMP "+ e.condasmt.accept(this)+"\n";                           //comparaison des deux éléments
-        s+=e.condasmt.getClass().getSimpleName().equals("Eq")?"EQ ":"LE ";  //séléction du comparateur (EQ/LE)
+        s+=e.condasmt.getClass().getSimpleName().equals("Eq")?"   EQ ":"   LE ";  //séléction du comparateur (EQ/LE)
         String t = getNewLabel(); // création du label du cas true
         s+= t + "\n";
-        s+= e.elseasmt.accept(this)+"\n";
+        s+= "   "+e.elseasmt.accept(this)+"\n";
         String end = getNewLabel(); //création du label de fin;
-        s+= end + "\n"; // renvois de la phase else au label de fin
+        s+= "   "+end + "\n"; // renvois de la phase else au label de fin
         s+= "."+t+":\n"; //label true
-        s+= e.thenasmt.accept(this)+"\n";
+        s+= "   "+e.thenasmt.accept(this)+"\n";
         s+= "."+end+":\n";
         
         return s;
@@ -141,7 +149,9 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Neg e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String indent = e.ident.accept(this);
+        String s = indent +" , "+ indent;
+        return s;
     }
 
     @Override
