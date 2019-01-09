@@ -18,9 +18,7 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         return e;
     }
 
-    public Bool visit(Bool e) {
-        return e;
-    }
+    public Bool visit(Bool e) { return e; }
 
     public Int visit(Int e) {
         return e;
@@ -180,13 +178,14 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         Type type2 = Type.gen();
         Var var2 = new Var (id2);
 
+
         if (e.e1 instanceof Not){
             Not not = (Not) e.e1;
             if (not.e instanceof LE){
                 LE le = (LE) not.e;
                 return new Let (id1,type1,le.e1,
                        new Let (id2,type2,le.e2,
-                       new If  (new Not(new LE(var1,var2)),e.e2.accept(this),e.e3.accept(this))));
+                       new If  (new LE(var1,var2),e.e3.accept(this),e.e2.accept(this))));
 
             }
             else{
@@ -198,18 +197,27 @@ public class KNormVisitor implements ObjVisitor<Exp> {
 
         }
 
-        if (e.e1 instanceof LE){
+        else if (e.e1 instanceof LE){
             LE le = (LE) e.e1;
             return new Let (id1,type1,le.e1,
                    new Let (id2,type2,le.e2,
                    new If  (new LE(var1,var2),e.e2.accept(this),e.e3.accept(this))));
 
         }
-        else{
+        else if (e.e1 instanceof Eq){
             Eq eq = (Eq) e.e1;
             return new Let (id1,type1,eq.e1,
                    new Let (id2,type2,eq.e2,
                    new If  (new Eq(var1,var2),e.e2.accept(this),e.e3.accept(this))));
+        }
+
+        else { //e.e1 n'est pas une comparaison
+
+            return new Let (id1,type1,e.e1,
+                   new Let (id2,type2,new Bool(false),
+                   new If(new Eq(var1,var2),e.e3.accept(this),e.e2.accept(this))));
+
+
         }
 
     }
