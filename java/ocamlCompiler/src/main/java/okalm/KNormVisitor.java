@@ -132,7 +132,8 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         return res;
     }
 
-    public Let visit(Eq e){
+    public Exp visit(Eq e){ //Renvoie Let initialement
+        /**
         Exp e1 = e.e1.accept(this);
         Exp e2 = e.e2.accept(this);
         Id new_var1 = Id.gen();
@@ -143,9 +144,12 @@ public class KNormVisitor implements ObjVisitor<Exp> {
                 new Let(new_var2, new_type2, e2,
                         new Eq (new Var(new_var1), new Var(new_var2))));
         return res;
+         */
+        return e;
     }
 
-    public Let visit(LE e){
+    public Exp visit(LE e){ //Renvoie Let initialement
+        /*
         Exp e1 = e.e1.accept(this);
         Exp e2 = e.e2.accept(this);
         Id new_var1 = Id.gen();
@@ -156,13 +160,40 @@ public class KNormVisitor implements ObjVisitor<Exp> {
                   new Let(new_var2, new_type2, e2,
                         new LE (new Var(new_var1), new Var(new_var2))));
         return res;
+        */
+        return e;
     }
 
-    public If visit(If e){
+    public Let visit(If e){ //Renvoie If initialement
+        /**
         Exp e1 = e.e1.accept(this);
         Exp e2 = e.e2.accept(this);
         Exp e3 = e.e3.accept(this);
         return new If(e1, e2, e3);
+         */
+
+        Id id1 = Id.gen();
+        Type type1 = Type.gen();
+        Var var1 = new Var (id1);
+
+        Id id2 = Id.gen();
+        Type type2 = Type.gen();
+        Var var2 = new Var (id2);
+
+        if (e.e1 instanceof LE){
+            LE eqORle = (LE) e.e1;
+            return new Let (id1,type1,eqORle.e1,
+                   new Let (id2,type2,eqORle.e2,
+                   new If  (new LE(var1,var2),e.e2.accept(this),e.e3.accept(this))));
+
+        }
+        else{
+            Eq eqORle = (Eq) e.e1;
+            return new Let (id1,type1,eqORle.e1,
+                   new Let (id2,type2,eqORle.e2,
+                   new If  (new LE(var1,var2),e.e2.accept(this),e.e3.accept(this))));
+        }
+
     }
 
     public Let visit(Let e) {
