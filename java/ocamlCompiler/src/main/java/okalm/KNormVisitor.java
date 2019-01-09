@@ -180,6 +180,24 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         Type type2 = Type.gen();
         Var var2 = new Var (id2);
 
+        if (e.e1 instanceof Not){
+            Not not = (Not) e.e1;
+            if (not.e instanceof LE){
+                LE le = (LE) not.e;
+                return new Let (id1,type1,le.e1,
+                       new Let (id2,type2,le.e2,
+                       new If  (new Not(new LE(var1,var2)),e.e2.accept(this),e.e3.accept(this))));
+
+            }
+            else{
+                Eq eq = (Eq) not.e;
+                return new Let (id1,type1,eq.e1,
+                       new Let (id2,type2,eq.e2,
+                       new If  (new Not(new Eq(var1,var2)),e.e2.accept(this),e.e3.accept(this))));
+            }
+
+        }
+
         if (e.e1 instanceof LE){
             LE le = (LE) e.e1;
             return new Let (id1,type1,le.e1,
