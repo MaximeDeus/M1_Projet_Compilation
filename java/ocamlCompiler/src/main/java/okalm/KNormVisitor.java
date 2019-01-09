@@ -193,7 +193,7 @@ public class KNormVisitor implements ObjVisitor<Exp> {
                 Eq eq = (Eq) not.e;
                 return new Let (id1,type1,eq.e1,
                        new Let (id2,type2,eq.e2,
-                       new If  (new Not(new Eq(var1,var2)),e.e2.accept(this),e.e3.accept(this))));
+                       new If  (new Eq(var1,var2),e.e3.accept(this),e.e2.accept(this))));
             }
 
         }
