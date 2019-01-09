@@ -1,6 +1,5 @@
 package okalm.asml;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
     public Map<String, String> visit(Add e) {
         Map m = new HashMap();
 
-        m.putAll(e.accept(this));
+        m.putAll(e.ident.accept(this));
         m.putAll(e.ioi.accept(this));
         m.forEach((t, u) -> {
             u = "Gen";
@@ -35,7 +34,7 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
 
         Map m = new HashMap();
 
-        m.putAll(e.accept(this));
+        m.putAll(e.ident.accept(this));
         m.putAll(e.ioi.accept(this));
         m.forEach((t, u) -> {
             u = "Gen";
@@ -91,10 +90,11 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
     public Map<String, String> visit(Fundefs e) {
         Map m = new HashMap();
         String s = null;
-        WorkList workl = new WorkList(e);
+        WorkList workl;
+        WorkList wlTemp;
 
+        //remplissage de la map des variables de ce bloc + les arguments formels de ce fonction
         m.putAll(e.asmt.accept(this));
-
         if (!e.formal_args.isEmpty()) {
             e.formal_args.forEach((element) -> {
 
@@ -102,19 +102,37 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
             });
         }
 
+        //Si un if dans ce bloc a deja crée une Worklist, one en sert, sinon on en fait une nouvelle
         if (m.containsKey("worklistmap")) {
             s = (String) m.get("worklistmap");
-            WorkList wlTemp = wlList.get(s);
-            workl.suc.add(wlTemp);
+            wlTemp = wlList.get(s);
+            wlTemp.exp = e;
+
+        } else {
+            wlTemp = new WorkList(e);
+
         }
-/////////////////////////////////TODO
+
+        workl = wlTemp;
+
+        //remplissage de la worklist avec les variables de ce bloc, sauvegardées dans la map m
+        m.forEach((t, u) -> {
+            if (u.equals("Gen")) {
+                workl.gen.add((String) t);
+            } else if (u.equals("Kill")) {
+                workl.kill.add((String) t);
+            }
+        });
+
+        wlList.put(workl.toString(), workl);
+
         if (!e.fundefs.isEmpty()) {
             e.fundefs.forEach((element) -> {
-
+                element.accept(this);
             });
         }
 
-        return e;
+        return null;
     }
 
     @Override
@@ -180,74 +198,90 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
     }
 
     @Override
-    public ArrayList<Exp_asml> visit(Int e) {
-        ArrayList<Exp_asml> eas = new ArrayList<>();
-        eas.add(e);
-        return eas;
+    public Map<String, String> visit(Eq e) {
+        Map m = new HashMap();
+
+        m.putAll(e.e1.accept(this));
+        m.putAll(e.e2.accept(this));
+        m.forEach((t, u) -> {
+            u = "Gen";
+        });
+
+        return m;
     }
 
     @Override
-    public Exp_asml visit(Label e) {
-        return e;   //Les labels restent tels quels, pas de transformation à faire
-    }
-
-    @Override
-    public Exp_asml visit(Mem e) {
-        e.ident1 = e.ident1.accept(this);
-        e.ioi = e.ioi.accept(this);
-        e.ident2 = e.ident2.accept(this);
-        return e;
-    }
-
-    @Override
-    public Exp_asml visit(Neg e) {
-        e.ident = e.ident.accept(this);
-        return e;
-    }
-
-    @Override
-    public Exp_asml visit(New e) {
-        e.ioi = e.ioi.accept(this);
-        return e;
-    }
-
-    @Override
-    public Exp_asml visit(Nop e) {
-        return e;
-    }
-
-    @Override
-    public Exp_asml visit(ParenExp e) {
+    public Map<String, String> visit(LE e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Exp_asml visit(Tokens e) {
+    public Map<String, String> visit(Int e) {
+        return new HashMap<>();
+    }
+
+    @Override
+    public Map<String, String> visit(Label e) {
+        return new HashMap<>();   //Les labels restent tels quels, pas de transformation à faire
+    }
+
+    @Override
+    public Map<String, String> visit(Mem e) {
+        Map m = new HashMap();
+        m.putAll(e.ident1.accept(this));
+        m.putAll(e.ioi.accept(this));
+        m.putAll(e.ident2.accept(this));
+        return m;
+    }
+
+    @Override
+    public Map<String, String> visit(Neg e) {
+        return e.ident.accept(this);
+    }
+
+    @Override
+    public Map<String, String> visit(New e) {
+
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Exp_asml visit(Fdiv e) {
+    public Map<String, String> visit(Nop e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Exp_asml visit(Fmul e) {
+    public Map<String, String> visit(ParenExp e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Exp_asml visit(Fneg e) {
+    public Map<String, String> visit(Tokens e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Exp_asml visit(Fsub e) {
+    public Map<String, String> visit(Fdiv e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Exp_asml visit(Fadd e) {
+    public Map<String, String> visit(Fmul e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Map<String, String> visit(Fneg e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Map<String, String> visit(Fsub e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Map<String, String> visit(Fadd e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
