@@ -50,7 +50,7 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Asmt e) {
-        return "Let "+e.ident.accept(this)+" = "+e.e.accept(this)+" in "+this.indentRepeator()+e.asmt.accept(this);
+        return "let "+e.ident.accept(this)+" = "+e.e.accept(this)+" in "+this.indentRepeator()+e.asmt.accept(this);
     }
 
     @Override
@@ -109,11 +109,11 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
         }
         
         //en tête de la fonction
-        s +="\nLet "+e.label.accept(this);
+        s +="\nlet "+e.label.accept(this);
         for(Exp_asml elem : e.formal_args){
             s+=" "+elem.accept(this);
         }
-        s+=" =";
+        s+=" = ";
         nbIndent++;
         //corps de la fonction
         s+= this.indentRepeator()+ e.asmt.accept(this);
