@@ -34,7 +34,7 @@ public class Mem extends Exp_asml {
 
     @Override
     public <E> E accept(AsmlErrorVisitor<E> v) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visit(this);
     }
 
 }

@@ -81,8 +81,7 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(Not e) {
-        //TODO
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new okalm.asml.Neg(e.e.accept(this));
     }
 
     @Override
@@ -163,8 +162,8 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
         e.es.forEach((element) -> {
             l.add(new Fargs(element.accept(this)));
         });
-
-        return new okalm.asml.Call(e.e.accept(this), l);
+        Label label = new Label(e.e.accept(this).toString());
+        return new okalm.asml.Call(label, l);
     }
 
     @Override

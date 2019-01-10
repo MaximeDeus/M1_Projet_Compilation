@@ -76,7 +76,7 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Fargs e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return e.ident.accept(this);
     }
 
     @Override
@@ -147,13 +147,13 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
 //        )
         String retour = indent?"\n":" ";
         nbIndent++;
-        String s = "if " + e.condasmt.accept(this) + " then ("+ indentRepeator() + e.thenasmt.accept(this) +retour;
+        String s = "if " + e.condasmt.accept(this) + " then ("+ indentRepeator() + e.thenasmt.accept(this);
         nbIndent--;
-        s+= indentRepeator() + ") else ("+retour;
+        s+= indentRepeator() + ") else (";
         nbIndent++;
         s+=indentRepeator()+e.elseasmt.accept(this);
         nbIndent--;
-        s+=indentRepeator()+retour;
+        s+=indentRepeator()+")"+indentRepeator();
         
         return s;
         
@@ -176,7 +176,7 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Neg e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "neg "+e.ident.accept(this);
     }
 
     @Override

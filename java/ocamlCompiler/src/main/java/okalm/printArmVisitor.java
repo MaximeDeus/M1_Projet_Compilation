@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package okalm;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import okalm.asml.*;
 /**
  *
@@ -11,10 +14,18 @@ import okalm.asml.*;
  */
 public class printArmVisitor implements AsmlObjVisitor<String>{
     
-    int labelNum;
+    private int labelNum;
+    private Set<String> extFun;
     
     public printArmVisitor(){
         labelNum=0;
+        extFun = new HashSet();
+        extFun.add("print_int");
+        extFun.add("print_newline");
+        extFun.add("print_string");
+        extFun.add("exit");
+        extFun.add("hello_world");
+        extFun.add("print_char");
     }
     
     public String getNewLabel(){
@@ -52,18 +63,34 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
                 s+= "   MOV "+ e.ident.accept(this)+" , "+ e.e.accept(this)+"\n";
                 break;
                 
+            case "Neg":
+                s+="";
+                break;
+                
+            case "Asmt":
+                s+="";
+                break;
+                
             default: 
                 s+= "!"+type +" is not supported yet!";
                 break;
         }
         //TODO
-        s+=e.asmt.accept(this)+"\n";
+        s+=e.asmt.accept(this);
         return s;        
     }
 
     @Override
     public String visit(Call e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (extFun.contains(e.label.accept(this))){
+            String s = "";
+            for(Exp_asml elem: e.fargs){
+                s+= " "+elem.accept(this)+" ";
+            }
+            return "   min_caml_"+e.label.accept(this) +s;
+        }else{
+            return "!Function call not supported yet!\n";
+        }
     }
 
     @Override
@@ -92,12 +119,12 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
     public String visit(If e) {
         String s = "";
         s+= "   CMP "+ e.condasmt.accept(this)+"\n";                           //comparaison des deux éléments
-        s+=e.condasmt.getClass().getSimpleName().equals("Eq")?"EQ ":"LE ";  //séléction du comparateur (EQ/LE)
+        s+=e.condasmt.getClass().getSimpleName().equals("Eq")?"   EQ ":"   LE ";  //séléction du comparateur (EQ/LE)
         String t = getNewLabel(); // création du label du cas true
         s+= t + "\n";
         s+= e.elseasmt.accept(this)+"\n";
         String end = getNewLabel(); //création du label de fin;
-        s+= end + "\n"; // renvois de la phase else au label de fin
+        s+= "   "+end + "\n"; // renvois de la phase else au label de fin
         s+= "."+t+":\n"; //label true
         s+= e.thenasmt.accept(this)+"\n";
         s+= "."+end+":\n";
@@ -122,7 +149,9 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Neg e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String indent = e.ident.accept(this);
+        String s = indent +" , "+ indent;
+        return s;
     }
 
     @Override
@@ -152,7 +181,7 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Fargs e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return e.ident.accept(this);
     }
 
     @Override

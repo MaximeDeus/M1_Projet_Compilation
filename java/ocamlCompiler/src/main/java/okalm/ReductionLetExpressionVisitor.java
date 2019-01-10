@@ -99,24 +99,24 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
     @Override
     public Exp visit(Let e) {
 
-        if (e.e1 instanceof Let){ //Si fils gauche est un let
+        if (e.e1 instanceof Let) { //Si fils gauche est un let
             parents.add(e); //On l'ajoute à la liste des parents
             return e.e1.accept(this); //On termine son exécution et appelle son fils gauche
         }
 
-        if(e.e2 instanceof Let|| e.e2 instanceof LetRec){ //Si fils droit est un LetXXX
+        if (e.e2 instanceof Let || e.e2 instanceof LetRec) { //Si fils droit est un LetXXX
             filsDroit = e.e2.accept(this); //On stocke le résultat de l'appel (construction récursive) dans filsDroit
-            return new Let (e.id, e.t, e.e1,filsDroit); //On renvoie le nouvel arbre construit (Nouvel arbre car nouvelle référence)
+            return new Let(e.id, e.t, e.e1, filsDroit); //On renvoie le nouvel arbre construit (Nouvel arbre car nouvelle référence)
         }
 
         /**
          * Construction de l'arbre (fils droit)
          */
-        if (parents.size() > 0){
-                Let parent = parents.get(parents.size() - 1); //On prend le dernier parent ajouté
-                parents.remove(parent);
-                Let nouveauFilsDroit = new Let(parent.id, parent.t, e.e2, parent.e2); //Création du nouveau fils droit à partir du parent (cf algo)
-                return new Let(e.id, e.t, e.e1, nouveauFilsDroit.accept(this)); //Construction récursive de l'arbre
+        if (parents.size() > 0) {
+            Let parent = parents.get(parents.size() - 1); //On prend le dernier parent ajouté
+            parents.remove(parent);
+            Let nouveauFilsDroit = new Let(parent.id, parent.t, e.e2, parent.e2); //Création du nouveau fils droit à partir du parent (cf algo)
+            return new Let(e.id, e.t, e.e1, nouveauFilsDroit.accept(this)); //Construction récursive de l'arbre
         }
         return e;
     }
@@ -128,8 +128,8 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(LetRec e) {
-        if (e.e instanceof Let || e.e instanceof LetRec){ //Si le in est un LetXXX
-            return new LetRec(e.fd,e.e.accept(this)); //On applique l'algorithme sur la partie droite (nouvelle référence)
+        if (e.e instanceof Let || e.e instanceof LetRec) { //Si le in est un LetXXX
+            return new LetRec(e.fd, e.e.accept(this)); //On applique l'algorithme sur la partie droite (nouvelle référence)
         }
         return e;
     }
@@ -146,6 +146,10 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(LetTuple e) {
+
+        if (e.e2 instanceof Let || e.e2 instanceof LetRec) { //Si le in est un LetXXX
+            return new LetTuple(e.ids, e.ts, e.e1, e.e2); //On applique l'algorithme sur la partie droite (nouvelle référence)
+        }
         return e;
     }
 
