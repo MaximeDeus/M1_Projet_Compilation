@@ -111,7 +111,7 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
         //en tête de la fonction
         s +="\nLet "+e.label.accept(this);
         for(Exp_asml elem : e.formal_args){
-            s+=elem.accept(this)+" ";
+            s+=" "+elem.accept(this);
         }
         s+=" =";
         nbIndent++;
