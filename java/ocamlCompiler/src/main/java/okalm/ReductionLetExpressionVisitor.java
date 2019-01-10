@@ -48,12 +48,11 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(Add e) {
-        return e;
+        return new Add (e.e1.accept(this),e.e2.accept(this));
     }
-
     @Override
     public Exp visit(Sub e) {
-        return e;
+        return new Sub (e.e1.accept(this),e.e2.accept(this));
     }
 
     @Override
@@ -63,37 +62,37 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(FAdd e) {
-        return e;
+        return new FAdd (e.e1.accept(this),e.e2.accept(this));
     }
 
     @Override
     public Exp visit(FSub e) {
-        return e;
+        return new FSub (e.e1.accept(this),e.e2.accept(this));
     }
 
     @Override
     public Exp visit(FMul e) {
-        return e;
+        return new FMul (e.e1.accept(this),e.e2.accept(this));
     }
 
     @Override
     public Exp visit(FDiv e) {
-        return e;
+        return new FDiv(e.e1.accept(this),e.e2.accept(this));
     }
 
     @Override
     public Exp visit(Eq e) {
-        return e;
+        return new Eq (e.e1.accept(this),e.e2.accept(this));
     }
 
     @Override
     public Exp visit(LE e) {
-        return e;
+        return new LE (e.e1.accept(this),e.e2.accept(this));
     }
 
     @Override
     public Exp visit(If e) {
-        return e;
+        return new If (e.e1.accept(this),e.e2.accept(this),e.e3.accept(this));
     }
 
     @Override
@@ -102,11 +101,6 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
         if (e.e1 instanceof Let) { //Si fils gauche est un let
             parents.add(e); //On l'ajoute à la liste des parents
             return e.e1.accept(this); //On termine son exécution et appelle son fils gauche
-        }
-
-        if (e.e2 instanceof Let || e.e2 instanceof LetRec) { //Si fils droit est un LetXXX
-            filsDroit = e.e2.accept(this); //On stocke le résultat de l'appel (construction récursive) dans filsDroit
-            return new Let(e.id, e.t, e.e1, filsDroit); //On renvoie le nouvel arbre construit (Nouvel arbre car nouvelle référence)
         }
 
         /**
@@ -118,7 +112,12 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
             Let nouveauFilsDroit = new Let(parent.id, parent.t, e.e2, parent.e2); //Création du nouveau fils droit à partir du parent (cf algo)
             return new Let(e.id, e.t, e.e1, nouveauFilsDroit.accept(this)); //Construction récursive de l'arbre
         }
-        return e;
+
+        else{
+            filsDroit = e.e2.accept(this); //On stocke le résultat de l'appel (construction récursive) dans filsDroit
+            return new Let(e.id, e.t, e.e1, filsDroit); //On renvoie le nouvel arbre construit (Nouvel arbre car nouvelle référence)
+        }
+
     }
 
     @Override
@@ -128,7 +127,12 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(LetRec e) {
-        if (e.e instanceof Let || e.e instanceof LetRec) { //Si le in est un LetXXX
+
+        if (e.fd.e instanceof Let) { //Si le fils gauche est un Let (Pas un LetRec)
+            FunDef new_fd = new FunDef(e.fd.id,e.fd.type,e.fd.args,e.fd.e.accept(this));
+            e = new LetRec(new_fd, e.e); //On a appliqué l'algorithme sur le fils gauche du LetRec
+        }
+        else {
             return new LetRec(e.fd, e.e.accept(this)); //On applique l'algorithme sur la partie droite (nouvelle référence)
         }
         return e;
@@ -146,11 +150,7 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(LetTuple e) {
-
-        if (e.e2 instanceof Let || e.e2 instanceof LetRec) { //Si le in est un LetXXX
-            return new LetTuple(e.ids, e.ts, e.e1, e.e2); //On applique l'algorithme sur la partie droite (nouvelle référence)
-        }
-        return e;
+        return new LetTuple(e.ids, e.ts, e.e1, e.e2.accept(this)); //On applique l'algorithme sur la partie droite (nouvelle référence)
     }
 
     @Override
