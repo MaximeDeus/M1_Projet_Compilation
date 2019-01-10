@@ -15,12 +15,13 @@ import java.util.Map;
  * @author liakopog
  */
 public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
-
+    public String regList;
     public Map<String, Integer> reg;
     public int regNum;
 
     public BasicAllocationVisitor() {
         reg = new HashMap();
+        regList = "";
         regNum = 4; //premier registre libre
 
     }
@@ -110,6 +111,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
     public Exp_asml visit(Ident e) {
         if (!reg.containsKey(e.ident)) {
             reg.put(e.ident, regNum);
+            regList+= e.ident +"= R"+ regNum +" | ";
             regNum++;
         }
         return new Ident("R" + reg.get(e.ident));

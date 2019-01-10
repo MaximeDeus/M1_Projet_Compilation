@@ -64,9 +64,8 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(Bool e) {
-        String s;
-        s = e.b ? "true" : "false";
-        return new Ident(s);
+        int i = e.b ? 1 : 0;
+        return new okalm.asml.Int(i);
     }
 
     @Override

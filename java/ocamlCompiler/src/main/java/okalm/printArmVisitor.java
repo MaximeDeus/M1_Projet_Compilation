@@ -14,10 +14,12 @@ import okalm.asml.*;
  */
 public class printArmVisitor implements AsmlObjVisitor<String>{
     
+    private String ident;
     private int labelNum;
     private Set<String> extFun;
     
     public printArmVisitor(){
+        ident = "        ";
         labelNum=0;
         extFun = new HashSet();
         extFun.add("print_int");
@@ -32,7 +34,7 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
         labelNum++;
         return "label"+labelNum;
     }
-
+    
     @Override
     public String visit(Add e) {
         return e.ident.accept(this)+" , "+e.ioi.accept(this);
@@ -49,26 +51,31 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
         String s = "";
         switch(type){
             case "Add":
-                s+= "   ADD "+ e.ident.accept(this)+" , "+ e.e.accept(this) + "\n";
+                s+= ident+ "ADD\t"+ e.ident.accept(this)+", "+ e.e.accept(this) + "\n";
                 break;
                 
             case "Sub":
+                s+= ident+ "SUB\t"+ e.ident.accept(this)+", "+ e.e.accept(this) + "\n";
                 break;
             
             case "Int":
-                s+= "   MOV "+ e.ident.accept(this)+" , "+ e.e.accept(this) +"\n";
+                s+= ident+ "MOV\t"+ e.ident.accept(this)+", "+ e.e.accept(this) +"\n";
                 break;
                 
             case "Ident":
-                s+= "   MOV "+ e.ident.accept(this)+" , "+ e.e.accept(this)+"\n";
+                s+= ident+ "MOV\t"+ e.ident.accept(this)+", "+ e.e.accept(this)+"\n";
                 break;
                 
             case "Neg":
-                s+="";
+                s+="NEG TODO";
+                break;
+                
+            case "Call":
+                s+=e.e.accept(this)+"\n"+ident+"MOV\t"+e.ident.accept(this)+", Rr\n";
                 break;
                 
             case "Asmt":
-                s+="";
+                s+="ASMT detetcted "+e.e.accept(this)+"\n";
                 break;
                 
             default: 
@@ -76,20 +83,22 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
                 break;
         }
         //TODO
+        //s = "!SUITE "+e.asmt.getClass().getSimpleName()+"!";
         s+=e.asmt.accept(this);
         return s;        
     }
 
+    
     @Override
     public String visit(Call e) {
+        String s = "";
+        for(Exp_asml elem: e.fargs){
+            s+= ident+ "MOV\tRe, "+elem.accept(this)+"\n";
+        }
         if (extFun.contains(e.label.accept(this))){
-            String s = "";
-            for(Exp_asml elem: e.fargs){
-                s+= " "+elem.accept(this)+" ";
-            }
-            return "   min_caml_"+e.label.accept(this) +s;
+            return s+ ident+ "B\tmin_caml_"+e.label.accept(this) +" ";
         }else{
-            return "!Function call not supported yet!\n";
+            return s+ ident+ "B\t_"+e.label.accept(this) +" ";
         }
     }
 
@@ -101,12 +110,19 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
     @Override
     public String visit(Fundefs e) {
         String s="";
-        if(e.label.accept(this).equals("_")){
-            s+=e.label+"main:\n";
+        for(Exp_asml f: e.fundefs){
+            s+=f.accept(this);
+        }
+        Boolean isMain = e.label.accept(this).equals("_");
+        if(isMain){
+            s+=e.label+"start:\n";
         }else{
             s+=e.label+s+":\n";
         }
         s+=e.asmt.accept(this)+"\n";
+        if(!isMain){
+            s+=ident+ "LDMFDL\tSP!, {lr}\n"+ident+"BX LR\n";
+        }
         return s;
     }
 
@@ -114,20 +130,29 @@ public class printArmVisitor implements AsmlObjVisitor<String>{
     public String visit(Ident e) {
         return e.ident;
     }
+    
+    private String ThenElse(Exp_asml e){
+        String s ="";
+        if(e.getClass().getSimpleName().equals("Int")){
+            s+=ident;
+        }
+        s+= e.accept(this);
+        return s;
+    }
 
     @Override
     public String visit(If e) {
         String s = "";
-        s+= "   CMP "+ e.condasmt.accept(this)+"\n";                           //comparaison des deux éléments
-        s+=e.condasmt.getClass().getSimpleName().equals("Eq")?"   EQ ":"   LE ";  //séléction du comparateur (EQ/LE)
+        s+= ident+ "CMP\t"+ e.condasmt.accept(this)+"\n";    //comparaison des deux éléments
+        s+=e.condasmt.getClass().getSimpleName().equals("Eq")?ident+ "EQ\t":ident+ "LE\t";  //séléction du comparateur (EQ/LE)
         String t = getNewLabel(); // création du label du cas true
         s+= t + "\n";
-        s+= e.elseasmt.accept(this)+"\n";
+        s+= ThenElse(e.elseasmt)+"\n";
         String end = getNewLabel(); //création du label de fin;
-        s+= "   "+end + "\n"; // renvois de la phase else au label de fin
-        s+= "."+t+":\n"; //label true
-        s+= e.thenasmt.accept(this)+"\n";
-        s+= "."+end+":\n";
+        s+= ident+end + "\n"; // renvois de la phase else au label de fin
+        s+= t+":\n"; //label true
+        s+= ThenElse(e.thenasmt)+"\n";
+        s+= end+":";
         
         return s;
     }

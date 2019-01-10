@@ -141,17 +141,18 @@ public class Commande {
     }
 
     public static Exp_asml frontend(Exp exp) {
-        System.out.println("_____ FrontEnd _____");
+        //System.out.println("_____ FrontEnd _____");
+        System.out.println("---parsed code: ");
         PrintVisitor pv = new PrintVisitor();
-
+        exp.accept(pv);
         //K-norm
-        System.out.println("\n------ K-Normalisation ------");
+        System.out.println("\n\n------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
         exp = exp.accept(kv);
         exp.accept(pv); //affichage K-normalisation
 
         //a-convers
-        System.out.println("\n------ A-Conversion ------");
+        //System.out.println("\n------ A-Conversion ------");
         AlphaConversionVisitor acv = new AlphaConversionVisitor();
         exp = exp.accept(acv);
         //exp.accept(pv); //affichage A-Conversion
@@ -160,15 +161,15 @@ public class Commande {
         System.out.println("\n------ Reduction Let Expression ------");
         ReductionLetExpressionVisitor rlev = new ReductionLetExpressionVisitor();
         exp = exp.accept(rlev);
-        //exp.accept(pv); //affichage let expression
+        exp.accept(pv); //affichage let expression
 
-        System.out.println("\n------ Closure ------");
+        //System.out.println("\n------ Closure ------");
         ClosureVisitor cv = new ClosureVisitor();
         exp = exp.accept(cv);
-        System.out.println(cv.functionsToString()); //affichage des fonctions après closure
-        //exp.accept(pv); //affichage code après closure
+        //System.out.println(cv.functionsToString()); //affichage des fonctions après closure
+        exp.accept(pv); //affichage code après closure
 
-        System.out.println("\n------ FrontEnd to BackEnd ------");
+        //System.out.println("\n------ FrontEnd to BackEnd ------");
         FrontToEndVisitor ftev = new FrontToEndVisitor();
         Exp_asml exp_asml = exp.accept(ftev);
         exp_asml = ftev.wrapCode(exp_asml, cv.listeFun);
@@ -177,14 +178,15 @@ public class Commande {
     }
 
     public static Exp_asml backend(Exp_asml exp) {
-        System.out.println("_____ Backend _____");
+        //System.out.println("_____ Backend _____");
         BasicAllocationVisitor bav = new BasicAllocationVisitor();
         exp = exp.accept(bav);
+        System.out.println("LIste des registres: "+bav.regList);
         return exp;
     }
 
     public static void outputARM(Exp_asml exp) {
-        System.out.println("_____ ARM _____");
+        System.out.println("\n\n---ARM code: ");
         printArmVisitor pav = new printArmVisitor();
         System.out.println(exp.accept(pav));
         
@@ -193,7 +195,7 @@ public class Commande {
     }
 
     public static void output(Exp_asml exp) {
-        System.out.println("_____ ASML _____");
+        System.out.println("\n\n---ASML code");
         printAsmlVisitor pav = new printAsmlVisitor(true);
         System.out.println(exp.accept(pav));
         

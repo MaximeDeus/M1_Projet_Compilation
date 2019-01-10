@@ -6,6 +6,7 @@
 package okalm;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import okalm.ast.*;
@@ -17,13 +18,19 @@ import okalm.ast.Float;
  */
 public class AlphaConversionVisitor implements ObjVisitor<Exp> {
 
-    private ArrayList<String> listeId;
+    private HashSet<String> listeFun;
 
     private Integer numfun; // représente l'environemment actuel (0=main, 1=f1, 2=f2 etc)
     private Integer funCount; //compteur de numéro de fonction (1 fonction = 1 numéro, main = 0)
 
     public AlphaConversionVisitor() {
-        listeId = new ArrayList<>();
+        listeFun = new HashSet();
+        listeFun.add("print_int");
+        listeFun.add("print_newline");
+        listeFun.add("print_string");
+        listeFun.add("exit");
+        listeFun.add("hello_world");
+        listeFun.add("print_char");
         numfun = 0;
         funCount = 0;
     }
@@ -35,7 +42,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
      * @return
      */
     private Id rename(Id id) {
-        if (numfun == 0) {
+        if (numfun == 0 || listeFun.contains(id.id)) {
             return new Id(id.id); //x
         } else {
             return new Id(id.id + numfun.toString()); //x1 ou x2 ou...
@@ -136,6 +143,8 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
     @Override
     public Exp visit(LetRec e) {
         funCount++; //nouvelle fonction = nouveau numéro de fonction
+        this.listeFun.add(e.fd.id.id); //ajout du nom de la fonction à la liste de fonction connue
+        
         Integer previousFun = numfun; //on enregistre la fonction dans laquelle on se trouvait (numfun = fonction actuelle)
         numfun=funCount; //on se positionne dans la nouvelle fonction
         

@@ -101,24 +101,15 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
 
     @Override
     public String visit(Fundefs e) {
-//let _f x y =
-//   let z = add x y in
-//   let t = 2 in
-//   sub t z
-//
-//let _ =
-//   let x = 0 in
-//   let y = 1 in
-//   let z = call _f x y in
-//   call _min_caml_print_int z
         String s="";
         //fonctions à déclarer avant
         for(Exp_asml elem : e.fundefs){
-            s+=elem.accept(this)+"\n";
+            
+            s+=elem.accept(this)+"";
         }
         
         //en tête de la fonction
-        s ="Let "+e.label.accept(this);
+        s +="\nLet "+e.label.accept(this);
         for(Exp_asml elem : e.formal_args){
             s+=elem.accept(this)+" ";
         }
