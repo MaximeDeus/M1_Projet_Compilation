@@ -29,7 +29,6 @@ do
 		fi
 		cd ../
 	 else
-		rm $test_case
 	 	echo " ERREUR le programme le transforme pas en ASML"
 	 fi
 done
