@@ -33,6 +33,10 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         listeFun.put("cos", new TFloat());
         listeFun.put("sin", new TFloat());
         listeFun.put("tan", new TFloat());
+        listeFun.put("sqrt", new TFloat());
+        listeFun.put("abs_float", new TFloat());
+        listeFun.put("int_of_float", new TFloat());
+        listeFun.put("float_of_int", new TInt());
         
 
     }
@@ -50,7 +54,7 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
             listeFun.remove(id.id);
         }
         if (!l.isEmpty()&&l.containsKey(id.id)) {
-            throw new TypeException("Declaration error "+l+" : variable " + id.toString() + " declared twice or more");
+            throw new TypeException("Declaration error : variable " + id.toString() + " declared twice or more");
         } else {
             l.put(id.id, t);
         }
@@ -452,7 +456,7 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         }
         Type type =listeArray.get(id);
         if(!testType(t1, TArray.class)||!testType(t2, TInt.class)||!testType(t3, type.getClass())){
-            throw new UnsupportedOperationException("Bad typing for get parameter e1 : Array excepted and e2 : Integer expected or e3 : "+type.getClass().getSimpleName()+" excepted");
+            throw new UnsupportedOperationException("Bad typing for put :e2 and e3 same type expected");
             
         }
         return new TUnit();
