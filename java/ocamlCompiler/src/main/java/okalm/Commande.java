@@ -190,16 +190,15 @@ public class Commande {
         printArmVisitor pav = new printArmVisitor();
         System.out.println(exp.accept(pav));
         
-        write_in_file ("Output/result.s", exp, pav);
+        write_in_file ("result.s", exp.accept(pav));
 
     }
 
     public static void output(Exp_asml exp) {
         System.out.println("\n\n---ASML code");
-        printAsmlVisitor pav = new printAsmlVisitor(true);
+        printAsmlVisitor pav = new printAsmlVisitor();
         System.out.println(exp.accept(pav));
-        
-        write_in_file ("Output/result.asml", exp, pav);
+        write_in_file ("output/result.asml", exp.accept(pav));
     }
 
     public static void output(Exp exp) {
@@ -236,34 +235,25 @@ public class Commande {
         return expression;
     }
     
-    public static void write_in_file  (String chemin, Exp_asml exp,printAsmlVisitor pav){
-        
-        final File fichier =new File(chemin); 
-        try {
-            fichier.createNewFile();
-            final FileWriter writer = new FileWriter(fichier);
-            try {
-                writer.write(exp.accept(pav));
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-            System.out.println("Impossible de creer le fichier");
-        }
+    public void test(String s){
+        //output.txt<-s;
     }
     
-    public static void write_in_file  (String chemin, Exp_asml exp,printArmVisitor pav){
-        
+    public static void write_in_file  (String chemin, String code){
+        System.out.println("text writer");
         final File fichier =new File(chemin); 
+        System.out.println("file: "+fichier);
         try {
             fichier.createNewFile();
             final FileWriter writer = new FileWriter(fichier);
             try {
-                writer.write(exp.accept(pav));
+                
+                writer.write(code);
             } finally {
                 writer.close();
             }
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Impossible de creer le fichier");
         }
     }

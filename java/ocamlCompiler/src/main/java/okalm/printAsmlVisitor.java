@@ -18,6 +18,7 @@ public class printAsmlVisitor implements AsmlObjVisitor<String>{
     
     public printAsmlVisitor(){
         this.indent=false;
+        nbIndent = 0;
     }
     
     /**

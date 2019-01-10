@@ -161,7 +161,7 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
         e.es.forEach((element) -> {
             l.add(new Fargs(element.accept(this)));
         });
-        Label label = new Label(e.e.accept(this).toString());
+        Label label = new Label("_"+e.e.accept(this).toString());
         return new okalm.asml.Call(label, l);
     }
 
