@@ -2,45 +2,63 @@ package okalm.asml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 /**
  *
  * @author liakopog
  */
 public class RechercheVariablesActives {
-	HashMap<String, WorkList> wlList;
-	HashMap<Exp_asml, ArrayList<String>> listevars = new HashMap<Exp_asml, ArrayList<String>>(); // Liste de tout bloc et ses variables actives
-	HashMap<WorkList, VarInOut> mapInOut = new HashMap<>(); // Liste de tout bloc et ses in et out
 
-	public RechercheVariablesActives(HashMap<String, WorkList> wlList) {
+    HashMap<String, WorkList> wlList;
+    HashMap<Exp_asml, ArrayList<String>> listevars = new HashMap<Exp_asml, ArrayList<String>>(); // Liste de tout bloc et ses variables actives
+    HashMap<WorkList, VarInOut> mapInOut = new HashMap<>(); // Liste de tout bloc et ses in et out
 
-		this.wlList = wlList;
-	}
+    public RechercheVariablesActives(HashMap<String, WorkList> wlList) {
 
-	public HashMap<Exp_asml, ArrayList<String>> rechercher() {
-		for (WorkList wlracine : wlList.values()) {
+        this.wlList = wlList;
+    }
 
-			parcoursRecursifBlocInitialisation(wlracine); // Initialisation du In de chaque bloc avec son Gen
+    public HashMap<Exp_asml, ArrayList<String>> rechercher() {
+        for (WorkList wlracine : wlList.values()) {
 
-		}
+            HashMap<WorkList, VarInOut> mapPrecedenteIteration = mapInOut;
+            parcoursRecursifBlocInitialisation(wlracine); // Initialisation du In de chaque bloc avec son Gen
+            while (!(mapPrecedenteIteration.equals(mapInOut))) {
+                parcoursRecursifBloc(wlracine);
+            }
+        }
 
-		return listevars;
+        return listevars;
 
-	}
+    }
 
-	public void parcoursRecursifBloc(WorkList w) {
+    public void parcoursRecursifBloc(WorkList w) {
+        VarInOut inOut = mapInOut.get(w);
 
-	}
+        for (String wSuccesseur : w.suc) {
+            VarInOut temp = new VarInOut();
+            inOut.out.addAll(mapInOut.get(wlList.get(wSuccesseur)).in);
 
-	public void parcoursRecursifBlocInitialisation(WorkList w) {
-		VarInOut inOut = new VarInOut(w.gen);
-		mapInOut.put(w, inOut);
-		for (String wSucc : w.suc) {
-			parcoursRecursifBlocInitialisation(wlList.get(wSucc));
-		}
-	}
+            temp.out = inOut.out;
+            temp.out.removeAll(w.kill);
+            temp.out.addAll(w.gen);
+
+            inOut.in.addAll(temp.out);
+
+        }
+        mapInOut.put(w, inOut);
+        for (String wSuccesseur : w.suc) {
+            parcoursRecursifBloc(wlList.get(wSuccesseur));
+        }
+
+    }
+
+    public void parcoursRecursifBlocInitialisation(WorkList w) {
+        VarInOut inOut = new VarInOut(w.gen);
+        mapInOut.put(w, inOut);
+        for (String wSuccesseur : w.suc) {
+            parcoursRecursifBlocInitialisation(wlList.get(wSuccesseur));
+        }
+    }
 
 }
