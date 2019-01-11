@@ -132,9 +132,9 @@ public class ClosureVisitor implements ObjVisitor<Exp>{
         });
         
         ClosureFunction c = new ClosureFunction(
-                "_"+f.id.id,
-                s,
-                f.e
+                "_"+f.id.id, //label
+                s, //arguments
+                f.e //code
         );
         //ajout de la fonction
         listeFun.add(c);

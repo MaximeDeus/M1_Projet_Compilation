@@ -25,7 +25,12 @@ public class ClosureFunction {
     
     @Override
     public String toString(){
-        return label + ", " + parameters.toString()+"\n";
+        String s ="";
+        System.out.print(label + ", " + parameters.toString()+"=\n");
+        PrintVisitor p = new PrintVisitor();
+        code.accept(p);
+        System.out.print("\n");
+        return s;
     }
     
     /**

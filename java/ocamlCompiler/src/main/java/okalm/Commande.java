@@ -146,10 +146,10 @@ public class Commande {
         PrintVisitor pv = new PrintVisitor();
         exp.accept(pv);
         //K-norm
-        System.out.println("\n\n------ K-Normalisation ------");
+        //System.out.println("\n\n------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
         exp = exp.accept(kv);
-        exp.accept(pv); //affichage K-normalisation
+        //exp.accept(pv); //affichage K-normalisation
 
         //a-convers
         //System.out.println("\n------ A-Conversion ------");
@@ -158,15 +158,16 @@ public class Commande {
         //exp.accept(pv); //affichage A-Conversion
 
         //reduction let
-        System.out.println("\n------ Reduction Let Expression ------");
+        //System.out.println("\n------ Reduction Let Expression ------");
         ReductionLetExpressionVisitor rlev = new ReductionLetExpressionVisitor();
         exp = exp.accept(rlev);
-        exp.accept(pv); //affichage let expression
+        //exp.accept(pv); //affichage let expression
 
-        //System.out.println("\n------ Closure ------");
+        System.out.println("\n------ Closure ------");
         ClosureVisitor cv = new ClosureVisitor();
         exp = exp.accept(cv);
-        //System.out.println(cv.functionsToString()); //affichage des fonctions après closure
+        cv.functionsToString(); //affichage des fonctions après closure
+        System.out.print("\n");
         exp.accept(pv); //affichage code après closure
 
         //System.out.println("\n------ FrontEnd to BackEnd ------");
