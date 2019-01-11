@@ -5,11 +5,22 @@
  */
 package okalm.asml;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  *
  * @author liakopog
  */
 public class GraphColoringVisitor implements AsmlObjVisitor<Object> {
+
+    HashMap<Exp_asml, ArrayList<String>> listeVarActives;
+    Graphe graphe;
+
+    public GraphColoringVisitor(HashMap<Exp_asml, ArrayList<String>> listeVA) {
+        listeVarActives = listeVA;
+        graphe = new Graphe();
+    }
 
     @Override
     public Object visit(Add e) {
@@ -23,6 +34,16 @@ public class GraphColoringVisitor implements AsmlObjVisitor<Object> {
 
     @Override
     public Object visit(Asmt e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visit(Eq e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visit(LE e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -118,16 +139,6 @@ public class GraphColoringVisitor implements AsmlObjVisitor<Object> {
 
     @Override
     public Object visit(Tokens e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visit(Eq e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object visit(LE e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

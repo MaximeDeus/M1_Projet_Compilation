@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class RechercheVariablesActives {
 
     HashMap<String, WorkList> wlList;
-    HashMap<Exp_asml, ArrayList<String>> listevars = new HashMap<Exp_asml, ArrayList<String>>(); // Liste de tout bloc et ses variables actives
+    HashMap<Exp_asml, ArrayList<String>> listevars = new HashMap<>(); // Liste de tout bloc et ses variables actives
     HashMap<WorkList, VarInOut> mapInOut = new HashMap<>(); // Liste de tout bloc et ses in et out
 
     public RechercheVariablesActives(HashMap<String, WorkList> wlList) {
@@ -24,6 +24,7 @@ public class RechercheVariablesActives {
             HashMap<WorkList, VarInOut> mapPrecedenteIteration = mapInOut;
             parcoursRecursifBlocInitialisation(wlracine); // Initialisation du In de chaque bloc avec son Gen
             while (!(mapPrecedenteIteration.equals(mapInOut))) {
+                mapPrecedenteIteration = mapInOut;
                 parcoursRecursifBloc(wlracine);
             }
         }
