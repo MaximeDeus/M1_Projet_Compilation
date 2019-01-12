@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.File;
 import okalm.asml.BasicAllocationVisitor;
-import okalm.asml.CodeGenerationVisitor;
+//import okalm.asml.CodeGenerationVisitor;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
 
@@ -25,7 +25,8 @@ public class Commande {
     static boolean bool_base = false;
     static boolean bool_erreur = false;
     static boolean bool_outputfile = false;
-    static String nom_fichier;
+    static String nom_fichier_output;
+    static String nom_fichier_mincalm;
 
     /**
      * option d'argument: -h: HELP -o: OUTPUT FILE -v: DISPLAY VERSION -t: TYPE
@@ -35,68 +36,68 @@ public class Commande {
      * @throws Exception
      */
     public static void option(String args[]) throws Exception {
-
+        int i=0;
         if (args.length < 2) {
             throw new IllegalArgumentException("More arguments needed, use -h for more informations.");
         } else {
 
-            for (int i = 1; i < args.length; i++) {
-
-                switch (args[i]) {
-
-                    case "-o":
-                        //output file
-                        bool_outputfile = true;
-                        if (args.length > i + 1) {
-                            String[] s = args[i + 1].split(".");
-                            if (s.length == 2 && s[1].equals("s")) {
-                                nom_fichier = args[i + 1];
-                                i++;
+            for (i = 0; i < args.length; i++) {
+                 if(args[i].endsWith(".ml")){
+                    nom_fichier_mincalm = args[i];
+                 } else {
+                    switch (args[i]) {
+                        case "-o":
+                            //output file
+                            bool_outputfile = true;
+                            if (args.length >= i + 1) {
+                                if(args[i+1].endsWith(".s")||args[i+1].endsWith(".asml")){
+                                    nom_fichier_output = args[i + 1];
+                                    i++;
+                                }
                             }
-                        }
-                        break;
+                            break;
 
-                    case "-h":
-                        //help
-                        bool_help = true;
-                        break;
+                        case "-h":
+                            //help
+                            bool_help = true;
+                            break;
 
-                    case "-v":
-                        //display version
-                        bool_version = true;
-                        break;
+                        case "-v":
+                            //display version
+                            bool_version = true;
+                            break;
 
-                    case "-t":
-                        //type checking only
-                        bool_type = true;
-                        break;
+                        case "-t":
+                            //type checking only
+                            bool_type = true;
+                            break;
 
-                    case "-p":
-                        //parse only
-                        bool_parse = true;
+                        case "-p":
+                            //parse only
+                            bool_parse = true;
 
-                        break;
+                            break;
 
-                    case "-asml":
-                        //output ASML
-                        bool_ASML = true;
-                        break;
+                        case "-asml":
+                            //output ASML
+                            bool_ASML = true;
+                            break;
 
-                    case "-base":
-                        bool_base = true;
-                        break;
-
-                    default:
-                        bool_erreur = true;
-                        break;
-                }
+                        case "-base":
+                            bool_base = true;
+                            break;
+                        default:
+                            bool_erreur = true;
+                            break;
+                    }
+                } 
             }
-            compute(args);
+            compute();
         }
 
     }
 
-    public static void compute(String args[]) throws Exception {
+    public static void compute() throws Exception {
 
         if (bool_erreur) {
             error();
@@ -105,7 +106,7 @@ public class Commande {
         } else if (bool_help) {
             help();
         } else {
-            Exp exp = parse(args);
+            Exp exp = parse(nom_fichier_mincalm);
             if (!bool_parse) {
                 typechecking(exp);
                 if (!bool_type) {
@@ -146,10 +147,10 @@ public class Commande {
         PrintVisitor pv = new PrintVisitor();
         exp.accept(pv);
         //K-norm
-        //System.out.println("\n\n------ K-Normalisation ------");
+        System.out.println("\n\n------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
         exp = exp.accept(kv);
-        //exp.accept(pv); //affichage K-normalisation
+        exp.accept(pv); //affichage K-normalisation
 
         //a-convers
         //System.out.println("\n------ A-Conversion ------");
@@ -158,16 +159,15 @@ public class Commande {
         //exp.accept(pv); //affichage A-Conversion
 
         //reduction let
-        //System.out.println("\n------ Reduction Let Expression ------");
+        System.out.println("\n------ Reduction Let Expression ------");
         ReductionLetExpressionVisitor rlev = new ReductionLetExpressionVisitor();
         exp = exp.accept(rlev);
-        //exp.accept(pv); //affichage let expression
+        exp.accept(pv); //affichage let expression
 
-        System.out.println("\n------ Closure ------");
+        //System.out.println("\n------ Closure ------");
         ClosureVisitor cv = new ClosureVisitor();
         exp = exp.accept(cv);
-        cv.functionsToString(); //affichage des fonctions après closure
-        System.out.print("\n");
+        //System.out.println(cv.functionsToString()); //affichage des fonctions après closure
         exp.accept(pv); //affichage code après closure
 
         //System.out.println("\n------ FrontEnd to BackEnd ------");
@@ -190,8 +190,10 @@ public class Commande {
         System.out.println("\n\n---ARM code: ");
         printArmVisitor pav = new printArmVisitor();
         System.out.println(exp.accept(pav));
-        
-        write_in_file ("result.s", exp.accept(pav));
+        writeInFile("output/result.s", exp.accept(pav));
+        if(bool_outputfile){
+            writeInFile(nom_fichier_output,exp.accept(pav));
+        }
 
     }
 
@@ -199,7 +201,10 @@ public class Commande {
         System.out.println("\n\n---ASML code");
         printAsmlVisitor pav = new printAsmlVisitor();
         System.out.println(exp.accept(pav));
-        write_in_file ("output/result.asml", exp.accept(pav));
+        writeInFile("output/result.asml", exp.accept(pav));
+        if(bool_outputfile){
+            writeInFile(nom_fichier_output,exp.accept(pav));
+        }
     }
 
     public static void output(Exp exp) {
@@ -216,9 +221,9 @@ public class Commande {
 
     }
 
-    public static Exp parse(String args[]) throws Exception {
+    public static Exp parse(String s) throws Exception {
 
-        Parser p = new Parser(new Lexer(new FileReader(args[0])));
+        Parser p = new Parser(new Lexer(new FileReader(s)));
         /*System.out.println("BASIC MAIN:");*/
         Exp expression = (Exp) p.parse().value;
         assert (expression != null);
@@ -240,10 +245,9 @@ public class Commande {
         //output.txt<-s;
     }
     
-    public static void write_in_file  (String chemin, String code){
-        System.out.println("text writer");
+    public static void writeInFile (String chemin, String code){
         final File fichier =new File(chemin); 
-        System.out.println("file: "+fichier);
+        System.out.println("file: "+chemin);
         try {
             fichier.createNewFile();
             final FileWriter writer = new FileWriter(fichier);
