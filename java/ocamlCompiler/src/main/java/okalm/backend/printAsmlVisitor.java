@@ -6,12 +6,13 @@
 package okalm.backend;
 
 import okalm.asml.*;
+import okalm.tools.AsmlObjVisitor;
 
 /**
  *
  * @author defoursr
  */
-public class printAsmlVisitor implements AsmlObjVisitor<String>{
+public class printAsmlVisitor implements AsmlObjVisitor<String> {
     
     private Integer nbIndent;
     private Boolean indent;

@@ -3,7 +3,7 @@ package okalm;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.File;
-import okalm.asml.BasicAllocationVisitor;
+import okalm.backend.BasicAllocationVisitor;
 //import okalm.asml.CodeGenerationVisitor;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;

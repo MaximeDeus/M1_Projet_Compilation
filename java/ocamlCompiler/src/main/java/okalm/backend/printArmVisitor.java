@@ -7,11 +7,13 @@ package okalm.backend;
 import java.util.HashSet;
 import java.util.Set;
 import okalm.asml.*;
+import okalm.tools.AsmlObjVisitor;
+
 /**
  *
  * @author defoursr
  */
-public class printArmVisitor implements AsmlObjVisitor<String>{
+public class printArmVisitor implements AsmlObjVisitor<String> {
     
     private String ident;
     private int labelNum;
