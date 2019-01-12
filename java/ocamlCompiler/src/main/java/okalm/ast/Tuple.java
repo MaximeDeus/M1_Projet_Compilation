@@ -2,9 +2,9 @@ package okalm.ast;
 
 import java.util.List;
 
-import okalm.ObjErrorVisitor;
-import okalm.ObjVisitor;
-import okalm.Visitor;
+import okalm.tools.ObjErrorVisitor;
+import okalm.tools.ObjVisitor;
+import okalm.tools.Visitor;
 
 public class Tuple extends Exp {
     public final List<Exp> es;

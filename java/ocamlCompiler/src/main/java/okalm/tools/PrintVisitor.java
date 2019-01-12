@@ -1,10 +1,10 @@
-package okalm;
+package okalm.tools;
 
 import java.util.*;
 
 import okalm.ast.*;
 import okalm.ast.Float;
-class PrintVisitor implements Visitor {
+public class PrintVisitor implements Visitor {
     
     private Integer nbIndent;
     

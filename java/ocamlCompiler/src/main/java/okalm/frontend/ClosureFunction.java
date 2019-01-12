@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package okalm;
+package okalm.frontend;
 
 import java.util.List;
+
+import okalm.tools.PrintVisitor;
 import okalm.ast.Exp;
 
 /**

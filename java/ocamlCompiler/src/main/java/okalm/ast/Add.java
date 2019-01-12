@@ -1,8 +1,8 @@
 package okalm.ast;
 
-import okalm.ObjErrorVisitor;
-import okalm.ObjVisitor;
-import okalm.Visitor;
+import okalm.tools.ObjErrorVisitor;
+import okalm.tools.ObjVisitor;
+import okalm.tools.Visitor;
 
 public class Add extends Exp {
     public final Exp e1;

@@ -7,6 +7,7 @@ import java.util.*;
 
 import okalm.ast.*;
 import okalm.ast.Float;
+import okalm.tools.Id;
 import okalm.type.TUnit;
 import okalm.type.Type;
 

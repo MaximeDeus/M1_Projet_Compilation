@@ -2,7 +2,7 @@ package okalm.ast;
 
 import java.util.List;
 
-import okalm.Id;
+import okalm.tools.Id;
 import okalm.type.Type;
 
 public class FunDef {

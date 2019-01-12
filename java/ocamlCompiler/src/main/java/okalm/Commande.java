@@ -1,13 +1,17 @@
 package okalm;
 
 import java.io.FileReader;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.File;
 import okalm.asml.BasicAllocationVisitor;
 //import okalm.asml.CodeGenerationVisitor;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
+import okalm.backend.printAsmlVisitor;
+import okalm.tools.PrintVisitor;
+import okalm.backend.printArmVisitor;
+import okalm.frontend.*;
+import okalm.typechecking.TypeVisitor;
 
 /**
  *

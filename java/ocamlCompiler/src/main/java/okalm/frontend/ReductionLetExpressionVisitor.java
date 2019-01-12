@@ -1,7 +1,8 @@
-package okalm;
+package okalm.frontend;
 
 import okalm.ast.*;
 import okalm.ast.Float;
+import okalm.tools.ObjVisitor;
 
 import java.util.HashMap;
 import java.util.LinkedList;

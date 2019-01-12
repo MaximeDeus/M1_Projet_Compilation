@@ -1,4 +1,4 @@
-package okalm;
+package okalm.tools;
 
 import okalm.ast.*;
 

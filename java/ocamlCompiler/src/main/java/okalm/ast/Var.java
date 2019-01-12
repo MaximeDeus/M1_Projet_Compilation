@@ -1,9 +1,9 @@
 package okalm.ast;
 
-import okalm.Id;
-import okalm.ObjErrorVisitor;
-import okalm.ObjVisitor;
-import okalm.Visitor;
+import okalm.tools.Id;
+import okalm.tools.ObjErrorVisitor;
+import okalm.tools.ObjVisitor;
+import okalm.tools.Visitor;
 
 public class Var extends Exp {
     public final Id id;

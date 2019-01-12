@@ -1,9 +1,11 @@
-package okalm;
+package okalm.typechecking;
 
 import java.util.*;
 
+import okalm.tools.Id;
 import okalm.ast.*;
 import okalm.ast.Float;
+import okalm.tools.ObjVisitor;
 
 class VarVisitor implements ObjVisitor<Set<String>> {
 
