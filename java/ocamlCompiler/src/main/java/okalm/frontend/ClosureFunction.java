@@ -5,13 +5,12 @@
  */
 package okalm.frontend;
 
+import okalm.ast.Exp;
+import okalm.tools.PrintVisitor;
+
 import java.util.List;
 
-import okalm.tools.PrintVisitor;
-import okalm.ast.Exp;
-
 /**
- *
  * @author defoursr
  */
 public class ClosureFunction {
@@ -24,17 +23,17 @@ public class ClosureFunction {
         this.parameters = parameters;
         this.code = code;
     }
-    
+
     @Override
-    public String toString(){
-        String s ="";
-        System.out.print(label + ", " + parameters.toString()+"=\n");
+    public String toString() {
+        String s = "";
+        System.out.println("lebel: " + label + "\nparameters: " + parameters.toString() + "\ncode:");
         PrintVisitor p = new PrintVisitor();
         code.accept(p);
-        System.out.print("\n");
+        System.out.println("\n");
         return s;
     }
-    
+
     /**
      * @return the Label
      */
