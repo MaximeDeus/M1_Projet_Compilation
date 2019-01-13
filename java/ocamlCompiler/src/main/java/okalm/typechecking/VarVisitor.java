@@ -1,13 +1,14 @@
 package okalm.typechecking;
 
-import java.util.*;
-
-import okalm.tools.Id;
 import okalm.ast.*;
 import okalm.ast.Float;
+import okalm.tools.Id;
 import okalm.tools.ObjVisitor;
 
-class VarVisitor implements ObjVisitor<Set<String>> {
+import java.util.HashSet;
+import java.util.Set;
+
+public class VarVisitor implements ObjVisitor<Set<String>> {
 
     public Set<String> visit(Unit e) {
         return new HashSet<String>();
@@ -49,19 +50,19 @@ class VarVisitor implements ObjVisitor<Set<String>> {
         return fv1;
     }
 
-    public Set<String> visit(FNeg e){
+    public Set<String> visit(FNeg e) {
         Set<String> fv = e.e.accept(this);
         return fv;
     }
 
-    public Set<String> visit(FAdd e){
+    public Set<String> visit(FAdd e) {
         Set<String> fv1 = e.e1.accept(this);
         Set<String> fv2 = e.e2.accept(this);
         fv1.addAll(fv2);
         return fv1;
     }
 
-    public Set<String> visit(FSub e){
+    public Set<String> visit(FSub e) {
         Set<String> fv1 = e.e1.accept(this);
         Set<String> fv2 = e.e2.accept(this);
         fv1.addAll(fv2);
@@ -75,28 +76,28 @@ class VarVisitor implements ObjVisitor<Set<String>> {
         return fv1;
     }
 
-    public Set<String> visit(FDiv e){
+    public Set<String> visit(FDiv e) {
         Set<String> fv1 = e.e1.accept(this);
         Set<String> fv2 = e.e2.accept(this);
         fv1.addAll(fv2);
         return fv1;
     }
 
-    public Set<String> visit(Eq e){
+    public Set<String> visit(Eq e) {
         Set<String> fv1 = e.e1.accept(this);
         Set<String> fv2 = e.e2.accept(this);
         fv1.addAll(fv2);
         return fv1;
     }
 
-    public Set<String> visit(LE e){
+    public Set<String> visit(LE e) {
         Set<String> fv1 = e.e1.accept(this);
         Set<String> fv2 = e.e2.accept(this);
         fv1.addAll(fv2);
         return fv1;
     }
 
-    public Set<String> visit(If e){
+    public Set<String> visit(If e) {
         Set<String> fv1 = e.e1.accept(this);
         Set<String> fv2 = e.e2.accept(this);
         Set<String> fv3 = e.e3.accept(this);
@@ -115,13 +116,13 @@ class VarVisitor implements ObjVisitor<Set<String>> {
         return res;
     }
 
-    public Set<String> visit(Var e){
+    public Set<String> visit(Var e) {
         Set<String> res = new HashSet<String>();
         res.add(e.id.toString());
         return res;
     }
 
-    public Set<String> visit(LetRec e){
+    public Set<String> visit(LetRec e) {
         Set<String> res = new HashSet<String>();
         Set<String> fv = e.e.accept(this);
         Set<String> fv_fun = e.fd.e.accept(this);
@@ -135,7 +136,7 @@ class VarVisitor implements ObjVisitor<Set<String>> {
         return res;
     }
 
-    public Set<String> visit(App e){
+    public Set<String> visit(App e) {
         Set<String> res = new HashSet<String>();
         res.addAll(e.e.accept(this));
         for (Exp exp : e.es) {
@@ -144,7 +145,7 @@ class VarVisitor implements ObjVisitor<Set<String>> {
         return res;
     }
 
-    public Set<String> visit(Tuple e){
+    public Set<String> visit(Tuple e) {
         Set<String> res = new HashSet<String>();
         for (Exp exp : e.es) {
             res.addAll(exp.accept(this));
@@ -152,7 +153,7 @@ class VarVisitor implements ObjVisitor<Set<String>> {
         return res;
     }
 
-    public Set<String> visit(LetTuple e){
+    public Set<String> visit(LetTuple e) {
         Set<String> res = new HashSet<String>();
         Set<String> fv1 = e.e1.accept(this);
         Set<String> fv2 = e.e2.accept(this);
@@ -164,21 +165,21 @@ class VarVisitor implements ObjVisitor<Set<String>> {
         return res;
     }
 
-    public Set<String> visit(Array e){
+    public Set<String> visit(Array e) {
         Set<String> fv1 = e.e1.accept(this);
         Set<String> fv2 = e.e2.accept(this);
         fv1.addAll(fv2);
         return fv1;
     }
 
-    public Set<String> visit(Get e){
+    public Set<String> visit(Get e) {
         Set<String> fv1 = e.e1.accept(this);
         Set<String> fv2 = e.e2.accept(this);
         fv1.addAll(fv2);
         return fv1;
     }
 
-    public Set<String> visit(Put e){
+    public Set<String> visit(Put e) {
         Set<String> fv1 = e.e1.accept(this);
         Set<String> fv2 = e.e2.accept(this);
         Set<String> fv3 = e.e3.accept(this);
