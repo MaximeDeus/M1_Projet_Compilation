@@ -140,7 +140,7 @@ public class Commande {
 
     public static void typechecking(Exp exp) throws Exception {
        /* System.out.println("------ TypeChecking ------");*/
-        TypeVisitor tv = new TypeVisitor();
+        TypeVisitor tv = new TypeVisitor(0);
         exp.accept(tv);
         /*System.out.println("Code type cheking is valid");*/
     }
