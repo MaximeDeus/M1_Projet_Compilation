@@ -1,13 +1,15 @@
-package okalm.typechecking;
+package okalm;
 
-import okalm.tools.Id;
+import java.util.ArrayList;
+import java.util.HashMap; 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import okalm.ast.*;
 import okalm.type.*;
-import okalm.tools.ObjErrorVisitor;
-
-import java.util.*;
 
 /**
+ *
  * @author defoursr DiardJul
  */
 public class TypeVisitor implements ObjErrorVisitor<Type> {
@@ -17,9 +19,10 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
     private Map<String, Type> listeArray;
     private Map<String, List<Type>> listeTuple;
     private Map<Exp, Type> listeExp;
-    private Map<Exp, List<Type>> listeExpTuple;
-
-    public TypeVisitor() {
+    private Map<Exp, List<Type>>  listeExpTuple;
+    private int num_let;
+    
+    public TypeVisitor(int n) {
         listeVar = new HashMap();
         listeFun = new HashMap();
         listeArray = new HashMap();
@@ -36,36 +39,35 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         listeFun.put("abs_float", new TFloat());
         listeFun.put("int_of_float", new TFloat());
         listeFun.put("float_of_int", new TInt());
-
+        num_let=n;
 
     }
 
     /**
      * Ajoute un Id à l'environnement l actuel
      *
-     * @param l  name of the map
+     * @param  l name of the map
      * @param id new Id to add to the environement
-     * @param t  type to associate with the Id
+     * @param t type to associate with the Id
      * @throws TypeException if the Id has already been declared before
      */
     private void addId(Map<String, Type> l, Id id, Type t) throws TypeException {
-        if (l == listeFun && l.containsKey(id.id)) {
+        if(l==listeFun && l.containsKey(id.id)){
             listeFun.remove(id.id);
         }
-        if (!l.isEmpty() && l.containsKey(id.id)) {
+        if (!l.isEmpty()&&l.containsKey(id.id)) {
             throw new TypeException("Declaration error : variable " + id.toString() + " declared twice or more");
         } else {
             l.put(id.id, t);
         }
     }
-
-    private void addExpType(Exp exp, Type t) {
-        listeExp.put(exp, t);
-    }
-
-    private void addExpTuple(Exp exp, ArrayList<Type> t) {
-        listeExpTuple.put(exp, (List) t);
-    }
+     private void addExpType(Exp exp, Type t){
+         listeExp.put(exp, t);
+     }
+     
+     private void addExpTuple(Exp exp, ArrayList<Type> t){
+         listeExpTuple.put(exp, (List)t);
+     }
 
     private Boolean testType(Type t, Class s) {
         return t.getClass().getSimpleName().equals(s.getSimpleName());
@@ -305,56 +307,68 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
 
     @Override
     public Type visit(Let e) throws Exception {
+        num_let++;
         Type t1 = e.e1.accept(this);
 
-        if (testType(t1, TArray.class)) {
+        if (testType(t1, TArray.class)){
             addId(listeArray, e.id, listeExp.get(e.e1));
-        } else if (!testType(t1, TTuple.class)) {
-            this.addId(listeVar, e.id, t1);
-        } else {
+        }else if (!testType(t1, TTuple.class)){
+            this.addId(listeVar,e.id, t1);
+        }else{
             listeTuple.put(e.id.id, listeExpTuple.get(e.e1));
         }
         Type t2 = e.e2.accept(this);
-
+        num_let--;
+        if (num_let==0){
+            return new TUnit();
+        }
         return t2;
     }
 
     @Override
     public Type visit(Var e) throws Exception {
-
-        if (!listeVar.containsKey(e.id.id) && !listeArray.containsKey(e.id.id) && !listeTuple.containsKey(e.id.id)) {
+        
+        if (!listeVar.containsKey(e.id.id)&&!listeArray.containsKey(e.id.id)&&!listeTuple.containsKey(e.id.id)) {
             throw new TypeException("Unknow variable " + e.id.id);
         }
-        if (listeVar.containsKey(e.id.id)) {
+        if(listeVar.containsKey(e.id.id)){
             return listeVar.get(e.id.id);
-        } else if (listeArray.containsKey(e.id.id)) {
+        }else if(listeArray.containsKey(e.id.id)){
             return new TArray();
-        } else if (listeFun.containsKey(e.id.id)) {
+        }else if (listeFun.containsKey(e.id.id)){
             return listeFun.get(e.id.id);
-        } else {
+        }else{
             return new TTuple();
         }
     }
 
     @Override
     public Type visit(LetRec e) throws Exception {
-
-        if (listeFun.containsKey(e.fd.id)) {
+        num_let++;
+        if (listeFun.containsKey(e.fd.id)){
+            num_let--;
+            if(num_let==0){
+                return new TUnit();
+            }
             return listeFun.get(e.fd.id);
-        } else {
-            TypeVisitor tv = new TypeVisitor();
+        }else{
+            TypeVisitor tv = new TypeVisitor(num_let);
 
             for (int i = 0; i < e.fd.args.size(); i++) {
-                tv.addId(listeVar, e.fd.args.get(i), new TUndef());
+                tv.addId(listeVar,e.fd.args.get(i), new TUndef());
             }
-            addId(listeFun, e.fd.id, new TUndef());
+            addId(listeFun,e.fd.id, new TUndef());
             tv.listeVar.putAll(this.listeVar);
             tv.listeFun.putAll(this.listeFun);
             tv.listeArray.putAll(this.listeArray);
-
+            
             Type trenvoi = e.fd.e.accept(tv);
             listeFun.remove(e.fd.id);
-            addId(listeFun, e.fd.id, trenvoi);
+            addId(listeFun,e.fd.id, trenvoi);
+            num_let--;
+            if(num_let==0){
+                return new TUnit();
+            }
             return e.e.accept(this);
         }
     }
@@ -366,24 +380,24 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
         String rendu = "error";
         for (String s : h) {
             rendu = s;
-            if (!listeFun.containsKey(rendu) && !listeVar.containsKey(rendu) &&
-                    !listeArray.containsKey(rendu) && !listeTuple.containsKey(rendu)) {
+            if (!listeFun.containsKey(rendu) && !listeVar.containsKey(rendu)&&
+                    !listeArray.containsKey(rendu)&&!listeTuple.containsKey(rendu)) {
                 throw new TypeException("Unknow function " + rendu);
             }
         }
         if (listeVar.containsKey(rendu)) {
             return listeVar.get(rendu);
         }
-
+        
         return listeFun.get(rendu);
     }
 
     @Override
     public Type visit(Tuple e) throws Exception {
         ArrayList<Type> lt = new ArrayList();
-        for (Exp ex : e.es) {
+        for(Exp ex : e.es){
             // ici si on veux limiter les type autoriser dans un tuple
-            Type t = ex.accept(this);
+            Type t= ex.accept(this);
             lt.add(t);
         }
         addExpTuple(e, lt);
@@ -391,14 +405,14 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
     }
 
     @Override
-    public Type visit(LetTuple e) throws Exception {
+    public Type visit(LetTuple e) throws Exception {        
         //TODO
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Type visit(Array e) throws Exception {
-
+        
         Type t1 = e.e1.accept(this);
         Type t2 = e.e2.accept(this);
         if (testType(t1, TUndef.class)) {
@@ -419,7 +433,7 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
 
     @Override
     public Type visit(Get e) throws Exception {
-        String id = "error";
+        String id="error";
         Type t1 = e.e1.accept(this);
         Type t2 = e.e2.accept(this);
         if (testType(t1, TUndef.class)) {
@@ -443,21 +457,21 @@ public class TypeVisitor implements ObjErrorVisitor<Type> {
 
     @Override
     public Type visit(Put e) throws Exception {
-        String id = "error";
+        String id="error";
         Type t1 = e.e1.accept(this);
         Type t2 = e.e2.accept(this);
         Type t3 = e.e3.accept(this);
         VarVisitor vv = new VarVisitor();
         Set<String> h = e.e1.accept(vv);
         for (String s : h) {
-            if (listeArray.containsKey(s)) {
-                id = s;
+            if (listeArray.containsKey(s)){
+                id=s; 
             }
         }
-        Type type = listeArray.get(id);
-        if (!testType(t1, TArray.class) || !testType(t2, TInt.class) || !testType(t3, type.getClass())) {
+        Type type =listeArray.get(id);
+        if(!testType(t1, TArray.class)||!testType(t2, TInt.class)||!testType(t3, type.getClass())){
             throw new UnsupportedOperationException("Bad typing for put :e2 and e3 same type expected");
-
+            
         }
         return new TUnit();
     }
