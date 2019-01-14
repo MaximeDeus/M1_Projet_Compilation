@@ -102,7 +102,7 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(FNeg e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -152,7 +152,7 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(LetRec e) { //après la closure, on ne rencontre plus de let rec
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -169,27 +169,27 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(Tuple e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp_asml visit(LetTuple e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp_asml visit(Array e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp_asml visit(Get e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp_asml visit(Put e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
