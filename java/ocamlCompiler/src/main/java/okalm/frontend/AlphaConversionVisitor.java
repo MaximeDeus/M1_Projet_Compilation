@@ -24,6 +24,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
 
     private Integer numfun; // représente l'environemment actuel (0=main, 1=f1, 2=f2 etc)
     private Integer funCount; //compteur de numéro de fonction (1 fonction = 1 numéro, main = 0)
+    private Boolean closure;
 
     public AlphaConversionVisitor() {
         listeFun = new HashSet();
@@ -35,10 +36,12 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
         listeFun.add("print_char");
         numfun = 0;
         funCount = 0;
+        closure = false;
     }
 
     /**
-     * Renomme une variable suivant le numéro de la fonction dans laquelle on se trouve (main=0)
+     * Renomme une variable suivant le numéro de la fonction dans laquelle on se
+     * trouve (main=0)
      *
      * @param id
      * @return
@@ -144,34 +147,47 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(LetRec e) {
-        funCount++; //nouvelle fonction = nouveau numéro de fonction
+        Boolean b = false;
+        
+        if (closure==false) {
+            funCount++; //nouvelle fonction = nouveau numéro de fonction
+            closure = true;
+            b=true;
+        }
+
         this.listeFun.add(e.fd.id.id); //ajout du nom de la fonction à la liste de fonction connue
-        
+
         Integer previousFun = numfun; //on enregistre la fonction dans laquelle on se trouvait (numfun = fonction actuelle)
-        numfun=funCount; //on se positionne dans la nouvelle fonction
-        
+        numfun = funCount; //on se positionne dans la nouvelle fonction
+
         //copie des arguments de la fonction
         FunDef f = e.fd;
         List<Id> temp = new ArrayList();
-        f.args.forEach((element)-> {
+        f.args.forEach((element) -> {
             temp.add(rename(element));
         });
-        
+
         //création de l'en-tête de la fonction et alpha conversion du corps de la fonction (f.e)
-        FunDef fd = new FunDef(f.id,f.type,temp,f.e.accept(this));
-        numfun=previousFun;//retour dans la fonction précédente
-        
+        FunDef fd = new FunDef(f.id, f.type, temp, f.e.accept(this));
+        numfun = previousFun;//retour dans la fonction précédente
+
         //alpha conversion de la partie après le 'in' de la fonction
+        if(b){
+            closure = false;
+        }
         LetRec lr = new LetRec(fd, e.e.accept(this));
-        return(lr);
+        
+        return (lr);
+
     }
+
     @Override
     public Exp visit(App e) {
         List<Exp> temp = new ArrayList();
         e.es.forEach((element) -> {
             temp.add(element.accept(this));
         });
-        return new App(e.e.accept(this),temp);
+        return new App(e.e.accept(this), temp);
     }
 
     @Override

@@ -6,7 +6,9 @@
 package okalm.frontend;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import okalm.tools.ObjVisitor;
 import okalm.ast.*;
@@ -127,15 +129,17 @@ public class ClosureVisitor implements ObjVisitor<Exp> {
         FunDef f = e.fd;
         
         //liste de paramètres convertie en liste de string
-        List<String> s = new ArrayList<>();
+        Set<String> s = new HashSet<String>();
         f.args.forEach((element) -> {
             s.add(element.id);
         });
         
+        Exp cpyCode = f.e.accept(this);
+        
         ClosureFunction c = new ClosureFunction(
                 "_"+f.id.id, //label
                 s, //arguments
-                f.e //code
+                cpyCode //code
         );
         //ajout de la fonction
         listeFun.add(c);

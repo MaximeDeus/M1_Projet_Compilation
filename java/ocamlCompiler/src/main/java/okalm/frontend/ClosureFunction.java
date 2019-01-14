@@ -8,26 +8,41 @@ package okalm.frontend;
 import okalm.ast.Exp;
 import okalm.tools.PrintVisitor;
 
-import java.util.List;
+import java.util.Set;
+import okalm.typechecking.VarVisitor;
 
 /**
  * @author defoursr
  */
 public class ClosureFunction {
     private String label;
-    private List<String> parameters;
+    private Set<String> parameters;
+    private Set<String> freeVar;
     private Exp code;
 
-    public ClosureFunction(String label, List<String> parameters, Exp code) {
+    public ClosureFunction(String label, Set<String> parameters, Exp code) {
         this.setLabel(label);
         this.parameters = parameters;
         this.code = code;
+        this.freeVar = generateFreeVar(parameters, code);
+    }
+    /**
+     * 
+     * @param parameters
+     * @param code
+     * @return 
+     */
+    private Set<String> generateFreeVar(Set<String> parameters, Exp code){
+        VarVisitor vv = new VarVisitor();
+        Set<String> cpy = code.accept(vv);
+        cpy.removeAll(parameters);
+        return cpy;
     }
 
     @Override
     public String toString() {
         String s = "";
-        System.out.println("lebel: " + label + "\nparameters: " + parameters.toString() + "\ncode:");
+        System.out.println("label: " + label + "\nparameters: " + parameters.toString() +"\n free variables:"+ freeVar.toString() +"\ncode:");
         PrintVisitor p = new PrintVisitor();
         code.accept(p);
         System.out.println("\n");
@@ -44,7 +59,7 @@ public class ClosureFunction {
     /**
      * @return the parameters
      */
-    public List<String> getParameters() {
+    public Set<String> getParameters() {
         return parameters;
     }
 
@@ -69,7 +84,7 @@ public class ClosureFunction {
     /**
      * @param parameters the parameters to set
      */
-    public void setParameters(List<String> parameters) {
+    public void setParameters(Set<String> parameters) {
         this.parameters = parameters;
     }
 

@@ -151,7 +151,7 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
     }
 
     @Override
-    public Exp_asml visit(LetRec e) { //après la closure, aucun Let Rec n'est censé être trouvé
+    public Exp_asml visit(LetRec e) { //après la closure, un let rec est une fonction closure
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
