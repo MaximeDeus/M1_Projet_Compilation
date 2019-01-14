@@ -9,7 +9,7 @@ import okalm.asml.*;
 import okalm.tools.AsmlObjVisitor;
 
 /**
- *
+ * Génére du code asml à partir d'un arbre asml
  * @author defoursr
  */
 public class printAsmlVisitor implements AsmlObjVisitor<String> {
@@ -31,6 +31,10 @@ public class printAsmlVisitor implements AsmlObjVisitor<String> {
         nbIndent = 0;
     }
     
+    
+    /**
+     * @return indentation à ajouté en début de ligne
+     */
     private String indentRepeator(){
         if(!indent) return "";
         String s= "";
@@ -130,14 +134,6 @@ public class printAsmlVisitor implements AsmlObjVisitor<String> {
 
     @Override
     public String visit(If e) {
-//        But:
-//        if a = b then (
-//            let res1 = 0 in
-//            call _min_caml_print_int res1
-//        ) else (
-//            let res2 = 1 in
-//            call _min_caml_print_int res2 
-//        )
         String retour = indent?"\n":" ";
         nbIndent++;
         String s = "if " + e.condasmt.accept(this) + " then ("+ indentRepeator() + e.thenasmt.accept(this);
