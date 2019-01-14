@@ -15,7 +15,7 @@ import okalm.ast.*;
 import okalm.ast.Float;
 
 /**
- *
+ * sépare les fonctions du  main et les stocke dans une liste de ClosureFunction
  * @author defoursr
  */
 public class ClosureVisitor implements ObjVisitor<Exp> {
@@ -124,6 +124,11 @@ public class ClosureVisitor implements ObjVisitor<Exp> {
         return new Var(e.id);
     }
 
+    /**
+     * 
+     * @param e Exp à traiter
+     * @return le prochain noeud Exp traité par le visiteur, la fonction étant stockée dans un objet ClosureFunction
+     */
     @Override
     public Exp visit(LetRec e) {
         FunDef f = e.fd;

@@ -10,7 +10,7 @@ import okalm.asml.*;
 import okalm.tools.AsmlObjVisitor;
 
 /**
- *
+ * Génére du code ARM à partir d'un arbre asml
  * @author defoursr
  */
 public class printArmVisitor implements AsmlObjVisitor<String> {

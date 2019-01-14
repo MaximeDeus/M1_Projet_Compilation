@@ -7,7 +7,6 @@ import okalm.backend.BasicAllocationVisitor;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
 import okalm.backend.printAsmlVisitor;
-import okalm.tools.PrintVisitor;
 import okalm.backend.printArmVisitor;
 import okalm.frontend.*;
 import okalm.typechecking.TypeVisitor;
@@ -149,7 +148,7 @@ public class Commande {
         /*System.out.println("Code type cheking is valid");*/
     }
     /**
-     * execcute les étapes du Frontend et convertie l'arbre AST en arbre ASML
+     * execute les étapes du Frontend et convertit l'arbre AST en arbre ASML
      * 
      * @param exp arbre correctement parsé et typé
      * @return arbre ASML
@@ -157,22 +156,19 @@ public class Commande {
      */
     public static Exp_asml frontend(Exp exp) throws Exception {
         //System.out.println("_____ FrontEnd _____");
-        //System.out.println("---parsed code: ");
+        //System.out.println("---parsed code--- ");
         //PrintVisitor pv = new PrintVisitor();
         //exp.accept(pv);
-        //K-norm
         //System.out.println("\n\n------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
         exp = exp.accept(kv);
         //exp.accept(pv); //affichage K-normalisation
 
-        //a-convers
         //System.out.println("\n------ A-Conversion ------");
         AlphaConversionVisitor acv = new AlphaConversionVisitor();
         exp = exp.accept(acv);
         //exp.accept(pv); //affichage A-Conversion
 
-        //reduction let
         // System.out.println("\n------ Reduction Let Expression ------");
         ReductionLetExpressionVisitor rlev = new ReductionLetExpressionVisitor();
         exp = exp.accept(rlev);
@@ -203,15 +199,15 @@ public class Commande {
         //System.out.println("_____ Backend _____");
         BasicAllocationVisitor bav = new BasicAllocationVisitor();
         exp = exp.accept(bav);
-        //System.out.println("LIste des registres: " + bav.regList);
+        //System.out.println("Liste des registres: " + bav.regList);
         return exp;
     }
 
     /**
-     * convertie un arbre ASML en ARM et l'écrie dans un fichier
+     * convertit un arbre ASML en ARM et l'écrit dans un fichier
      * 
      * @param exp arbre ASML
-     * @throws Exception problème de traduction ou d'écrire
+     * @throws Exception problème de traduction ou d'écriture
      */
     public static void outputARM(Exp_asml exp) throws Exception {
         //System.out.println("\n\n---ARM code: ");
@@ -225,7 +221,7 @@ public class Commande {
     }
 
     /**
-     * couvertie un arbre ASML en code ASML et l'écrie dans un fichier
+     * couvertit un arbre ASML en code ASML et l'écrit dans un fichier
      * 
      * @param exp arbre ASML
      * @throws Exception Exception problème de traduction ou d'écrire
@@ -249,7 +245,7 @@ public class Commande {
     }
 
     /**
-     * convertie un programme Mincaml en Arbre parsé
+     * convertit un programme Mincaml en Arbre parsé
      * 
      * @param s programme
      * @return arbre d'Exp
@@ -275,11 +271,11 @@ public class Commande {
         return expression;
     }
     /**
-     * écris une chaîne de caractère dans un fichier donné
+     * écrit une chaîne de caractères dans un fichier donné
      * 
      * @param chemin  le chemin et le nom du fichier
      * @param code chaîne de caractère
-     * @throws Exception en cas d'erreu d'écriture
+     * @throws Exception en cas d'erreur d'écriture
      */
     public static void writeInFile(String chemin, String code) throws Exception {
         final File fichier = new File(chemin);
