@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.File;
 import okalm.backend.BasicAllocationVisitor;
+//import okalm.asml.CodeGenerationVisitor;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
 import okalm.backend.printAsmlVisitor;
@@ -143,8 +144,10 @@ public class Commande {
      * @throws Exception problème de typage
      */
     public static void typechecking(Exp exp) throws Exception {
+       /* System.out.println("------ TypeChecking ------");*/
         TypeVisitor tv = new TypeVisitor(0);
         exp.accept(tv);
+        /*System.out.println("Code type cheking is valid");*/
     }
     /**
      * execcute les étapes du Frontend et convertie l'arbre AST en arbre ASML
@@ -219,6 +222,7 @@ public class Commande {
         if (bool_outputfile) {
             writeInFile(nom_fichier_output, exp.accept(pav));
         }
+
     }
 
     /**
@@ -255,6 +259,7 @@ public class Commande {
     public static Exp parse(String s) throws Exception {
 
         Parser p = new Parser(new Lexer(new FileReader(s)));
+        /*System.out.println("BASIC MAIN:");*/
         Exp expression = (Exp) p.parse().value;
         assert (expression != null);
         /*System.out.println("------ AST ------");

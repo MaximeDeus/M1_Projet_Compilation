@@ -11,11 +11,11 @@ import okalm.tools.AsmlVisitor;
 public class Sub extends Exp_asml {
 
     public Exp_asml ident;
-    public Exp_asml ioi;
+    public Exp_asml identOrImm;
 
-    public Sub(Exp_asml ident, Exp_asml ioi) {
+    public Sub(Exp_asml ident, Exp_asml identOrImm) {
         this.ident = ident;
-        this.ioi = ioi;
+        this.identOrImm = identOrImm;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Sub extends Exp_asml {
 
     @Override
     public <E> E accept(AsmlErrorVisitor<E> v) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

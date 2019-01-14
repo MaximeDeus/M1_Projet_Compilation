@@ -38,12 +38,12 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     
     @Override
     public String visit(Add e) {
-        return e.ident.accept(this)+" , "+e.ioi.accept(this);
+        return e.ident.accept(this)+" , "+e.identOrImm.accept(this);
     }
 
     @Override
     public String visit(Sub e) {
-        return e.ident.accept(this)+" , "+e.ioi.accept(this);
+        return e.ident.accept(this)+" , "+e.identOrImm.accept(this);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
         if (extFun.contains(e.label.accept(this))){
             return s+ ident+ "BL\tmin_caml_"+e.label.accept(this) +" ";
         }else{
-            return s+ ident+ "BL\t_"+e.label.accept(this) +" ";
+            return s+ ident+ "BL\t"+e.label.accept(this) +" ";
         }
     }
 
