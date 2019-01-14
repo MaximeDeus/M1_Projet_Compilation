@@ -15,10 +15,10 @@ import okalm.tools.AsmlVisitor;
  */
 public class New extends Exp_asml {
 
-    public Exp_asml ioi;
+    public Exp_asml identOrImm;
 
-    public New(Exp_asml ioi) {
-        this.ioi = ioi;
+    public New(Exp_asml identOrImm) {
+        this.identOrImm = identOrImm;
     }
 
     @Override

@@ -5,7 +5,7 @@ package okalm.asml;
  * @author liakopog
  */
 public enum Tokens {
-	LPAREN("("),
+	 LPAREN("("),
      RPAREN(")"),
      PLUS("+"),
      EQUAL("="),

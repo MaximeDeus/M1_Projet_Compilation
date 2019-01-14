@@ -28,6 +28,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
 
     public AlphaConversionVisitor() {
         listeFun = new HashSet();
+        //Fonctions de la librairie mincaml
         listeFun.add("print_int");
         listeFun.add("print_newline");
         listeFun.add("print_string");
@@ -40,8 +41,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
     }
 
     /**
-     * Renomme une variable suivant le numéro de la fonction dans laquelle on se
-     * trouve (main=0)
+     * Renomme une variable suivant le numéro de la fonction dans laquelle on se trouve (main=0)
      *
      * @param id
      * @return

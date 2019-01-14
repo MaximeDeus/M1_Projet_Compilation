@@ -32,14 +32,14 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
     @Override
     public Exp_asml visit(Add e) {
         e.ident = e.ident.accept(this);
-        e.ioi = e.ioi.accept(this);
+        e.identOrImm = e.identOrImm.accept(this);
         return e;
     }
 
     @Override
     public Exp_asml visit(Sub e) {
         e.ident = e.ident.accept(this);
-        e.ioi = e.ioi.accept(this);
+        e.identOrImm = e.identOrImm.accept(this);
         return e;
     }
 
@@ -141,7 +141,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
     @Override
     public Exp_asml visit(Mem e) {
         e.ident1 = e.ident1.accept(this);
-        e.ioi = e.ioi.accept(this);
+        e.identOrImm = e.identOrImm.accept(this);
         e.ident2 = e.ident2.accept(this);
         return e;
     }
@@ -154,7 +154,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(New e) {
-        e.ioi = e.ioi.accept(this);
+        e.identOrImm = e.identOrImm.accept(this);
         return e;
     }
 

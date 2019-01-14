@@ -25,7 +25,7 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
         Map m = new HashMap();
 
         m.putAll(e.ident.accept(this));
-        m.putAll(e.ioi.accept(this));
+        m.putAll(e.identOrImm.accept(this));
         m.forEach((t, u) -> {
             u = "Gen";
         });
@@ -39,7 +39,7 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
         Map m = new HashMap();
 
         m.putAll(e.ident.accept(this));
-        m.putAll(e.ioi.accept(this));
+        m.putAll(e.identOrImm.accept(this));
         m.forEach((t, u) -> {
             u = "Gen";
         });
@@ -241,7 +241,7 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
     public Map<String, String> visit(Mem e) {
         Map m = new HashMap();
         m.putAll(e.ident1.accept(this));
-        m.putAll(e.ioi.accept(this));
+        m.putAll(e.identOrImm.accept(this));
         m.putAll(e.ident2.accept(this));
         return m;
     }

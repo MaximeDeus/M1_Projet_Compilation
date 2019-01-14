@@ -11,20 +11,19 @@ package okalm.asml;
  */
 public class AsmlVisitorCreator {
 
-    Fundefs racine;
+    private Fundefs racine;
 
     public AsmlVisitorCreator(Fundefs racine) {
         this.racine = racine;
     }
 
-    public void allouerRegistres() {
+    public void allouerRegistres() {//TODO
     }
 
     public void createVisitors(Fundefs f) {
-//        f.accept(new AllSpillAllocationVisitor());
-//        int i = 0;
-//        while (i < f.fundefs.size()) {
-//            f.fundefs[i]
-
+    //        f.accept(new AllSpillAllocationVisitor());
+    //        int i = 0;
+    //        while (i < f.fundefs.size()) {
+    //            f.fundefs[i]
     }
 }
