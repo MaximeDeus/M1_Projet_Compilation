@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- *
  * @author liakopog
  */
 public class GraphColoringVisitor implements AsmlObjVisitor<Object> {

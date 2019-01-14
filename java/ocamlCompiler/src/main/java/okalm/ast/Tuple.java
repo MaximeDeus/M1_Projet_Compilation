@@ -1,10 +1,10 @@
 package okalm.ast;
 
-import java.util.List;
-
 import okalm.tools.ObjErrorVisitor;
 import okalm.tools.ObjVisitor;
 import okalm.tools.Visitor;
+
+import java.util.List;
 
 public class Tuple extends Exp {
     public final List<Exp> es;
@@ -19,7 +19,8 @@ public class Tuple extends Exp {
 
     public void accept(Visitor v) {
         v.visit(this);
-    }    
+    }
+
     public <E> E accept(ObjErrorVisitor<E> v) throws Exception {
         return v.visit(this);
     }

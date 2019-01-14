@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author liakopog
  */
 public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
@@ -114,7 +113,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
     public Exp_asml visit(Ident e) {
         if (!reg.containsKey(e.ident)) {
             reg.put(e.ident, regNum);
-            regList+= e.ident +"= R"+ regNum +" | ";
+            regList += e.ident + "= R" + regNum + " | ";
             regNum++;
         }
         return new Ident("R" + reg.get(e.ident));
@@ -203,15 +202,15 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(Eq e) {
-        e.e1= e.e1.accept(this);
-        e.e2= e.e2.accept(this);
+        e.e1 = e.e1.accept(this);
+        e.e2 = e.e2.accept(this);
         return e;
     }
 
     @Override
     public Exp_asml visit(LE e) {
-        e.e1= e.e1.accept(this);
-        e.e2= e.e2.accept(this);
-        return e;    
+        e.e1 = e.e1.accept(this);
+        e.e2 = e.e2.accept(this);
+        return e;
     }
 }

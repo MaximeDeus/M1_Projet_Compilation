@@ -1,10 +1,10 @@
 package okalm.ast;
 
-import java.util.List;
-
 import okalm.tools.ObjErrorVisitor;
 import okalm.tools.ObjVisitor;
 import okalm.tools.Visitor;
+
+import java.util.List;
 
 public class App extends Exp {
 
@@ -12,8 +12,7 @@ public class App extends Exp {
     public final List<Exp> es;
 
     /**
-     *
-     * @param e Var avec id= nom de la fonction appelée
+     * @param e  Var avec id= nom de la fonction appelée
      * @param es Paramètre de l'appel de la fonction
      */
     public App(Exp e, List<Exp> es) {

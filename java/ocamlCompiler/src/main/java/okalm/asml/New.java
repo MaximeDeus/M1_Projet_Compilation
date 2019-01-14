@@ -10,7 +10,6 @@ import okalm.tools.AsmlObjVisitor;
 import okalm.tools.AsmlVisitor;
 
 /**
- *
  * @author liakopog
  */
 public class New extends Exp_asml {

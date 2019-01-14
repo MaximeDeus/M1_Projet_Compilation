@@ -15,15 +15,17 @@ public class Var extends Exp {
     public <E> E accept(ObjVisitor<E> v) {
         return v.visit(this);
     }
+
     public void accept(Visitor v) {
         v.visit(this);
-    }    
+    }
+
     public <E> E accept(ObjErrorVisitor<E> v) throws Exception {
         return v.visit(this);
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return id.toString();
     }
 }

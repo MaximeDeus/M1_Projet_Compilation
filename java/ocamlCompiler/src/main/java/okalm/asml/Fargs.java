@@ -5,7 +5,6 @@ import okalm.tools.AsmlObjVisitor;
 import okalm.tools.AsmlVisitor;
 
 /**
- *
  * @author liakopog
  */
 public class Fargs extends Exp_asml {

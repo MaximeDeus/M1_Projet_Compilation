@@ -10,7 +10,6 @@ import okalm.tools.AsmlObjVisitor;
 import okalm.tools.AsmlVisitor;
 
 /**
- *
  * @author defoursr
  */
 public class Eq extends Exp_asml {

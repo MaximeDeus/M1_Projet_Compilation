@@ -5,17 +5,18 @@
  */
 package okalm.frontend;
 
+import okalm.ast.*;
+import okalm.ast.Float;
+import okalm.tools.Id;
+import okalm.tools.ObjVisitor;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import okalm.tools.Id;
-import okalm.tools.ObjVisitor;
-import okalm.ast.*;
-import okalm.ast.Float;
-
 /**
  * renomme les noms de variables en commun au main et aux fonctions.
+ *
  * @author defoursr
  */
 public class AlphaConversionVisitor implements ObjVisitor<Exp> {
@@ -146,18 +147,17 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
     }
 
     /**
-     * 
      * @param e Exp en train d'être traité
      * @return Un nouvel arbre avec les variables renommées
      */
     @Override
     public Exp visit(LetRec e) {
         Boolean b = false;
-        
-        if (closure==false) {
+
+        if (closure == false) {
             funCount++; //nouvelle fonction = nouveau numéro de fonction
             closure = true;
-            b=true;
+            b = true;
         }
 
         this.listeFun.add(e.fd.id.id); //ajout du nom de la fonction à la liste des fonctions connues
@@ -177,11 +177,11 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
         numfun = previousFun;//retour dans la fonction précédente
 
         //alpha conversion de la partie après le 'in' de la fonction (fils droit)
-        if(b){
+        if (b) {
             closure = false;
         }
         LetRec lr = new LetRec(fd, e.e.accept(this));
-        
+
         return (lr);
 
     }

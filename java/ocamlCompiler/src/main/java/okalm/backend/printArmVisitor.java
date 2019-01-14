@@ -86,8 +86,6 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 s += "!" + type + " is not supported yet!";
                 break;
         }
-        //TODO
-        //s = "!SUITE "+e.asmt.getClass().getSimpleName()+"!";
         s += ThenElse(e.asmt);
         return s;
     }

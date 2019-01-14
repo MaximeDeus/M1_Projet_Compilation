@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author liakopog
  */
 public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, String>> {

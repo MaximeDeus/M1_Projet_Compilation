@@ -10,61 +10,61 @@ import okalm.tools.AsmlObjVisitor;
 
 /**
  * Génére du code asml à partir d'un arbre asml
+ *
  * @author defoursr
  */
 public class printAsmlVisitor implements AsmlObjVisitor<String> {
-    
+
     private Integer nbIndent;
     private Boolean indent;
-    
-    public printAsmlVisitor(){
-        this.indent=false;
+
+    public printAsmlVisitor() {
+        this.indent = false;
         nbIndent = 0;
     }
-    
+
     /**
-     * 
      * @param indent option d'indentation
      */
-    public printAsmlVisitor(Boolean indent){
-        this.indent=indent;
+    public printAsmlVisitor(Boolean indent) {
+        this.indent = indent;
         nbIndent = 0;
     }
-    
-    
+
+
     /**
-     * @return indentation à ajouté en début de ligne
+     * @return indentation à ajouter en début de ligne
      */
-    private String indentRepeator(){
-        if(!indent) return "";
-        String s= "";
-        for(int i = 0; i<nbIndent;i++){
-            s=s+"   ";
+    private String indentRepeator() {
+        if (!indent) return "";
+        String s = "";
+        for (int i = 0; i < nbIndent; i++) {
+            s = s + "   ";
         }
-        return "\n"+s;
+        return "\n" + s;
     }
 
     @Override
     public String visit(Add e) {
-        return ("add "+e.ident.accept(this) +" "+e.identOrImm.accept(this));
+        return ("add " + e.ident.accept(this) + " " + e.identOrImm.accept(this));
     }
 
     @Override
     public String visit(Sub e) {
-        return ("sub "+e.ident.accept(this) +" "+e.identOrImm.accept(this));
+        return ("sub " + e.ident.accept(this) + " " + e.identOrImm.accept(this));
     }
 
     @Override
     public String visit(Asmt e) {
-        return "let "+e.ident.accept(this)+" = "+e.e.accept(this)+" in "+this.indentRepeator()+e.asmt.accept(this);
+        return "let " + e.ident.accept(this) + " = " + e.e.accept(this) + " in " + this.indentRepeator() + e.asmt.accept(this);
     }
 
     @Override
     public String visit(Call e) {
-        String s= "call "+e.label.accept(this)+" ";
-        if(!e.fargs.isEmpty()){
-            for(Exp_asml elem : e.fargs){
-                s+=elem.accept(this)+" ";
+        String s = "call " + e.label.accept(this) + " ";
+        if (!e.fargs.isEmpty()) {
+            for (Exp_asml elem : e.fargs) {
+                s += elem.accept(this) + " ";
             }
         }
         return s;
@@ -107,22 +107,22 @@ public class printAsmlVisitor implements AsmlObjVisitor<String> {
 
     @Override
     public String visit(Fundefs e) {
-        String s="";
+        String s = "";
         //fonctions à déclarer avant
-        for(Exp_asml elem : e.fundefs){
-            
-            s+=elem.accept(this)+"";
+        for (Exp_asml elem : e.fundefs) {
+
+            s += elem.accept(this) + "";
         }
-        
+
         //en tête de la fonction
-        s +="\nlet "+e.label.accept(this);
-        for(Exp_asml elem : e.formal_args){
-            s+=" "+elem.accept(this);
+        s += "\nlet " + e.label.accept(this);
+        for (Exp_asml elem : e.formal_args) {
+            s += " " + elem.accept(this);
         }
-        s+=" = ";
+        s += " = ";
         nbIndent++;
         //corps de la fonction
-        s+= this.indentRepeator()+ e.asmt.accept(this);
+        s += this.indentRepeator() + e.asmt.accept(this);
         nbIndent--;
         return s;
     }
@@ -134,18 +134,18 @@ public class printAsmlVisitor implements AsmlObjVisitor<String> {
 
     @Override
     public String visit(If e) {
-        String retour = indent?"\n":" ";
+        String retour = indent ? "\n" : " ";
         nbIndent++;
-        String s = "if " + e.condasmt.accept(this) + " then ("+ indentRepeator() + e.thenasmt.accept(this);
+        String s = "if " + e.condasmt.accept(this) + " then (" + indentRepeator() + e.thenasmt.accept(this);
         nbIndent--;
-        s+= indentRepeator() + ") else (";
+        s += indentRepeator() + ") else (";
         nbIndent++;
-        s+=indentRepeator()+e.elseasmt.accept(this);
+        s += indentRepeator() + e.elseasmt.accept(this);
         nbIndent--;
-        s+=indentRepeator()+")"+indentRepeator();
-        
+        s += indentRepeator() + ")" + indentRepeator();
+
         return s;
-        
+
     }
 
     @Override
@@ -165,7 +165,7 @@ public class printAsmlVisitor implements AsmlObjVisitor<String> {
 
     @Override
     public String visit(Neg e) {
-        return "neg "+e.ident.accept(this);
+        return "neg " + e.ident.accept(this);
     }
 
     @Override
@@ -190,11 +190,11 @@ public class printAsmlVisitor implements AsmlObjVisitor<String> {
 
     @Override
     public String visit(Eq e) {
-        return e.e1.accept(this)+" == "+ e.e2.accept(this);
+        return e.e1.accept(this) + " == " + e.e2.accept(this);
     }
 
     @Override
     public String visit(LE e) {
-        return e.e1.accept(this)+" <= "+ e.e2.accept(this);
+        return e.e1.accept(this) + " <= " + e.e2.accept(this);
     }
 }

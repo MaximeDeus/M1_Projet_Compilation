@@ -1,9 +1,9 @@
 package okalm.ast;
 
-import java.util.List;
-
 import okalm.tools.Id;
 import okalm.type.Type;
+
+import java.util.List;
 
 public class FunDef {
     public final Id id;
@@ -17,5 +17,5 @@ public class FunDef {
         this.args = args;
         this.e = e;
     }
- 
+
 }

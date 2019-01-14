@@ -17,7 +17,7 @@ import okalm.ast.Float;
 // Similarly, you can compute more complex values based
 // on this scheme. For instance, the set of free variables,
 // or generate a new tree.
- 
+
 public class HeightVisitorSimple implements Visitor {
 
     // this variable is used to store the result of 
@@ -73,7 +73,7 @@ public class HeightVisitorSimple implements Visitor {
         e.e2.accept(this);
         int res2 = res;
         // finally, we store e's height in res
-        res = Math.max(res1, res2) + 1 ;
+        res = Math.max(res1, res2) + 1;
     }
 
     public void visit(Sub e) {
@@ -81,28 +81,28 @@ public class HeightVisitorSimple implements Visitor {
         int res1 = res;
         e.e2.accept(this);
         int res2 = res;
-        res = Math.max(res1, res2) + 1 ;
-   }
+        res = Math.max(res1, res2) + 1;
+    }
 
-    public void visit(FNeg e){
+    public void visit(FNeg e) {
         e.e.accept(this);
         res++;
     }
 
-    public void visit(FAdd e){
+    public void visit(FAdd e) {
         e.e1.accept(this);
         int res1 = res;
         e.e2.accept(this);
         int res2 = res;
-        res = Math.max(res1, res2) + 1 ;
+        res = Math.max(res1, res2) + 1;
     }
 
-    public void visit(FSub e){
+    public void visit(FSub e) {
         e.e1.accept(this);
         int res1 = res;
         e.e2.accept(this);
         int res2 = res;
-        res = Math.max(res1, res2) + 1 ;
+        res = Math.max(res1, res2) + 1;
     }
 
     public void visit(FMul e) {
@@ -110,41 +110,41 @@ public class HeightVisitorSimple implements Visitor {
         int res1 = res;
         e.e2.accept(this);
         int res2 = res;
-        res = Math.max(res1, res2) + 1 ;
-     }
+        res = Math.max(res1, res2) + 1;
+    }
 
-    public void visit(FDiv e){
+    public void visit(FDiv e) {
         e.e1.accept(this);
         int res1 = res;
         e.e2.accept(this);
         int res2 = res;
-        res = Math.max(res1, res2) + 1 ;
+        res = Math.max(res1, res2) + 1;
     }
 
-    public void visit(Eq e){
+    public void visit(Eq e) {
         e.e1.accept(this);
         int res1 = res;
         e.e2.accept(this);
         int res2 = res;
-        res = Math.max(res1, res2) + 1 ;
+        res = Math.max(res1, res2) + 1;
     }
 
-    public void visit(LE e){
+    public void visit(LE e) {
         e.e1.accept(this);
         int res1 = res;
         e.e2.accept(this);
         int res2 = res;
-        res = Math.max(res1, res2) + 1 ;
+        res = Math.max(res1, res2) + 1;
     }
 
-    public void visit(If e){
+    public void visit(If e) {
         e.e1.accept(this);
         int res1 = res;
         e.e2.accept(this);
         int res2 = res;
         e.e3.accept(this);
         int res3 = res;
-        res = Math.max(res1, Math.max(res2, res3)) + 1 ;
+        res = Math.max(res1, Math.max(res2, res3)) + 1;
     }
 
     public void visit(Let e) {
@@ -152,22 +152,22 @@ public class HeightVisitorSimple implements Visitor {
         int res1 = res;
         e.e2.accept(this);
         int res2 = res;
-        res = Math.max(res1, res2) + 1 ;
+        res = Math.max(res1, res2) + 1;
     }
 
-    public void visit(Var e){
+    public void visit(Var e) {
         res = 0;
     }
 
-    public void visit(LetRec e){
+    public void visit(LetRec e) {
         e.e.accept(this);
         int res1 = res;
         e.fd.e.accept(this);
         int res2 = res;
-        res = Math.max(res1, res2) + 1 ;
+        res = Math.max(res1, res2) + 1;
     }
 
-    public void visit(App e){
+    public void visit(App e) {
         e.e.accept(this);
         int res1 = res;
         for (Exp exp : e.es) {
@@ -177,7 +177,7 @@ public class HeightVisitorSimple implements Visitor {
         res = res1 + 1;
     }
 
-    public void visit(Tuple e){
+    public void visit(Tuple e) {
         int res1 = 0;
         for (Exp exp : e.es) {
             exp.accept(this);
@@ -186,7 +186,7 @@ public class HeightVisitorSimple implements Visitor {
         res = res1 + 1;
     }
 
-    public void visit(LetTuple e){
+    public void visit(LetTuple e) {
         e.e1.accept(this);
         int res1 = res;
         e.e2.accept(this);
@@ -194,7 +194,7 @@ public class HeightVisitorSimple implements Visitor {
         res = Math.max(res1, res2);
     }
 
-    public void visit(Array e){
+    public void visit(Array e) {
         e.e1.accept(this);
         int res1 = res;
         e.e2.accept(this);
@@ -202,7 +202,7 @@ public class HeightVisitorSimple implements Visitor {
         res = Math.max(res1, res2);
     }
 
-    public void visit(Get e){
+    public void visit(Get e) {
         e.e1.accept(this);
         int res1 = res;
         e.e2.accept(this);
@@ -210,14 +210,14 @@ public class HeightVisitorSimple implements Visitor {
         res = Math.max(res1, res2);
     }
 
-    public void visit(Put e){
+    public void visit(Put e) {
         e.e1.accept(this);
         int res1 = res;
         e.e2.accept(this);
         int res2 = res;
         e.e3.accept(this);
         int res3 = res;
-        res = Math.max(res1, Math.max(res2, res3)) + 1 ;
+        res = Math.max(res1, Math.max(res2, res3)) + 1;
     }
 }
 

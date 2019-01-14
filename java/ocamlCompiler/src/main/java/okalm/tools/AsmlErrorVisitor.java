@@ -3,7 +3,6 @@ package okalm.tools;
 import okalm.asml.*;
 
 /**
- *
  * @author liakopog
  */
 public interface AsmlErrorVisitor<E> {
@@ -13,10 +12,10 @@ public interface AsmlErrorVisitor<E> {
     public E visit(Sub e) throws Exception;
 
     public E visit(Asmt e) throws Exception;
-        
+
     public E visit(Eq e) throws Exception;
-    
-    public E  visit(LE e) throws Exception;
+
+    public E visit(LE e) throws Exception;
 
     public E visit(Call e) throws Exception;
 
