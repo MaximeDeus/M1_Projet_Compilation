@@ -22,11 +22,12 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
 
     private HashSet<String> listeFun;
 
-    private Integer numfun; // représente l'environemment actuel (0=main, 1=f1, 2=f2 etc)
+    private Integer numfun; //représente l'environemment actuel (0=main, 1=f1, 2=f2 etc)
     private Integer funCount; //compteur de numéro de fonction (1 fonction = 1 numéro, main = 0)
 
     public AlphaConversionVisitor() {
         listeFun = new HashSet();
+        //Fonctions de la librairie mincaml
         listeFun.add("print_int");
         listeFun.add("print_newline");
         listeFun.add("print_string");
@@ -145,7 +146,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
     @Override
     public Exp visit(LetRec e) {
         funCount++; //nouvelle fonction = nouveau numéro de fonction
-        this.listeFun.add(e.fd.id.id); //ajout du nom de la fonction à la liste de fonction connue
+        this.listeFun.add(e.fd.id.id); //ajout du nom de la fonction à la liste de fonctions connues
         
         Integer previousFun = numfun; //on enregistre la fonction dans laquelle on se trouvait (numfun = fonction actuelle)
         numfun=funCount; //on se positionne dans la nouvelle fonction
@@ -176,12 +177,12 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(Tuple e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp visit(LetTuple e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

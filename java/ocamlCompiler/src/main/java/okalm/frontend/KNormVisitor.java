@@ -12,9 +12,9 @@ import java.util.List;
 
 public class KNormVisitor implements ObjVisitor<Exp> {
 
-    //Attributs utilisés pour la méthode App
+    //Attributs utilisés pour la méthode App, permet de K-Normaliser les fonctions avec plusieurs paramètres
     private LinkedList<Exp> liste_arguments = new LinkedList<>(); //Liste qui contient les arguments k-normalisés
-    private HashMap<App, Integer> nb_argument_fonction = new HashMap<>(); //Cette map associe une fonction à son nombre de paramètre
+    private HashMap<App, Integer> nb_argument_fonction = new HashMap<>(); //Cette map associe pour chaque fonction son nombre de paramètres
 
     public Unit visit(Unit e) {
         return e;
@@ -135,39 +135,19 @@ public class KNormVisitor implements ObjVisitor<Exp> {
     }
 
     public Exp visit(Eq e) { //Renvoie Let initialement
-        /**
-         Exp e1 = e.e1.accept(this);
-         Exp e2 = e.e2.accept(this);
-         Id new_var1 = Id.gen();
-         Type new_type1 = Type.gen();
-         Id new_var2 = Id.gen();
-         Type new_type2 = Type.gen();
-         Let res = new Let(new_var1, new_type1, e1,
-         new Let(new_var2, new_type2, e2,
-         new Eq (new Var(new_var1), new Var(new_var2))));
-         return res;
-         */
+
         return e;
     }
 
     public Exp visit(LE e) { //Renvoie Let initialement
-        /**
-         Exp e1 = e.e1.accept(this);
-         Exp e2 = e.e2.accept(this);
-         Id new_var1 = Id.gen();
-         Type new_type1 = Type.gen();
-         Id new_var2 = Id.gen();
-         Type new_type2 = Type.gen();
-         Let res = new Let(new_var1, new_type1, e1,
-         new Let(new_var2, new_type2, e2,
-         new LE (new Var(new_var1), new Var(new_var2))));
-         return res;
-         */
+
         return e;
     }
 
     public Let visit(If e) { //Renvoie If initialement
         /**
+         * Code donné initialement
+         *
          Exp e1 = e.e1.accept(this);
          Exp e2 = e.e2.accept(this);
          Exp e3 = e.e3.accept(this);
@@ -182,6 +162,11 @@ public class KNormVisitor implements ObjVisitor<Exp> {
         Type type2 = Type.gen();
         Var var2 = new Var(id2);
 
+
+        /**
+         * Utilisation du pattern matching pour K-Normaliser selon le cas traité
+         * Chaque cas est défini selon les spécifications de la documentation mincaml
+         */
 
         if (e.e1 instanceof Not) {
             Not not = (Not) e.e1;
@@ -239,31 +224,6 @@ public class KNormVisitor implements ObjVisitor<Exp> {
     }
 
     public Exp visit(App e) {
-
-
-        //TODO v1 qui fonctionne (version basique)
-        /** Id new_id = Id.gen();
-         Type new_type = Type.gen();
-         List<Exp> new_es = new LinkedList<>();
-         new_es.add(new Var(new_id));
-
-         Let new_let = new Let (new_id,new_type,e.es.get(0),new App(e.e,new_es));
-
-         return new_let;
-         */
-
-        /**
-         //TODO v2 qui fonctionne (version appels imbriqués)
-         Id new_id = Id.gen();
-         Type new_type = Type.gen();
-         List<Exp> new_es = new LinkedList<>();
-         new_es.add(new Var(new_id));
-
-         Let new_let = new Let (new_id,new_type,e.es.get(0).accept(this),new App(e.e,new_es));
-
-
-         return new_let;
-         */
 
         Id new_id = Id.gen();
         Type new_type = Type.gen();
