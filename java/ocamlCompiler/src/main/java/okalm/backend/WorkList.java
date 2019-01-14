@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package okalm.backend;
 
 import okalm.asml.Exp_asml;
@@ -11,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Permet de preserver des informations pertinentes pour chaque instruction du
+ * programme, qu'on utilise pour faire le graphe d'interférence des variables
  * @author defoursr
  */
 public class WorkList {

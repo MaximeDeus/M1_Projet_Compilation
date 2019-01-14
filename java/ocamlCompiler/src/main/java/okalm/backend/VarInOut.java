@@ -2,6 +2,9 @@ package okalm.backend;
 
 import java.util.ArrayList;
 
+/*
+Definit les variables in et out de chaque instruction ou bloc basique
+ */
 public class VarInOut {
 
     public ArrayList<String> in;

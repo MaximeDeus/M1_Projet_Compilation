@@ -1,10 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package okalm.backend;
 
+import java.util.HashSet;
+import java.util.Set;
 import okalm.asml.*;
 import okalm.tools.AsmlObjVisitor;
 
@@ -89,7 +86,6 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
         s += ThenElse(e.asmt);
         return s;
     }
-
 
     @Override
     public String visit(Call e) {

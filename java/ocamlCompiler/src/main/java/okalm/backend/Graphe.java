@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package okalm.backend;
 
 import java.util.HashMap;
@@ -10,7 +5,8 @@ import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
+/** 
+ * Classe réprésentant le graphe d'interférence des variables du programme
  * @author liakopog
  */
 public class Graphe {
@@ -22,6 +18,9 @@ public class Graphe {
 
     }
 
+    /*Ajoute un nouveau noeud dans le graphe
+    *@param String n
+     */
     public void ajouterNoeud(String n) {
         if (graphe.containsKey(n)) {
             try {
@@ -35,6 +34,8 @@ public class Graphe {
         }
     }
 
+    /*Ajoute une arete dans le graphe, qui signifie que les variables réprésentées par les deux noeuds sont actives en meme temps quelque part dans le programme
+     */
     public void ajouterArete(String noeud1, String noeud2) {
         graphe.get(noeud1).add(noeud2);
         graphe.get(noeud2).add(noeud1);

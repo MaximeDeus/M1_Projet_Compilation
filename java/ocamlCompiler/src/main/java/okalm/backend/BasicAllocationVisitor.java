@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package okalm.backend;
 
 import okalm.asml.*;
@@ -17,6 +12,7 @@ import java.util.Map;
  * @author liakopog
  */
 public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
+
     public String regList;
     public Map<String, Integer> reg;
     public int regNum;
@@ -28,6 +24,9 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
 
     }
 
+    /*
+    *
+     */
     @Override
     public Exp_asml visit(Add e) {
         e.ident = e.ident.accept(this);
@@ -129,7 +128,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(Int e) {
-        return e;
+        return e;   //Les int ne doivent pas se mettre dans les registres
     }
 
     @Override
