@@ -38,12 +38,12 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     
     @Override
     public String visit(Add e) {
-        return e.ident.accept(this)+" , "+e.ioi.accept(this);
+        return e.ident.accept(this)+" , "+e.identOrImm.accept(this);
     }
 
     @Override
     public String visit(Sub e) {
-        return e.ident.accept(this)+" , "+e.ioi.accept(this);
+        return e.ident.accept(this)+" , "+e.identOrImm.accept(this);
     }
 
     @Override

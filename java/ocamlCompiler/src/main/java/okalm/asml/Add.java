@@ -9,18 +9,15 @@ import okalm.tools.AsmlErrorVisitor;
 import okalm.tools.AsmlObjVisitor;
 import okalm.tools.AsmlVisitor;
 
-/**
- *
- * @author liakopog
- */
+
 public class Add extends Exp_asml {
 
     public Exp_asml ident;
-    public Exp_asml ioi;
+    public Exp_asml identOrImm;
 
-    public Add(Exp_asml ident, Exp_asml ioi) {
+    public Add(Exp_asml ident, Exp_asml identOrImm) {
         this.ident = ident;
-        this.ioi = ioi;
+        this.identOrImm = identOrImm;
     }
 
     @Override
