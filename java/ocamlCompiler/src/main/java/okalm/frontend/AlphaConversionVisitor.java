@@ -148,7 +148,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
     /**
      * 
      * @param e Exp en train d'être traité
-     * @return Un nouvel l'arbre avec les variables renommées
+     * @return Un nouvel arbre avec les variables renommées
      */
     @Override
     public Exp visit(LetRec e) {
