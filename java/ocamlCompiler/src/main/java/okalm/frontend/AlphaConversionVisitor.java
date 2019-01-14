@@ -15,7 +15,7 @@ import okalm.ast.*;
 import okalm.ast.Float;
 
 /**
- *
+ * renomme les noms de variables en commun au main et au fonctions.
  * @author defoursr
  */
 public class AlphaConversionVisitor implements ObjVisitor<Exp> {
@@ -43,8 +43,8 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
     /**
      * Renomme une variable suivant le numéro de la fonction dans laquelle on se trouve (main=0)
      *
-     * @param id
-     * @return
+     * @param id Id object from the original parsed code
+     * @return new Id renamed if necessary
      */
     private Id rename(Id id) {
         if (numfun == 0 || listeFun.contains(id.id)) {
@@ -145,6 +145,11 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
         return new Var(rename(e.id));
     }
 
+    /**
+     * 
+     * @param e Exp en train d'être traité
+     * @return une nouvelle version du noeud avec les variables avec un nom déjà présetn dans le main renomées
+     */
     @Override
     public Exp visit(LetRec e) {
         Boolean b = false;

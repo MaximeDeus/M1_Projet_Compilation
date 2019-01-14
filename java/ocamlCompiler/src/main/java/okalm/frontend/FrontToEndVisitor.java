@@ -13,13 +13,13 @@ import okalm.asml.*;
 import okalm.ast.*;
 
 /**
- *
+ * Convertie une structure ast en structure asml (front end to back end)
  * @author defoursr
  */
 public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
 
     /**
-     * encapsule le code dans la fonction mais (let_) et ajoute et visite les
+     * encapsule le code dans la fonction main (let _) et ajoute et visite les
      * fonctions déclaré dans listeFun
      *
      * @param e Exp_asml retourné après la visite du visiteur
@@ -151,7 +151,7 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
     }
 
     @Override
-    public Exp_asml visit(LetRec e) { //après la closure, un let rec est une fonction closure
+    public Exp_asml visit(LetRec e) { //après la closure, on ne rencontre plus de let rec
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
