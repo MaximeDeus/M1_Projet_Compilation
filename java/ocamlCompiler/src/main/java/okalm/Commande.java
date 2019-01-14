@@ -4,7 +4,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.File;
 import okalm.backend.BasicAllocationVisitor;
-//import okalm.asml.CodeGenerationVisitor;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
 import okalm.backend.printAsmlVisitor;
@@ -40,21 +39,21 @@ public class Commande {
      * @throws Exception
      */
     public static void option(String args[]) throws Exception {
-        int i=0;
+        int i = 0;
         if (args.length < 2) {
             throw new IllegalArgumentException("More arguments needed, use -h for more informations.");
         } else {
 
             for (i = 0; i < args.length; i++) {
-                 if(args[i].endsWith(".ml")){
+                if (args[i].endsWith(".ml")) {
                     nom_fichier_mincalm = args[i];
-                 } else {
+                } else {
                     switch (args[i]) {
                         case "-o":
                             //output file
                             bool_outputfile = true;
                             if (args.length >= i + 1) {
-                                if(args[i+1].endsWith(".s")||args[i+1].endsWith(".asml")){
+                                if (args[i + 1].endsWith(".s") || args[i + 1].endsWith(".asml")) {
                                     nom_fichier_output = args[i + 1];
                                     i++;
                                 }
@@ -94,7 +93,7 @@ public class Commande {
                             bool_erreur = true;
                             break;
                     }
-                } 
+                }
             }
             compute();
         }
@@ -104,7 +103,7 @@ public class Commande {
     public static void compute() throws Exception {
 
         if (bool_erreur) {
-            error();
+            throw new IllegalArgumentException("Bad option, use -h for more informations.");
         } else if (bool_version) {
             version();
         } else if (bool_help) {
@@ -137,24 +136,33 @@ public class Commande {
         System.out.println("-asml : ASML file");
         System.out.println("-base : basic main");
     }
-
+    /**
+     * effectue le typechecking
+     * 
+     * @param exp arbre correctement parsé
+     * @throws Exception problème de typage
+     */
     public static void typechecking(Exp exp) throws Exception {
-       /* System.out.println("------ TypeChecking ------");*/
         TypeVisitor tv = new TypeVisitor(0);
         exp.accept(tv);
-        /*System.out.println("Code type cheking is valid");*/
     }
-
-    public static Exp_asml frontend(Exp exp) {
+    /**
+     * execcute les étapes du Frontend et convertie l'arbre AST en arbre ASML
+     * 
+     * @param exp arbre correctement parsé et typé
+     * @return arbre ASML
+     * @throws Exception 
+     */
+    public static Exp_asml frontend(Exp exp) throws Exception {
         //System.out.println("_____ FrontEnd _____");
-        System.out.println("---parsed code: ");
-        PrintVisitor pv = new PrintVisitor();
-        exp.accept(pv);
+        //System.out.println("---parsed code: ");
+        //PrintVisitor pv = new PrintVisitor();
+        //exp.accept(pv);
         //K-norm
-        System.out.println("\n\n------ K-Normalisation ------");
+        //System.out.println("\n\n------ K-Normalisation ------");
         KNormVisitor kv = new KNormVisitor();
         exp = exp.accept(kv);
-        exp.accept(pv); //affichage K-normalisation
+        //exp.accept(pv); //affichage K-normalisation
 
         //a-convers
         //System.out.println("\n------ A-Conversion ------");
@@ -163,16 +171,16 @@ public class Commande {
         //exp.accept(pv); //affichage A-Conversion
 
         //reduction let
-        System.out.println("\n------ Reduction Let Expression ------");
+        // System.out.println("\n------ Reduction Let Expression ------");
         ReductionLetExpressionVisitor rlev = new ReductionLetExpressionVisitor();
         exp = exp.accept(rlev);
-        exp.accept(pv); //affichage let expression
+        //exp.accept(pv); //affichage let expression
 
         //System.out.println("\n------ Closure ------");
         ClosureVisitor cv = new ClosureVisitor();
         exp = exp.accept(cv);
         //System.out.println(cv.functionsToString()); //affichage des fonctions après closure
-        exp.accept(pv); //affichage code après closure
+        //exp.accept(pv); //affichage code après closure
 
         //System.out.println("\n------ FrontEnd to BackEnd ------");
         FrontToEndVisitor ftev = new FrontToEndVisitor();
@@ -182,89 +190,104 @@ public class Commande {
 
     }
 
-    public static Exp_asml backend(Exp_asml exp) {
+    /**
+     * effectue les étapes du backend 
+     * 
+     * @param exp arbre ASML
+     * @return arbre ASML traité
+     * @throws Exception problème dans le backend
+     */
+    public static Exp_asml backend(Exp_asml exp) throws Exception {
         //System.out.println("_____ Backend _____");
         BasicAllocationVisitor bav = new BasicAllocationVisitor();
         exp = exp.accept(bav);
-        System.out.println("LIste des registres: "+bav.regList);
+        //System.out.println("LIste des registres: " + bav.regList);
         return exp;
     }
 
-    public static void outputARM(Exp_asml exp) {
-        System.out.println("\n\n---ARM code: ");
+    /**
+     * convertie un arbre ASML en ARM et l'écrie dans un fichier
+     * 
+     * @param exp arbre ASML
+     * @throws Exception problème de traduction ou d'écrire
+     */
+    public static void outputARM(Exp_asml exp) throws Exception {
+        //System.out.println("\n\n---ARM code: ");
         printArmVisitor pav = new printArmVisitor();
-        System.out.println(exp.accept(pav));
+        //System.out.println(exp.accept(pav));
         writeInFile("output/result.s", exp.accept(pav));
-        if(bool_outputfile){
-            writeInFile(nom_fichier_output,exp.accept(pav));
+        if (bool_outputfile) {
+            writeInFile(nom_fichier_output, exp.accept(pav));
         }
-
     }
 
-    public static void output(Exp_asml exp) {
-        System.out.println("\n\n---ASML code");
+    /**
+     * couvertie un arbre ASML en code ASML et l'écrie dans un fichier
+     * 
+     * @param exp arbre ASML
+     * @throws Exception Exception problème de traduction ou d'écrire
+     */
+    public static void output(Exp_asml exp) throws Exception {
+        //System.out.println("\n\n---ASML code");
         printAsmlVisitor pav = new printAsmlVisitor();
-        System.out.println(exp.accept(pav));
+        //System.out.println(exp.accept(pav));
         writeInFile("output/result.asml", exp.accept(pav));
-        if(bool_outputfile){
-            writeInFile(nom_fichier_output,exp.accept(pav));
+        if (bool_outputfile) {
+            writeInFile(nom_fichier_output, exp.accept(pav));
         }
     }
-
-    public static void output(Exp exp) {
-        System.out.println("\noutput backend");
-    }
-
-    public static void error() {
-        System.out.println("ERROR:");
-        System.out.println("bad option use -h for help.");
-    }
-
+    
+    /**
+     * affiche la version du programme
+     */
     public static void version() {
         System.out.println("current version:1.0");
 
     }
 
+    /**
+     * convertie un programme Mincaml en Arbre parsé
+     * 
+     * @param s programme
+     * @return arbre d'Exp
+     * @throws Exception problème dans le parseur
+     */
     public static Exp parse(String s) throws Exception {
 
         Parser p = new Parser(new Lexer(new FileReader(s)));
-        /*System.out.println("BASIC MAIN:");*/
         Exp expression = (Exp) p.parse().value;
         assert (expression != null);
         /*System.out.println("------ AST ------");
         expression.accept(new PrintVisitor());
         System.out.println();*/
 
-       /* System.out.println("------ Height of the AST ------");
+ /* System.out.println("------ Height of the AST ------");
         int height = Height.computeHeight(expression);
         System.out.println("using Height.computeHeight: " + height);*/
 
-        /*ObjVisitor<Integer> v = new HeightVisitor();
+ /*ObjVisitor<Integer> v = new HeightVisitor();
         height = expression.accept(v);
         System.out.println("using HeightVisitor: " + height);*/
         return expression;
     }
-    
-    public void test(String s){
-        //output.txt<-s;
-    }
-    
-    public static void writeInFile (String chemin, String code){
-        final File fichier =new File(chemin); 
-        System.out.println("file: "+chemin);
+    /**
+     * écris une chaîne de caractère dans un fichier donné
+     * 
+     * @param chemin  le chemin et le nom du fichier
+     * @param code chaîne de caractère
+     * @throws Exception en cas d'erreu d'écriture
+     */
+    public static void writeInFile(String chemin, String code) throws Exception {
+        final File fichier = new File(chemin);
+        //System.out.println("file: " + chemin);
+        fichier.createNewFile();
+        final FileWriter writer = new FileWriter(fichier);
         try {
-            fichier.createNewFile();
-            final FileWriter writer = new FileWriter(fichier);
-            try {
-                
-                writer.write(code);
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Impossible de creer le fichier");
+            writer.write(code);
+        } finally {
+            writer.close();
         }
+
     }
 
 }
