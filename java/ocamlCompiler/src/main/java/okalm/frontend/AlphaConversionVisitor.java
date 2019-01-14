@@ -22,7 +22,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
 
     private HashSet<String> listeFun;
 
-    private Integer numfun; // représente l'environemment actuel (0=main, 1=f1, 2=f2 etc)
+    private Integer numfun; // représente l'environnemment actuel (0=main, 1=f1, 2=f2 etc)
     private Integer funCount; //compteur de numéro de fonction (1 fonction = 1 numéro, main = 0)
     private Boolean closure;
 
@@ -44,7 +44,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
      * Renomme une variable suivant le numéro de la fonction dans laquelle on se trouve (main=0)
      *
      * @param id objet Id tel que généré par le parser
-     * @return nouvel Id renomé
+     * @return nouvel Id renommé
      */
     private Id rename(Id id) {
         if (numfun == 0 || listeFun.contains(id.id)) {
@@ -148,7 +148,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
     /**
      * 
      * @param e Exp en train d'être traité
-     * @return une nouvelle version du noeud avec les variables avec un nom déjà présent dans le main renomées
+     * @return Un nouvel l'arbre avec les variables renommées
      */
     @Override
     public Exp visit(LetRec e) {
@@ -160,7 +160,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
             b=true;
         }
 
-        this.listeFun.add(e.fd.id.id); //ajout du nom de la fonction à la liste de fonction connue
+        this.listeFun.add(e.fd.id.id); //ajout du nom de la fonction à la liste des fonctions connues
 
         Integer previousFun = numfun; //on enregistre la fonction dans laquelle on se trouvait (numfun = fonction actuelle)
         numfun = funCount; //on se positionne dans la nouvelle fonction
@@ -176,7 +176,7 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
         FunDef fd = new FunDef(f.id, f.type, temp, f.e.accept(this));
         numfun = previousFun;//retour dans la fonction précédente
 
-        //alpha conversion de la partie après le 'in' de la fonction
+        //alpha conversion de la partie après le 'in' de la fonction (fils droit)
         if(b){
             closure = false;
         }
@@ -197,12 +197,12 @@ public class AlphaConversionVisitor implements ObjVisitor<Exp> {
 
     @Override
     public Exp visit(Tuple e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp visit(LetTuple e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
