@@ -142,7 +142,7 @@ public class VariableLivenessVisitor implements AsmlObjVisitor<Map<String, Strin
         wlTemp = wlList.get(e.elseasmt.toString());
         wlTemp.prec.add(e.toString());
 
-        e.condasmt.accept(this).forEach((t, u) -> {     //Les expressions evaluées dans la condition sont
+        e.condasmt.accept(this).forEach((t, u) -> {     //Les expressions evaluées dans la condition sont aussi à ajouter dans Gen
             wl.gen.add(t);
         });
 
