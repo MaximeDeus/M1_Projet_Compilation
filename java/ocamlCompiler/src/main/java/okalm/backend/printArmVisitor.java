@@ -47,34 +47,13 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     @Override
     public String visit(Asmt e) {
         String type = e.e.getClass().getSimpleName();
+
         String s = "";
         String end = "";
 
-        if (type.equals("Add") || type.equals("Sub")) {
-            Add add = (Add) e.e;
-            Ident arg1 = (Ident) add.ident;
-            if (arg1.mem) {
-                s += indent + "LDR\tR10, " + arg1.accept(this) + "\n";
-                end += indent + "STR\tR10, " + arg1.accept(this) + "\n";
-                arg1.ident = "R10";
-            }
-            if (add.identOrImm.getClass().getSimpleName().equals("Ident")) {
-                Ident arg2 = (Ident) add.identOrImm;
-                if (arg2.mem) {
-                    s += indent + "LDR\tR9, " + arg2.accept(this) + "\n";
-                    end += indent + "STR\t R9, " + arg2.accept(this) + "\n";
-                    arg2.ident = "R9";
-                }
-            }
-        } else if (type.equals("Ident")) {
-            Ident arg = (Ident) e.e;
-            if (arg.mem) {
-                s += indent + "LDR\t R10, " + arg.accept(this) + "\n";
-                end += indent + "STR\t R10, " + arg.accept(this) + "\n";
-                arg.ident = "R10";
-            }
-        }
+        //Si l'expression contenue dans l'arbre asmt est une variable, et en plus elle se trouve dans la mémoire, on la charge dans le registre 10
         Ident id = (Ident) e.ident;
+        String adresseIdent = e.ident.accept(this);
         if (id.mem) {
             s += indent + "LDR\t R12, " + e.ident.accept(this) + "\n";
             end += indent + "STR\t R12, " + e.ident.accept(this) + "\n";
@@ -83,11 +62,66 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
 
         switch (type) {
             case "Add":
-                s += indent + "ADD\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
+                Add add = (Add) e.e;
+                String adresseAdd1 = null;
+                String adresseAdd2 = null;
+                boolean add2Modifie = false;
+                Ident add1 = (Ident) add.ident;
+                if (add1.mem) {
+                    s += indent + "LDR\tR10, " + add1.accept(this) + "\n";      //On charge la variable dans un régistre
+                    adresseAdd1 = add.ident.accept(this);
+                    add1.ident = "R10";
+                }
+                if (add.identOrImm.getClass().getSimpleName().equals("Ident")) {    //On verifie qu'il s'agit d'une variable, et non pas d'un Int (ou une valeur immédiate plus généralement)
+                    Ident add2 = (Ident) add.identOrImm;
+                    if (add2.mem) {
+                        s += indent + "LDR\tR9, " + add2.accept(this) + "\n";
+                        adresseAdd2 = add.identOrImm.accept(this);
+                        add2.ident = "R9";
+                        add2Modifie = true;         //L'adresse/emplacement de la variable identOrImm a été modifié, nous devons la reinitialiser après son utilisation, dans le cas où ça sera necéssaire dans la suite de l'utiliser
+                    }
+                }
+
+                s += indent + "ADD\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";      //Instruction codée dans l'expression e
+
+                if (add1.mem) {
+                    add1.ident = adresseAdd1;       //reinitialisation de l'adresse originale de la variable ident
+                }
+                if (add2Modifie) {
+                    Ident add2 = (Ident) add.identOrImm;
+                    add2.ident = adresseAdd2;       //reinitialisation de l'adresse originale de la variable identOrImm
+                }
                 break;
 
             case "Sub":
-                s += indent + "SUB\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
+                Sub sub = (Sub) e.e;
+                String adresseSub1 = null;
+                String adresseSub2 = null;
+                boolean sub2Modifie = false;
+                Ident sub1 = (Ident) sub.ident;
+                if (sub1.mem) {
+                    s += indent + "LDR\tR10, " + sub1.accept(this) + "\n";      //On charge la variable dans un régistre
+                    adresseSub1 = sub.ident.accept(this);
+                    sub1.ident = "R10";
+                }
+                if (sub.identOrImm.getClass().getSimpleName().equals("Ident")) {    //On verifie qu'il s'agit d'une variable, et non pas d'un Int (ou une valeur immédiate plus généralement)
+                    Ident sub2 = (Ident) sub.identOrImm;
+                    if (sub2.mem) {
+                        s += indent + "LDR\tR9, " + sub2.accept(this) + "\n";
+                        adresseSub2 = sub.identOrImm.accept(this);
+                        sub2.ident = "R9";
+                        sub2Modifie = true; //L'adresse/emplacement de la variable identOrImm a été modifié, nous devons la reinitialiser après son utilisation, dans le cas où ça sera necéssaire dans la suite de l'utiliser
+                    }
+                }
+                s += indent + "SUB\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";      //Instruction codée dans l'expression e
+
+                if (sub1.mem) {
+                    sub1.ident = adresseSub1;       //reinitialisation de l'adresse originale de la variable ident
+                }
+                if (sub2Modifie) {
+                    Ident sub2 = (Ident) sub.identOrImm;
+                    sub2.ident = adresseSub2;       //reinitialisation de l'adresse originale de la variable identOrImm
+                }
                 break;
 
             case "Int":
@@ -95,7 +129,16 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 break;
 
             case "Ident":
+
+                Ident arg = (Ident) e.e;
+                String adresseArg = e.e.accept(this);       //Sauvegarde de son adresse originale pour la restituer après
+                if (arg.mem) {
+                    s += indent + "LDR\t R10, " + arg.accept(this) + "\n";
+                    arg.ident = "R10";//affecte la variable e dans le registre 10. Attention, après il faut restaurer son adresse memoire, sinon on ne va plus pouvoir le récuperer
+                }
                 s += indent + "MOV\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
+                arg.ident = adresseArg;     //restitution de l'adresse originale de la variable e
+
                 break;
 
             case "Neg":
@@ -103,6 +146,7 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 break;
 
             case "Call":
+                //On génére le code de la commande call, et on récupére son valeur de retour dans Ident
                 s += e.e.accept(this) + "\n" + indent + "MOV\t" + e.ident.accept(this) + ", R0\n";
                 break;
 
@@ -116,6 +160,7 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
         }
         s += end;
         s += ThenElse(e.asmt);
+        id.ident = adresseIdent;        //On remet dans l'Ident son propre adresse, soit qu'il soit dans un registre ou dans la mémoire
         return s;
     }
 
@@ -123,15 +168,14 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     public String visit(Call e) {
         String s = "";
         int i = 0;
-        for (Exp_asml elem : e.fargs) {
-            if (elem.getClass().getSimpleName().equals("Ident")) {
+        for (Exp_asml elem : e.fargs) {     //Parcours de la liste des arguments formels de la fundef
+            if (elem.getClass().getSimpleName().equals("Ident")) {      //Si l'argument est une variable
                 Ident id = (Ident) elem;
-                if (id.mem) {
+                if (id.mem) {               //Si on a marqué qu'il réside en mémoire
 
-                    s += indent + "LDR\tR" + i + ", " + elem.accept(this) + "\n";
-                    id.ident = "R" + i;
+                    s += indent + "LDR\tR" + i + ", " + elem.accept(this) + "\n";       //On charge la variable depuis la mémoire
                 } else {
-                    s += indent + "MOV\tR" + i + ", " + elem.accept(this) + "\n";
+                    s += indent + "MOV\tR" + i + ", " + elem.accept(this) + "\n";       //Sinon, la variable se trouve dans un régistre, alors on effectue un move(MOV)
                 }
                 i++;
             }
@@ -186,20 +230,32 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     public String visit(If e) {
         String s = "";
 
+        //On regarde s'il faut récuperer une variable depuis la memoire avant d'evaluer la condition du if
         Eq eq = (Eq) e.condasmt;
-        Ident arg1 = (Ident) eq.e1;
+        String adresseArg1 = null, adresseArg2 = null;
+
+        Ident arg1 = (Ident) eq.e1;     //On caste la premiere expression pour pouvoir accéder dans ses champs
         if (arg1.mem) {
-            s += indent + "LDR\tR10, " + arg1.accept(this) + "\n";
+            s += indent + "LDR\tR10, " + arg1.accept(this) + "\n";  //On charge dans le registre 10 depuis son adresse en memoire
+            adresseArg1 = arg1.ident;
             arg1.ident = "R10";
         }
-        Ident arg2 = (Ident) eq.e2;
+        Ident arg2 = (Ident) eq.e2;     //On caste la deuxième expression pour pouvoir accéder dans ses champs
         if (arg2.mem) {
-            s += indent + "LDR\tR9, " + arg2.accept(this) + "\n";
+            s += indent + "LDR\tR9, " + arg2.accept(this) + "\n";   //On charge dans le registre 10 depuis son adresse en memoire
+            adresseArg2 = arg2.ident;
             arg2.ident = "R9";
         }
 
         s += indent + "CMP\t" + e.condasmt.accept(this) + "\n";    //comparaison des deux éléments
         s += e.condasmt.getClass().getSimpleName().equals("Eq") ? indent + "BEQ\t" : indent + "BLE\t";  //séléction du comparateur (EQ/LE)
+
+        if (arg1.mem) {
+            arg1.ident = adresseArg1;   //reinitialisation de l'adresse originale de la variable e1
+        }
+        if (arg2.mem) {
+            arg2.ident = adresseArg2;   //reinitialisation de l'adresse originale de la variable e2
+        }
 
         String t = getNewLabel(); // création du label du cas true
         s += t + "\n";
