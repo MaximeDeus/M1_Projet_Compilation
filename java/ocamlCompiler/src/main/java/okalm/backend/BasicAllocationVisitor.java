@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*Alloue des registres pour stocker chaque variable definie dans le programme.
- *On fait une
- * @author liakopog
+/*Alloue des registres pour stocker chaque variable définie dans le programme.
+ *On fait une allocation des registres R4 à R8
+ *@author liakopog
  */
 public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
 
@@ -102,7 +102,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
                 fargs.add(element.accept(this));
             });
         }
-        e.formal_args = fargs;//Puis on les remplace avec une liste qui contient les memes arguments, mais allouées dans des régistres
+        e.formal_args = fargs;//Puis on les remplace avec une liste qui contient les memes arguments, mais allouées dans des registres
         e.ident = e.ident.accept(this);
 
         e.label = e.label.accept(this);
@@ -111,7 +111,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
     }
 
     /*
-     *Alloue un registre à chaque variable qui en a pas encore
+     *Alloue un registre à chaque variable qui n'en a pas encore
      */
     @Override
     public Exp_asml visit(Ident e) {
@@ -119,20 +119,20 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
 
         if (!reg.containsKey(e.ident)) {    //Si la variable n'est pas encore allouée
             if (regNum < 9) {              //S'il y a encore des registres libres, on les utilise
-                reg.put(e.ident, regNum);       //On l'ajoute dans la liste des registres avec le prochain régistre libre comme déstination
+                reg.put(e.ident, regNum);       //On l'ajoute dans la liste des registres avec le prochain registre libre comme déstination
 //                regList += e.ident + "= R" + regNum + " | ";
                 regNum++;
                 nouveauIdent = new Ident("R" + reg.get(e.ident));
-            } else {       //S' il ne restent plus de registres, on sauvegarde la variable dans la pile
+            } else {       //S'il ne reste plus de registre, on sauvegarde la variable dans la pile
                 reg.put(e.ident, -1);    //Valeur -1 signifie que la variable existe, mais pas dans un registre
                 nouveauIdent = new Ident("[fp" + "-" + (4 + 4 * referenceFp) + "]");
-                nouveauIdent.mem = true;//Cet attribut signifie que ce variable se trouve dans la mémoire
+                nouveauIdent.mem = true;//Cet attribut signifie que cette variable se trouve dans la mémoire
                 referenceFp++;
             }
         } else {
             nouveauIdent = e;
         }
-        return nouveauIdent;//On substitue ce noeud pour un nouveau noeud qui contient le régistre de destination comme nom
+        return nouveauIdent;//On substitue ce noeud pour un nouveau noeud qui contient le registre de destination comme nom
     }
 
     @Override
