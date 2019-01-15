@@ -57,7 +57,6 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 s += "LDR R10," + arg1.accept(this) + "\n";
                 end += "STR R10," + arg1.accept(this) + "\n";
                 arg1.ident = "R10";
-
             }
             if (add.identOrImm.getClass().getSimpleName().equals("Ident")) {
                 Ident arg2 = (Ident) add.identOrImm;
@@ -68,11 +67,15 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 }
             }
         } else if (type.equals("Ident")) {
-
+                Ident arg = (Ident) e.e;
+                if (arg.mem) {
+                s += "LDR R10," + arg.accept(this) + "\n";
+                end += "STR R10," + arg.accept(this) + "\n";
+                arg.ident = "R10";
+            }
         }
         Ident id = (Ident) e.ident;
         if (id.mem) {
-
             s += "LDR R12," + e.ident.accept(this) + "\n";
             end += "STR R12," + e.ident.accept(this) + "\n";
             id.ident = "R12";

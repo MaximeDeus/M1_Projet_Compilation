@@ -17,7 +17,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
     public String regList;
     public Map<String, Integer> reg;
     public int regNum;
-    public int referenceFp;
+    public int referenceFp = 0;
 
     public BasicAllocationVisitor() {
         reg = new HashMap();
@@ -125,7 +125,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
                 nouveauIdent = new Ident("R" + reg.get(e.ident));
             } else {       //S' il ne restent plus de registres, on sauvegarde la variable dans la pile
                 reg.put(e.ident, -1);    //Valeur -1 signifie que la variable existe, mais pas dans un registre
-                nouveauIdent = new Ident("[fp" + "-" + 4 + 4 * referenceFp + "]");
+                nouveauIdent = new Ident("[fp" + "-" + (4 + 4 * referenceFp) + "]");
                 nouveauIdent.mem = true;//Cet attribut signifie que ce variable se trouve dans la mémoire
                 referenceFp++;
             }
