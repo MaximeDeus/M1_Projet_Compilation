@@ -17,6 +17,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
     public String regList;
     public Map<String, Integer> reg;
     public int regNum;
+    public int referenceFp;
 
     public BasicAllocationVisitor() {
         reg = new HashMap();
@@ -80,7 +81,7 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(Fundefs e) {
-
+        referenceFp = 0;        //Dans cette fonction, on a une pile vide
         e.asmt = e.asmt.accept(this);
 
         //Parcours de la liste des fonctions stockés dans ce fundef
@@ -114,12 +115,24 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
      */
     @Override
     public Exp_asml visit(Ident e) {
+        Ident nouveauIdent;
+
         if (!reg.containsKey(e.ident)) {    //Si la variable n'est pas encore allouée
-            reg.put(e.ident, regNum);       //On l'ajoute dans la liste des registres avec le prochain régistre libre comme déstination
-            regList += e.ident + "= R" + regNum + " | ";
-            regNum++;
+            if (regNum < 9) {              //S'il y a encore des registres libres, on les utilise
+                reg.put(e.ident, regNum);       //On l'ajoute dans la liste des registres avec le prochain régistre libre comme déstination
+//                regList += e.ident + "= R" + regNum + " | ";
+                regNum++;
+                nouveauIdent = new Ident("R" + reg.get(e.ident));
+            } else {       //S' il ne restent plus de registres, on sauvegarde la variable dans la pile
+                reg.put(e.ident, -1);    //Valeur -1 signifie que la variable existe, mais pas dans un registre
+                nouveauIdent = new Ident("[fp" + "-" + 4 + 4 * referenceFp + "]");
+                nouveauIdent.mem = true;//Cet attribut signifie que ce variable se trouve dans la mémoire
+                referenceFp++;
+            }
+        } else {
+            nouveauIdent = e;
         }
-        return new Ident("R" + reg.get(e.ident));//On substitue ce noeud pour un nouveau noeud qui contient le régistre de destination comme nom
+        return nouveauIdent;//On substitue ce noeud pour un nouveau noeud qui contient le régistre de destination comme nom
     }
 
     @Override
