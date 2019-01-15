@@ -10,9 +10,11 @@ import okalm.tools.AsmlVisitor;
 public class Ident extends IdentOrImm {
 
     public String ident;
+    public boolean mem;
 
     public Ident(String ident) {
         this.ident = ident;
+        mem = false;
     }
 
     @Override

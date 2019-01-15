@@ -1,7 +1,5 @@
 package okalm.backend;
 
-import java.util.HashSet;
-import java.util.Set;
 import okalm.asml.*;
 import okalm.tools.AsmlObjVisitor;
 
@@ -15,12 +13,12 @@ import java.util.Set;
  */
 public class printArmVisitor implements AsmlObjVisitor<String> {
 
-    private String ident;
+    private String indent;
     private int labelNum;
     private Set<String> extFun;
 
     public printArmVisitor() {
-        ident = "        ";
+        indent = "        ";
         labelNum = 0;
         extFun = new HashSet();
         extFun.add("print_int");
@@ -50,21 +48,51 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     public String visit(Asmt e) {
         String type = e.e.getClass().getSimpleName();
         String s = "";
+        String end = "";
+
+        if (type.equals("Add") || type.equals("Sub")) {
+            Add add = (Add) e.e;
+            Ident arg1 = (Ident) add.ident;
+            if (arg1.mem) {
+                s += "LDR R10," + arg1.accept(this) + "\n";
+                end += "STR R10," + arg1.accept(this) + "\n";
+                arg1.ident = "R10";
+
+            }
+            if (add.identOrImm.getClass().getSimpleName().equals("Ident")) {
+                Ident arg2 = (Ident) add.identOrImm;
+                if (arg2.mem) {
+                    s += "LDR R9," + arg2.accept(this) + "\n";
+                    end += "STR R9," + arg2.accept(this) + "\n";
+                    arg2.ident = "R9";
+                }
+            }
+        } else if (type.equals("Ident")) {
+
+        }
+        Ident id = (Ident) e.ident;
+        if (id.mem) {
+
+            s += "LDR R12," + e.ident.accept(this) + "\n";
+            end += "STR R12," + e.ident.accept(this) + "\n";
+            id.ident = "R12";
+        }
+
         switch (type) {
             case "Add":
-                s += ident + "ADD\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
+                s += indent + "ADD\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
                 break;
 
             case "Sub":
-                s += ident + "SUB\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
+                s += indent + "SUB\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
                 break;
 
             case "Int":
-                s += ident + "MOV\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
+                s += indent + "MOV\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
                 break;
 
             case "Ident":
-                s += ident + "MOV\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
+                s += indent + "MOV\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
                 break;
 
             case "Neg":
@@ -72,7 +100,7 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 break;
 
             case "Call":
-                s += e.e.accept(this) + "\n" + ident + "MOV\t" + e.ident.accept(this) + ", R0\n";
+                s += e.e.accept(this) + "\n" + indent + "MOV\t" + e.ident.accept(this) + ", R0\n";
                 break;
 
             case "Asmt":
@@ -83,6 +111,7 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 s += "!" + type + " is not supported yet!";
                 break;
         }
+        s += end;
         s += ThenElse(e.asmt);
         return s;
     }
@@ -92,13 +121,22 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
         String s = "";
         int i = 0;
         for (Exp_asml elem : e.fargs) {
-            s += ident + "MOV\tR" + i + ", " + elem.accept(this) + "\n";
-            i++;
+            if (elem.getClass().getSimpleName().equals("Ident")) {
+                Ident id = (Ident) elem;
+                if (id.mem) {
+
+                    s += "LDR R" + i + "," + elem.accept(this) + "\n";
+                    id.ident = "R" + i;
+                } else {
+                    s += indent + "MOV\tR" + i + ", " + elem.accept(this) + "\n";
+                }
+                i++;
+            }
         }
         if (extFun.contains(e.label.accept(this))) {
-            return s + ident + "BL\tmin_caml_" + e.label.accept(this) + " ";
+            return s + indent + "BL\tmin_caml_" + e.label.accept(this) + " ";
         } else {
-            return s + ident + "BL\t" + e.label.accept(this) + " ";
+            return s + indent + "BL\t" + e.label.accept(this) + " ";
         }
     }
 
@@ -121,7 +159,7 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
         }
         s += e.asmt.accept(this) + "\n";
         if (!isMain) {
-            s += ident + "LDMFD\tSP!, {lr}\n" + ident + "BX LR\n";
+            s += indent + "LDMFD\tSP!, {lr}\n" + indent + "BX LR\n";
         }
         return s;
     }
@@ -134,7 +172,7 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     private String ThenElse(Exp_asml e) {
         String s = "";
         if (e.getClass().getSimpleName().equals("Int")) {
-            s += ident + "NOP";
+            s += indent + "NOP";
         } else {
             s += e.accept(this);
         }
@@ -144,15 +182,15 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     @Override
     public String visit(If e) {
         String s = "";
-        s += ident + "CMP\t" + e.condasmt.accept(this) + "\n";    //comparaison des deux éléments
-        s += e.condasmt.getClass().getSimpleName().equals("Eq") ? ident + "BEQ\t" : ident + "BLE\t";  //séléction du comparateur (EQ/LE)
+        s += indent + "CMP\t" + e.condasmt.accept(this) + "\n";    //comparaison des deux éléments
+        s += e.condasmt.getClass().getSimpleName().equals("Eq") ? indent + "BEQ\t" : indent + "BLE\t";  //séléction du comparateur (EQ/LE)
 
         String t = getNewLabel(); // création du label du cas true
         s += t + "\n";
         s += ThenElse(e.elseasmt) + "\n";
 
         String end = getNewLabel(); //création du label de fin;
-        s += ident + "B\t" + end + "\n"; // renvois de la phase else au label de fin
+        s += indent + "B\t" + end + "\n"; // renvois de la phase else au label de fin
         s += t + ":\n"; //label true
         s += ThenElse(e.thenasmt) + "\n";
         s += end + ":";
@@ -177,8 +215,8 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
 
     @Override
     public String visit(Neg e) {
-        String indent = e.ident.accept(this);
-        String s = indent + " , " + indent;
+        String ident = e.ident.accept(this);
+        String s = ident + " , " + ident;
         return s;
     }
 
