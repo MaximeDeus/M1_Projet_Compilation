@@ -54,30 +54,30 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
             Add add = (Add) e.e;
             Ident arg1 = (Ident) add.ident;
             if (arg1.mem) {
-                s += "LDR R10," + arg1.accept(this) + "\n";
-                end += "STR R10," + arg1.accept(this) + "\n";
+                s += indent + "LDR\tR10, " + arg1.accept(this) + "\n";
+                end += indent + "STR\tR10, " + arg1.accept(this) + "\n";
                 arg1.ident = "R10";
             }
             if (add.identOrImm.getClass().getSimpleName().equals("Ident")) {
                 Ident arg2 = (Ident) add.identOrImm;
                 if (arg2.mem) {
-                    s += "LDR R9," + arg2.accept(this) + "\n";
-                    end += "STR R9," + arg2.accept(this) + "\n";
+                    s += indent + "LDR\tR9, " + arg2.accept(this) + "\n";
+                    end += indent + "STR\t R9, " + arg2.accept(this) + "\n";
                     arg2.ident = "R9";
                 }
             }
         } else if (type.equals("Ident")) {
-                Ident arg = (Ident) e.e;
-                if (arg.mem) {
-                s += "LDR R10," + arg.accept(this) + "\n";
-                end += "STR R10," + arg.accept(this) + "\n";
+            Ident arg = (Ident) e.e;
+            if (arg.mem) {
+                s += indent + "LDR\t R10, " + arg.accept(this) + "\n";
+                end += indent + "STR\t R10, " + arg.accept(this) + "\n";
                 arg.ident = "R10";
             }
         }
         Ident id = (Ident) e.ident;
         if (id.mem) {
-            s += "LDR R12," + e.ident.accept(this) + "\n";
-            end += "STR R12," + e.ident.accept(this) + "\n";
+            s += indent + "LDR\t R12, " + e.ident.accept(this) + "\n";
+            end += indent + "STR\t R12, " + e.ident.accept(this) + "\n";
             id.ident = "R12";
         }
 
@@ -128,7 +128,7 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 Ident id = (Ident) elem;
                 if (id.mem) {
 
-                    s += "LDR R" + i + "," + elem.accept(this) + "\n";
+                    s += indent + "LDR\tR" + i + ", " + elem.accept(this) + "\n";
                     id.ident = "R" + i;
                 } else {
                     s += indent + "MOV\tR" + i + ", " + elem.accept(this) + "\n";
@@ -185,6 +185,19 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     @Override
     public String visit(If e) {
         String s = "";
+
+        Eq eq = (Eq) e.condasmt;
+        Ident arg1 = (Ident) eq.e1;
+        if (arg1.mem) {
+            s += indent + "LDR\tR10, " + arg1.accept(this) + "\n";
+            arg1.ident = "R10";
+        }
+        Ident arg2 = (Ident) eq.e2;
+        if (arg2.mem) {
+            s += indent + "LDR\tR9, " + arg2.accept(this) + "\n";
+            arg2.ident = "R9";
+        }
+
         s += indent + "CMP\t" + e.condasmt.accept(this) + "\n";    //comparaison des deux éléments
         s += e.condasmt.getClass().getSimpleName().equals("Eq") ? indent + "BEQ\t" : indent + "BLE\t";  //séléction du comparateur (EQ/LE)
 
