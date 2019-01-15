@@ -5,11 +5,14 @@ package okalm.typechecking;
  */
 public class TypeException extends Exception {
 
-    public TypeException() {
-        super("Type cheking error");
-    }
 
+    public TypeException(){
+        super("Type checking error");
+    }
+    
     public TypeException(String msg) {
         super(msg);
     }
 }
+
+    
