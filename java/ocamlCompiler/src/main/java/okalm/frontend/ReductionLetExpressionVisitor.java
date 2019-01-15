@@ -7,6 +7,13 @@ import okalm.tools.ObjVisitor;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+/**
+ * Cette classe permet d'appliquer l'algorithme de réduction des expressions 'Let'
+ * sur un arbre syntaxique
+ * Le parcours de l''AST s'effectue selon le design pattern Visiteur
+ *
+ * @author @MaximeDeus
+ */
 public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
 
     //Niveau d'imbrication du bloc actuel, permet de retrouver Let parent
@@ -102,7 +109,7 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
             parents.put(niveau, new LinkedList<>());
         }
         If res = new If(e.e1.accept(this), e.e2.accept(this), e.e3.accept(this));
-        niveau -=1; //On sort du If
+        niveau -= 1; //On sort du If
         return res;
     }
 
@@ -130,7 +137,7 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
                 || e.e2 instanceof FSub
                 || e.e2 instanceof FAdd
                 || e.e2 instanceof Sub
-        ) { //Si fils droit est un noeud parent
+                ) { //Si fils droit est un noeud parent
             filsDroit = e.e2.accept(this); //On stocke le résultat de l'appel (construction récursive) dans filsDroit
             e = new Let(e.id, e.t, e.e1, filsDroit); //On renvoie le nouvel arbre construit (Nouvel arbre car nouvelle référence)
         }
@@ -138,10 +145,10 @@ public class ReductionLetExpressionVisitor implements ObjVisitor<Exp> {
         /**
          * Construction de l'arbre (fils droit)
          */
-        if ( niveau > 0 && parents.get(niveau).size() > 0) {
+        if (niveau > 0 && parents.get(niveau).size() > 0) {
             Let parent = parents.get(niveau).get(parents.get(niveau).size() - 1); //On prend le dernier parent ajouté
             parents.get(niveau).remove(parent);
-            niveau -=1; //On quitte le bloc
+            niveau -= 1; //On quitte le bloc
             Let nouveauFilsDroit = new Let(parent.id, parent.t, e.e2, parent.e2); //Création du nouveau fils droit à partir du parent (cf algo)
             return new Let(e.id, e.t, e.e1, nouveauFilsDroit.accept(this)); //Construction récursive de l'arbre
         }

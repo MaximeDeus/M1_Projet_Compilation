@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package okalm.asml;
 
 import okalm.tools.AsmlErrorVisitor;
 import okalm.tools.AsmlObjVisitor;
 import okalm.tools.AsmlVisitor;
-
 
 public class Add extends Exp_asml {
 

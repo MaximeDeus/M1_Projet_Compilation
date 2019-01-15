@@ -1,15 +1,22 @@
 package okalm.frontend;
 
-import okalm.tools.Id;
 import okalm.ast.*;
 import okalm.ast.Float;
-import okalm.type.Type;
+import okalm.tools.Id;
 import okalm.tools.ObjVisitor;
+import okalm.type.Type;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Cette classe permet d'appliquer l'algorithme de K-Normalisation
+ * sur un arbre syntaxique
+ * Le parcours de l''AST s'effectue selon le design pattern Visiteur
+ *
+ * @author @MaximeDeus
+ */
 public class KNormVisitor implements ObjVisitor<Exp> {
 
     //Attributs utilisés pour la méthode App, permet de K-Normaliser les fonctions avec plusieurs paramètres

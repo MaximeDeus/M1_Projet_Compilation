@@ -1,21 +1,23 @@
 package okalm;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.File;
-import okalm.backend.BasicAllocationVisitor;
 import okalm.asml.Exp_asml;
 import okalm.ast.Exp;
-import okalm.backend.printAsmlVisitor;
+import okalm.backend.BasicAllocationVisitor;
 import okalm.backend.printArmVisitor;
+import okalm.backend.printAsmlVisitor;
 import okalm.frontend.*;
 import okalm.typechecking.TypeVisitor;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+
 /**
- *
  * @author diardjul
  */
 public class Commande {
+
+    private static final double VERSION = 1.0;
 
     static boolean bool_type = false;
     static boolean bool_frontend = false;
@@ -31,7 +33,7 @@ public class Commande {
     static String nom_fichier_mincalm;
 
     /**
-     * option d'argument: -h: HELP -o: OUTPUT FILE -v: DISPLAY VERSION -t: TYPE
+     * options d'argument: -h: HELP -o: OUTPUT FILE -v: DISPLAY VERSION -t: TYPE
      * CHECK ONLY -p: PARSE ONLY -asml: OUTPUT ASML -base: BASIC MAIN
      *
      * @param args tableau d'argument
@@ -135,24 +137,26 @@ public class Commande {
         System.out.println("-asml : ASML file");
         System.out.println("-base : basic main");
     }
+
     /**
      * effectue le typechecking
-     * 
+     *
      * @param exp arbre correctement parsé
      * @throws Exception problème de typage
      */
     public static void typechecking(Exp exp) throws Exception {
-       /* System.out.println("------ TypeChecking ------");*/
+        /* System.out.println("------ TypeChecking ------");*/
         TypeVisitor tv = new TypeVisitor(0);
         exp.accept(tv);
         /*System.out.println("Code type cheking is valid");*/
     }
+
     /**
      * execute les étapes du Frontend et convertit l'arbre AST en arbre ASML
-     * 
+     *
      * @param exp arbre correctement parsé et typé
      * @return arbre ASML
-     * @throws Exception 
+     * @throws Exception
      */
     public static Exp_asml frontend(Exp exp) throws Exception {
         //System.out.println("_____ FrontEnd _____");
@@ -189,8 +193,8 @@ public class Commande {
     }
 
     /**
-     * effectue les étapes du backend 
-     * 
+     * effectue les étapes du backend
+     *
      * @param exp arbre ASML
      * @return arbre ASML traité
      * @throws Exception problème dans le backend
@@ -205,7 +209,7 @@ public class Commande {
 
     /**
      * convertit un arbre ASML en ARM et l'écrit dans un fichier
-     * 
+     *
      * @param exp arbre ASML
      * @throws Exception problème de traduction ou d'écriture
      */
@@ -222,7 +226,7 @@ public class Commande {
 
     /**
      * couvertit un arbre ASML en code ASML et l'écrit dans un fichier
-     * 
+     *
      * @param exp arbre ASML
      * @throws Exception Exception problème de traduction ou d'écrire
      */
@@ -235,18 +239,18 @@ public class Commande {
             writeInFile(nom_fichier_output, exp.accept(pav));
         }
     }
-    
+
     /**
      * affiche la version du programme
      */
     public static void version() {
-        System.out.println("current version:1.0");
+        System.out.println(Commande.VERSION);
 
     }
 
     /**
      * convertit un programme Mincaml en Arbre parsé
-     * 
+     *
      * @param s programme
      * @return arbre d'Exp
      * @throws Exception problème dans le parseur
@@ -270,11 +274,12 @@ public class Commande {
         System.out.println("using HeightVisitor: " + height);*/
         return expression;
     }
+
     /**
      * écrit une chaîne de caractères dans un fichier donné
-     * 
-     * @param chemin  le chemin et le nom du fichier
-     * @param code chaîne de caractère
+     *
+     * @param chemin le chemin et le nom du fichier
+     * @param code   chaîne de caractère
      * @throws Exception en cas d'erreur d'écriture
      */
     public static void writeInFile(String chemin, String code) throws Exception {

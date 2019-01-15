@@ -4,7 +4,6 @@ import okalm.tools.AsmlObjVisitor;
 import okalm.tools.AsmlVisitor;
 
 /**
- *
  * @author liakopog
  */
 public class Label extends Ident {

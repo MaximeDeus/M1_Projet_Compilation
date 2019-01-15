@@ -7,9 +7,9 @@ package okalm.frontend;
 
 import okalm.ast.Exp;
 import okalm.tools.PrintVisitor;
+import okalm.typechecking.VarVisitor;
 
 import java.util.Set;
-import okalm.typechecking.VarVisitor;
 
 /**
  * @author defoursr
@@ -26,13 +26,13 @@ public class ClosureFunction {
         this.code = code;
         this.freeVar = generateFreeVar(parameters, code);
     }
+
     /**
-     * 
      * @param parameters
      * @param code
-     * @return 
+     * @return
      */
-    private Set<String> generateFreeVar(Set<String> parameters, Exp code){
+    private Set<String> generateFreeVar(Set<String> parameters, Exp code) {
         VarVisitor vv = new VarVisitor();
         Set<String> cpy = code.accept(vv);
         cpy.removeAll(parameters);
@@ -42,7 +42,7 @@ public class ClosureFunction {
     @Override
     public String toString() {
         String s = "";
-        System.out.println("label: " + label + "\nparameters: " + parameters.toString() +"\n free variables:"+ freeVar.toString() +"\ncode:");
+        System.out.println("label: " + label + "\nparameters: " + parameters.toString() + "\n free variables:" + freeVar.toString() + "\ncode:");
         PrintVisitor p = new PrintVisitor();
         code.accept(p);
         System.out.println("\n");

@@ -3,7 +3,6 @@ package okalm.tools;
 import okalm.asml.*;
 
 /**
- *
  * @author liakopog
  */
 public interface AsmlObjVisitor<E> {
@@ -13,10 +12,10 @@ public interface AsmlObjVisitor<E> {
     public E visit(Sub e);
 
     public E visit(Asmt e);
-    
+
     public E visit(Eq e);
-    
-    public E  visit(LE e);
+
+    public E visit(LE e);
 
     public E visit(Call e);
 

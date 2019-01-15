@@ -1,25 +1,27 @@
 package okalm.tools;
 
-import java.util.*;
-
 import okalm.ast.*;
 import okalm.ast.Float;
+
+import java.util.Iterator;
+import java.util.List;
+
 public class PrintVisitor implements Visitor {
-    
+
     private Integer nbIndent;
-    
-    public PrintVisitor(){
+
+    public PrintVisitor() {
         nbIndent = 0;
     }
-    
-    private String indentRepeator(){
-        String s= "";
-        for(int i = 0; i<nbIndent;i++){
-            s=s+"   ";
+
+    private String indentRepeator() {
+        String s = "";
+        for (int i = 0; i < nbIndent; i++) {
+            s = s + "   ";
         }
         return s;
     }
-    
+
     public void visit(Unit e) {
         System.out.print("()");
     }
@@ -65,13 +67,13 @@ public class PrintVisitor implements Visitor {
         System.out.print(")");
     }
 
-    public void visit(FNeg e){
+    public void visit(FNeg e) {
         System.out.print("(-. ");
         e.e.accept(this);
         System.out.print(")");
     }
 
-    public void visit(FAdd e){
+    public void visit(FAdd e) {
         System.out.print("(");
         e.e1.accept(this);
         System.out.print(" +. ");
@@ -79,7 +81,7 @@ public class PrintVisitor implements Visitor {
         System.out.print(")");
     }
 
-    public void visit(FSub e){
+    public void visit(FSub e) {
         System.out.print("(");
         e.e1.accept(this);
         System.out.print(" -. ");
@@ -95,7 +97,7 @@ public class PrintVisitor implements Visitor {
         System.out.print(")");
     }
 
-    public void visit(FDiv e){
+    public void visit(FDiv e) {
         System.out.print("(");
         e.e1.accept(this);
         System.out.print(" /. ");
@@ -103,7 +105,7 @@ public class PrintVisitor implements Visitor {
         System.out.print(")");
     }
 
-    public void visit(Eq e){
+    public void visit(Eq e) {
         System.out.print("(");
         e.e1.accept(this);
         System.out.print(" = ");
@@ -111,7 +113,7 @@ public class PrintVisitor implements Visitor {
         System.out.print(")");
     }
 
-    public void visit(LE e){
+    public void visit(LE e) {
         System.out.print("(");
         e.e1.accept(this);
         System.out.print(" <= ");
@@ -119,17 +121,17 @@ public class PrintVisitor implements Visitor {
         System.out.print(")");
     }
 
-    public void visit(If e){
+    public void visit(If e) {
         System.out.print("(if ");
         e.e1.accept(this);
         System.out.print(" then ");
         nbIndent++;
-        System.out.print("\n"+indentRepeator());
+        System.out.print("\n" + indentRepeator());
         e.e2.accept(this);
         nbIndent--;
-        System.out.print("\n"+indentRepeator()+" else ");
+        System.out.print("\n" + indentRepeator() + " else ");
         nbIndent++;
-        System.out.print("\n"+indentRepeator());
+        System.out.print("\n" + indentRepeator());
         e.e3.accept(this);
         nbIndent--;
         System.out.print(")");
@@ -142,12 +144,12 @@ public class PrintVisitor implements Visitor {
         System.out.print(" = ");
         e.e1.accept(this);
         nbIndent--;
-        System.out.print(" in  \n"+indentRepeator());
+        System.out.print(" in  \n" + indentRepeator());
         e.e2.accept(this);
         System.out.print(")");
     }
 
-    public void visit(Var e){
+    public void visit(Var e) {
         System.out.print(e.id);
     }
 
@@ -177,19 +179,19 @@ public class PrintVisitor implements Visitor {
         }
     }
 
-    public void visit(LetRec e){
+    public void visit(LetRec e) {
         System.out.print("(let rec " + e.fd.id + " ");
         printInfix(e.fd.args, " ");
         nbIndent++;
-        System.out.print(" =  \n"+indentRepeator());
+        System.out.print(" =  \n" + indentRepeator());
         e.fd.e.accept(this);
         nbIndent--;
-        System.out.print(" in  \n"+indentRepeator());
+        System.out.print(" in  \n" + indentRepeator());
         e.e.accept(this);
         System.out.print(")");
     }
 
-    public void visit(App e){
+    public void visit(App e) {
         System.out.print("(");
         e.e.accept(this);
         System.out.print(" ");
@@ -197,13 +199,13 @@ public class PrintVisitor implements Visitor {
         System.out.print(")");
     }
 
-    public void visit(Tuple e){
+    public void visit(Tuple e) {
         System.out.print("(");
         printInfix2(e.es, ", ");
         System.out.print(")");
     }
 
-    public void visit(LetTuple e){
+    public void visit(LetTuple e) {
         System.out.print("(let (");
         printInfix(e.ids, ", ");
         System.out.print(") = ");
@@ -213,7 +215,7 @@ public class PrintVisitor implements Visitor {
         System.out.print(")");
     }
 
-    public void visit(Array e){
+    public void visit(Array e) {
         System.out.print("(Array.create ");
         e.e1.accept(this);
         System.out.print(" ");
@@ -221,14 +223,14 @@ public class PrintVisitor implements Visitor {
         System.out.print(")");
     }
 
-    public void visit(Get e){
+    public void visit(Get e) {
         e.e1.accept(this);
         System.out.print(".(");
         e.e2.accept(this);
         System.out.print(")");
     }
 
-    public void visit(Put e){
+    public void visit(Put e) {
         System.out.print("(");
         e.e1.accept(this);
         System.out.print(".(");

@@ -3,7 +3,6 @@ package okalm.tools;
 import okalm.asml.*;
 
 /**
- *
  * @author liakopog
  */
 public interface AsmlVisitor {
@@ -13,9 +12,9 @@ public interface AsmlVisitor {
     void visit(Sub e);
 
     void visit(Asmt e);
-    
+
     void visit(Eq e);
-    
+
     void visit(LE e);
 
     void visit(Call e);

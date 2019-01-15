@@ -1,39 +1,35 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package okalm.frontend;
+
+import okalm.ast.*;
+import okalm.ast.Float;
+import okalm.tools.ObjVisitor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import okalm.tools.ObjVisitor;
-import okalm.ast.*;
-import okalm.ast.Float;
-
 /**
  * sépare les fonctions du  main et les stocke dans une liste de ClosureFunction
+ *
  * @author defoursr
  */
 public class ClosureVisitor implements ObjVisitor<Exp> {
-    
+
     public ArrayList<ClosureFunction> listeFun;
-    
-    public ClosureVisitor(){
-        listeFun= new ArrayList();
+
+    public ClosureVisitor() {
+        listeFun = new ArrayList();
     }
-    
-    public String functionsToString(){
-        String s ="";
-        for(ClosureFunction c: listeFun){
-            s+=c.toString();
+
+    public String functionsToString() {
+        String s = "";
+        for (ClosureFunction c : listeFun) {
+            s += c.toString();
         }
         return s;
     }
-    
+
     @Override
     public Exp visit(Unit e) {
         return e;
@@ -125,49 +121,49 @@ public class ClosureVisitor implements ObjVisitor<Exp> {
     }
 
     /**
-     * 
      * @param e Exp à traiter
      * @return le prochain noeud Exp traité par le visiteur, la fonction étant stockée dans un objet ClosureFunction
      */
     @Override
     public Exp visit(LetRec e) {
         FunDef f = e.fd;
-        
+
         //liste de paramètres convertie en liste de string
         Set<String> s = new HashSet<String>();
         f.args.forEach((element) -> {
             s.add(element.id);
         });
-        
+
         Exp cpyCode = f.e.accept(this);
-        
+
         ClosureFunction c = new ClosureFunction(
-                "_"+f.id.id, //label
+                "_" + f.id.id, //label
                 s, //arguments
                 cpyCode //code
         );
         //ajout de la fonction
         listeFun.add(c);
-        
-        return(e.e.accept(this));
+
+        return (e.e.accept(this));
     }
+
     @Override
     public Exp visit(App e) {
         List<Exp> temp = new ArrayList();
         e.es.forEach((element) -> {
             temp.add(element.accept(this));
         });
-        return new App(e.e.accept(this),temp);
+        return new App(e.e.accept(this), temp);
     }
 
     @Override
     public Exp visit(Tuple e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp visit(LetTuple e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -184,5 +180,5 @@ public class ClosureVisitor implements ObjVisitor<Exp> {
     public Exp visit(Put e) {
         return new Put(e.e1.accept(this), e.e2.accept(this), e.e3.accept(this));
     }
-    
+
 }

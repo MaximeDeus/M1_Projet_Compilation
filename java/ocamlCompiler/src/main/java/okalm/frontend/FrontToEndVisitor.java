@@ -1,30 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package okalm.frontend;
+
+import okalm.asml.*;
+import okalm.ast.*;
+import okalm.tools.ObjVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okalm.tools.ObjVisitor;
-import okalm.asml.*;
-import okalm.ast.*;
-
 /**
  * Convertie une structure ast en structure asml (front end to back end)
+ *
  * @author defoursr
  */
 public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
 
     /**
      * encapsule le code dans la fonction main (let _) et ajoute et visite les
-     * fonctions déclaré dans listeFun
+     * fonctions déclarées dans listeFun
      *
-     * @param e Exp_asml retourné après la visite du visiteur
+     * @param e        Exp_asml retourné après la visite du visiteur
      * @param listeFun liste de fonction retourné par le ClosureVisitor
-     * (ClosureVisitor.listeFun)
+     *                 (ClosureVisitor.listeFun)
      * @return l'arbre ecapsulé au format pour le BackEnd
      */
     public Exp_asml wrapCode(Exp_asml e, ArrayList<ClosureFunction> listeFun) {
@@ -44,8 +40,8 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
             listefunAsml.add(
                     new Fundefs( //fonction asml
                             element.getCode().accept(this), //code sous forme asml de la fonction
-                            new ArrayList(), //liste de sous fonction de la fonction //TODO
-                            params, //liste de paramètres créée précédement
+                            new ArrayList(), //liste de sous fonctions de la fonction //TODO
+                            params, //liste de paramètres créée précédemment
                             new Label(element.getLabel()), //nom de la fonction
                             new Ident("")));
         });
@@ -102,7 +98,7 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(FNeg e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -152,44 +148,44 @@ public class FrontToEndVisitor implements ObjVisitor<Exp_asml> {
 
     @Override
     public Exp_asml visit(LetRec e) { //après la closure, on ne rencontre plus de let rec
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp_asml visit(App e) {
         List<Exp_asml> l = new ArrayList();
 
-        //on visite tout les arguments de l'appel pour les transformer en noeuds asml et on les stocke dans une nouvelle liste asml
+        //on visite tous les arguments de l'appel pour les transformer en noeuds asml et on les stocke dans une nouvelle liste asml
         e.es.forEach((element) -> {
             l.add(new Fargs(element.accept(this)));
         });
-        Label label = new Label("_"+e.e.accept(this).toString());
+        Label label = new Label("_" + e.e.accept(this).toString());
         return new okalm.asml.Call(label, l);
     }
 
     @Override
     public Exp_asml visit(Tuple e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp_asml visit(LetTuple e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp_asml visit(Array e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp_asml visit(Get e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Exp_asml visit(Put e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

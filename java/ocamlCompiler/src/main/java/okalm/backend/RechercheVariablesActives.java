@@ -20,11 +20,11 @@ public class RechercheVariablesActives {
     }
 
     public HashMap<Exp_asml, ArrayList<String>> rechercher() {
-        for (WorkList wlracine : wlList.values()) {
+        for (WorkList wlracine : wlList.values()) {       //On fait un parcours recursif en commençant par la definition de la fonction qui constitue le bloc de code qu'on veut evaluer
 
             HashMap<WorkList, VarInOut> mapPrecedenteIteration = mapInOut;
             parcoursRecursifBlocInitialisation(wlracine); // Initialisation du In de chaque bloc avec son Gen
-            while (!(mapPrecedenteIteration.equals(mapInOut))) {
+            while (!(mapPrecedenteIteration.equals(mapInOut))) {    //Tant que on a pas trouvé un point fixe, on répéte le parcours recursif des instructions
                 mapPrecedenteIteration = mapInOut;
                 parcoursRecursifBloc(wlracine);
             }
@@ -34,6 +34,9 @@ public class RechercheVariablesActives {
 
     }
 
+    /*
+    *Fonction qui parcourt un bloc et ses successeurs pour trouver quelles variables sont actives
+     */
     public void parcoursRecursifBloc(WorkList w) {
         VarInOut inOut = mapInOut.get(w);
 
@@ -55,6 +58,9 @@ public class RechercheVariablesActives {
 
     }
 
+    /*
+     *Initialise chaque bloc et ses successeurs recursivement
+     */
     public void parcoursRecursifBlocInitialisation(WorkList w) {
         VarInOut inOut = new VarInOut(w.gen);
         mapInOut.put(w, inOut);

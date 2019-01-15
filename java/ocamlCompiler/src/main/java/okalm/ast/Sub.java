@@ -13,14 +13,15 @@ public class Sub extends Exp {
         this.e2 = e2;
     }
 
-    
+
     public <E> E accept(ObjVisitor<E> v) {
         return v.visit(this);
     }
 
     public void accept(Visitor v) {
         v.visit(this);
-    }    
+    }
+
     public <E> E accept(ObjErrorVisitor<E> v) throws Exception {
         return v.visit(this);
     }
