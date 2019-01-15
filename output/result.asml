@@ -1,0 +1,4 @@
+
+let _succ x11 = let v31 = x11 in let v41 = 1 in let v101 = v31 in let v111 = v41 in add v101 v111
+let _double x22 = let v52 = 2 in let v62 = x22 in let v82 = v52 in let v92 = v62 in add v82 v92
+let _ = let v1 = 1 in let v2 = 2 in let v0 = v1 in let v1 = v2 in let y = add v0 v1 in let x = y in let v9 = x in let v2 = v9 in let v8 = call _double v2  in let v4 = v8 in let v7 = call _succ v4  in let v6 = v7 in call _print_int v6 
