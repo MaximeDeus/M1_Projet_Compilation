@@ -62,22 +62,22 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 Ident arg2 = (Ident) add.identOrImm;
                 if (arg2.mem) {
                     s += indent + "LDR\tR9, " + arg2.accept(this) + "\n";
-                    end += indent + "STR\t R9, " + arg2.accept(this) + "\n";
+                    end += indent + "STR\tR9, " + arg2.accept(this) + "\n";
                     arg2.ident = "R9";
                 }
             }
         } else if (type.equals("Ident")) {
             Ident arg = (Ident) e.e;
             if (arg.mem) {
-                s += indent + "LDR\t R10, " + arg.accept(this) + "\n";
-                end += indent + "STR\t R10, " + arg.accept(this) + "\n";
+                s += indent + "LDR\tR10, " + arg.accept(this) + "\n";
+                end += indent + "STR\tR10, " + arg.accept(this) + "\n";
                 arg.ident = "R10";
             }
         }
         Ident id = (Ident) e.ident;
         if (id.mem) {
-            s += indent + "LDR\t R12, " + e.ident.accept(this) + "\n";
-            end += indent + "STR\t R12, " + e.ident.accept(this) + "\n";
+            s += indent + "LDR\tR12, " + e.ident.accept(this) + "\n";
+            end += indent + "STR\tR12, " + e.ident.accept(this) + "\n";
             id.ident = "R12";
         }
 
