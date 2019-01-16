@@ -55,8 +55,8 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
         Ident id = (Ident) e.ident;
         String adresseIdent = e.ident.accept(this);
         if (id.mem) {
-            s += indent + "LDR\t R12, " + e.ident.accept(this) + "\n";
-            end += indent + "STR\t R12, " + e.ident.accept(this) + "\n";
+            s += indent + "LDR\tR12, " + e.ident.accept(this) + "\n";
+            end += indent + "STR\tR12, " + e.ident.accept(this) + "\n";
             id.ident = "R12";
         }
 
@@ -133,10 +133,10 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 Ident arg = (Ident) e.e;
                 String adresseArg = e.e.accept(this);       //Sauvegarde de son adresse originale pour la restituer après
                 if (arg.mem) {
-                    s += indent + "LDR\t R10, " + arg.accept(this) + "\n";
+                    s += indent + "LDR\tR10, " + arg.accept(this) + "\n";
                     arg.ident = "R10";//affecte la variable e dans le registre 10. Attention, après il faut restaurer son adresse memoire, sinon on ne va plus pouvoir le récuperer
                 }
-                s += indent + "MOV\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
+                s += indent + "MOV\t"+ e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
                 arg.ident = adresseArg;     //restitution de l'adresse originale de la variable e
 
                 break;

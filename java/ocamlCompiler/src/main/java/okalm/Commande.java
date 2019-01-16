@@ -232,7 +232,7 @@ public class Commande {
      */
     public static void output(Exp_asml exp) throws Exception {
         //System.out.println("\n\n---ASML code");
-        printAsmlVisitor pav = new printAsmlVisitor();
+        printAsmlVisitor pav = new printAsmlVisitor(true);
         //System.out.println(exp.accept(pav));
         writeInFile("output/result.asml", exp.accept(pav));
         if (bool_outputfile) {
