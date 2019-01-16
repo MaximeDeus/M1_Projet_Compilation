@@ -43,6 +43,7 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     public String visit(Sub e) {
         return e.ident.accept(this) + " , " + e.identOrImm.accept(this);
     }
+    
 
     @Override
     public String visit(Asmt e) {
@@ -136,7 +137,7 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                     s += indent + "LDR\tR10, " + arg.accept(this) + "\n";
                     arg.ident = "R10";//affecte la variable e dans le registre 10. Attention, après il faut restaurer son adresse memoire, sinon on ne va plus pouvoir le récuperer
                 }
-                s += indent + "MOV\t"+ e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
+                s += indent + "MOV\t" + e.ident.accept(this) + ", " + e.e.accept(this) + "\n";
                 arg.ident = adresseArg;     //restitution de l'adresse originale de la variable e
 
                 break;
@@ -149,6 +150,9 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 //On génére le code de la commande call, et on récupére son valeur de retour dans Ident
                 s += e.e.accept(this) + "\n" + indent + "MOV\t" + e.ident.accept(this) + ", R0\n";
                 break;
+            case "If":
+                s += e.e.accept(this) + "\n";
+                break;
 
             case "Asmt":
                 s += e.e.accept(this) + "\n";
@@ -159,8 +163,21 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 break;
         }
         s += end;
-        if(!e.asmt.getClass().getSimpleName().equals("Ident")){
-        s += ThenElse(e.asmt);}
+        String temp = e.asmt.getClass().getSimpleName();
+        if (temp.equals("Ident")) {
+            s += indent + "MOV\tR0, "+e.asmt.accept(this);
+        }
+        else if(temp.equals("Add")){
+                s += indent + "ADD\tR0, "+ e.asmt.accept(this);
+        }
+        else if(temp.equals("Sub")){
+                s += indent + "SUB\tR0, "+ e.asmt.accept(this);
+        }
+        else{
+
+        s+=e.asmt.accept(this);
+        }
+        
         id.ident = adresseIdent;        //On remet dans l'Ident son propre adresse, soit qu'il soit dans un registre ou dans la mémoire
         return s;
     }
@@ -230,32 +247,58 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
     @Override
     public String visit(If e) {
         String s = "";
-
-        //On regarde s'il faut récuperer une variable depuis la memoire avant d'evaluer la condition du if
-        Eq eq = (Eq) e.condasmt;
         String adresseArg1 = null, adresseArg2 = null;
+        //On regarde s'il faut récuperer une variable depuis la memoire avant d'evaluer la condition du if
+        if (e.condasmt.getClass().getSimpleName().equals("Eq")) {
+            Eq eq = (Eq) e.condasmt;
 
-        Ident arg1 = (Ident) eq.e1;     //On caste la premiere expression pour pouvoir accéder dans ses champs
-        if (arg1.mem) {
-            s += indent + "LDR\tR10, " + arg1.accept(this) + "\n";  //On charge dans le registre 10 depuis son adresse en memoire
-            adresseArg1 = arg1.ident;
-            arg1.ident = "R10";
-        }
-        Ident arg2 = (Ident) eq.e2;     //On caste la deuxième expression pour pouvoir accéder dans ses champs
-        if (arg2.mem) {
-            s += indent + "LDR\tR9, " + arg2.accept(this) + "\n";   //On charge dans le registre 10 depuis son adresse en memoire
-            adresseArg2 = arg2.ident;
-            arg2.ident = "R9";
-        }
+            Ident arg1 = (Ident) eq.e1;     //On caste la premiere expression pour pouvoir accéder dans ses champs
+            if (arg1.mem) {
+                s += indent + "LDR\tR10, " + arg1.accept(this) + "\n";  //On charge dans le registre 10 depuis son adresse en memoire
+                adresseArg1 = arg1.ident;
+                arg1.ident = "R10";
+            }
+            Ident arg2 = (Ident) eq.e2;     //On caste la deuxième expression pour pouvoir accéder dans ses champs
+            if (arg2.mem) {
+                s += indent + "LDR\tR9, " + arg2.accept(this) + "\n";   //On charge dans le registre 10 depuis son adresse en memoire
+                adresseArg2 = arg2.ident;
+                arg2.ident = "R9";
+            }
+            s += indent + "CMP\t" + e.condasmt.accept(this) + "\n";    //comparaison des deux éléments
+            s += e.condasmt.getClass().getSimpleName().equals("Eq") ? indent + "BEQ\t" : indent + "BLE\t";  //séléction du comparateur (EQ/LE)
 
-        s += indent + "CMP\t" + e.condasmt.accept(this) + "\n";    //comparaison des deux éléments
-        s += e.condasmt.getClass().getSimpleName().equals("Eq") ? indent + "BEQ\t" : indent + "BLE\t";  //séléction du comparateur (EQ/LE)
-
-        if (arg1.mem) {
-            arg1.ident = adresseArg1;   //reinitialisation de l'adresse originale de la variable e1
+            if (arg1.mem) {
+                arg1.ident = adresseArg1;   //reinitialisation de l'adresse originale de la variable e1
+            }
+            if (arg2.mem) {
+                arg2.ident = adresseArg2;   //reinitialisation de l'adresse originale de la variable e2
+            }
         }
-        if (arg2.mem) {
-            arg2.ident = adresseArg2;   //reinitialisation de l'adresse originale de la variable e2
+        //On regarde s'il faut récuperer une variable depuis la memoire avant d'evaluer la condition du if
+        if (e.condasmt.getClass().getSimpleName().equals("LE")) {
+            LE eq = (LE) e.condasmt;
+
+            Ident arg1 = (Ident) eq.e1;     //On caste la premiere expression pour pouvoir accéder dans ses champs
+            if (arg1.mem) {
+                s += indent + "LDR\tR10, " + arg1.accept(this) + "\n";  //On charge dans le registre 10 depuis son adresse en memoire
+                adresseArg1 = arg1.ident;
+                arg1.ident = "R10";
+            }
+            Ident arg2 = (Ident) eq.e2;     //On caste la deuxième expression pour pouvoir accéder dans ses champs
+            if (arg2.mem) {
+                s += indent + "LDR\tR9, " + arg2.accept(this) + "\n";   //On charge dans le registre 10 depuis son adresse en memoire
+                adresseArg2 = arg2.ident;
+                arg2.ident = "R9";
+            }
+            s += indent + "CMP\t" + e.condasmt.accept(this) + "\n";    //comparaison des deux éléments
+            s += e.condasmt.getClass().getSimpleName().equals("Eq") ? indent + "BEQ\t" : indent + "BLE\t";  //séléction du comparateur (EQ/LE)
+
+            if (arg1.mem) {
+                arg1.ident = adresseArg1;   //reinitialisation de l'adresse originale de la variable e1
+            }
+            if (arg2.mem) {
+                arg2.ident = adresseArg2;   //reinitialisation de l'adresse originale de la variable e2
+            }
         }
 
         String t = getNewLabel(); // création du label du cas true
