@@ -159,7 +159,8 @@ public class printArmVisitor implements AsmlObjVisitor<String> {
                 break;
         }
         s += end;
-        s += ThenElse(e.asmt);
+        if(!e.asmt.getClass().getSimpleName().equals("Ident")){
+        s += ThenElse(e.asmt);}
         id.ident = adresseIdent;        //On remet dans l'Ident son propre adresse, soit qu'il soit dans un registre ou dans la mémoire
         return s;
     }
