@@ -124,13 +124,13 @@ public class BasicAllocationVisitor implements AsmlObjVisitor<Exp_asml> {
                 regNum++;
                 nouveauIdent = new Ident("R" + reg.get(e.ident));
             } else {       //S'il ne reste plus de registre, on sauvegarde la variable dans la pile
-                reg.put(e.ident, -1);    //Valeur -1 signifie que la variable existe, mais pas dans un registre
+                //reg.put(e.ident, -1);    //Valeur -1 signifie que la variable existe, mais pas dans un registre
                 nouveauIdent = new Ident("[fp" + "-" + (4 + 4 * referenceFp) + "]");
                 nouveauIdent.mem = true;//Cet attribut signifie que cette variable se trouve dans la mémoire
                 referenceFp++;
             }
         } else {
-            nouveauIdent = e;
+            nouveauIdent = new Ident("R"+ reg.get(e.ident));
         }
         return nouveauIdent;//On substitue ce noeud pour un nouveau noeud qui contient le registre de destination comme nom
     }
