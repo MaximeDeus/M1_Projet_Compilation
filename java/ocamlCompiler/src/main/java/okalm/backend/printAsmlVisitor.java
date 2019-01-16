@@ -1,5 +1,7 @@
 package okalm.backend;
 
+import java.util.HashSet;
+import java.util.Set;
 import okalm.asml.*;
 import okalm.tools.AsmlObjVisitor;
 
@@ -12,10 +14,18 @@ public class printAsmlVisitor implements AsmlObjVisitor<String> {
 
     private Integer nbIndent;
     private Boolean indent;
+    private Set<String> extFun;
 
     public printAsmlVisitor() {
         this.indent = false;
         nbIndent = 0;
+        extFun = new HashSet();
+        extFun.add("_print_int");
+        extFun.add("_print_newline");
+        extFun.add("_print_string");
+        extFun.add("_exit");
+        extFun.add("_hello_world");
+        extFun.add("_print_char");
     }
 
     /**
@@ -24,6 +34,13 @@ public class printAsmlVisitor implements AsmlObjVisitor<String> {
     public printAsmlVisitor(Boolean indent) {
         this.indent = indent;
         nbIndent = 0;
+        extFun = new HashSet();
+        extFun.add("_print_int");
+        extFun.add("_print_newline");
+        extFun.add("_print_string");
+        extFun.add("_exit");
+        extFun.add("_hello_world");
+        extFun.add("_print_char");
     }
 
 
@@ -56,7 +73,12 @@ public class printAsmlVisitor implements AsmlObjVisitor<String> {
 
     @Override
     public String visit(Call e) {
-        String s = "call " + e.label.accept(this) + " ";
+        String temp = "";
+        if(extFun.contains(e.label.accept(this))){
+            temp+="_min_caml";
+        }
+        temp+=e.label.accept(this);
+        String s = "call " + temp + " ";
         if (!e.fargs.isEmpty()) {
             for (Exp_asml elem : e.fargs) {
                 s += elem.accept(this) + " ";
