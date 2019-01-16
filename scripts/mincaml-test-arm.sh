@@ -10,15 +10,15 @@ MINCAMLC=scripts/mincamlc
 
 # TODO extends this script to run test in subdirectories
 # 
+
 echo VALID
-for test_case in tests/frontend/valid/*.ml
+for test_case in tests/backend/valid/*.ml
 do
-	 echo $test_case
-	 echo "testing asml on: $test_case"
-	 if $MINCAMLC $test_case -asml 2> /dev/null 1> /dev/null
+	 echo "testing arm on: $test_case"
+	 if $MINCAMLC $test_case -o output/result.s 2> /dev/null 1> /dev/null
 	 then
-		cd tools/
-		if ./asml ../output/result.asml 1> /dev/null #2> /dev/null
+		cd output/
+		if  ( make )  2> /dev/null 1> /dev/null   
 		then
 			echo "OK"
 		else
@@ -26,6 +26,8 @@ do
 		fi
 		cd ../
 	 else
-	 	echo " ERREUR le programme le transforme pas en ASML"
+	 	echo " ERREUR le programme le transforme pas en ARM"
 	 fi
 done
+
+
