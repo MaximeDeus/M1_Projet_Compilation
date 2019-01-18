@@ -18,7 +18,7 @@ do
 	 if $MINCAMLC $test_case -o output/result.s 2> /dev/null 1> /dev/null
 	 then
 		cd output/
-		if  ( make )  #2> /dev/null 1> /dev/null   
+		if  ( make )  2> /dev/null 1> /dev/null   
 		then
 			echo "OK"
 		else
